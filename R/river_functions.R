@@ -278,7 +278,7 @@ build_river_plot <- function(anno, group_by, pad = 0.1, fill_group = NULL) {
   
   group_links <- make_group_links(anno, group_by, plot_nodes)
   plot_links <- make_plot_links(group_links, fill = fill_group)
-  
+ 
   p <- ggplot() +
     geom_rect(data = plot_nodes,
               aes(xmin = xmin, xmax = xmax,
@@ -296,10 +296,10 @@ build_river_plot <- function(anno, group_by, pad = 0.1, fill_group = NULL) {
     scale_y_reverse() +
     theme_void()+
     geom_text(data = plot_nodes,
-              aes(x = (xmin+xmax)/2,
-                  y = (ymax + ymin)/2,
-                  label = name)) 
-  
+            aes(x = (xmin+xmax)/2,
+            y = (ymax + ymin)/2,
+            label = name)) 
+    
   p
   
 }

@@ -795,7 +795,6 @@ server <- function(input, output, session) {
     req(rv_filtered())
     if(nrow(rv_filtered()) > 0) {
       rbokehOutput("river_plot", height = 800)
-      write("Plot should be up now.", stderr())
     } else {
       p("No cells meet the current filtering criteria.")
     }
