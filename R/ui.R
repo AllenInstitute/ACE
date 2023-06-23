@@ -1,10 +1,11 @@
-library(shiny)
-library(dplyr)
-library(feather)
-library(DT)
-library(rbokeh)
-library(shinydashboard)
-
+suppressPackageStartupMessages({
+  library(shiny)
+  library(dplyr)
+  library(feather)
+  library(DT)
+  library(rbokeh)
+  library(shinydashboard)
+})
 
 # Define UI for application that draws a histogram
 ui <- function(request) {
@@ -68,6 +69,15 @@ ui <- function(request) {
                                        plotOutput("river_widthfinder",width = "100%",
                                                   height = "10px")
                                 )
+                              ),
+                              fluidRow(
+                                column(4,
+                                       strong("Download Options"),
+                                       fluidRow(
+                                         column(4,textInput("dlw","Width (in)",12)),
+                                         column(4,textInput("dlh","Height (in)",8)),
+                                         column(4,textInput("dlf","Font (pt)",10))),
+                                       downloadButton('downloadRiverPDF',"Download PDF"))
                               )
                      ),
                      tabPanel("Annotation Comparisons",

@@ -294,7 +294,11 @@ build_river_plot <- function(anno, group_by, pad = 0.1, fill_group = NULL) {
                 alpha = 0.4) +
     scale_fill_identity() +
     scale_y_reverse() +
-    theme_void()
+    theme_void()+
+    geom_text(data = plot_nodes,
+              aes(x = (xmin+xmax)/2,
+                  y = (ymax + ymin)/2,
+                  label = name)) 
   
   p
   

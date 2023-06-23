@@ -1,16 +1,18 @@
-library(dplyr)
-library(data.table)
-library(DT)
-library(feather)
-library(ggplot2)
-library(ggbeeswarm)
-library(purrr)
-library(rhdf5)
-library(rbokeh)
-library(scrattch.io)
-library(scrattch.vis)
-library(shiny)
-library(UpSetR)
+suppressPackageStartupMessages({
+  library(dplyr)
+  library(data.table)
+  library(DT)
+  library(feather)
+  library(ggplot2)
+  library(ggbeeswarm)
+  library(purrr)
+  library(rhdf5)
+  library(rbokeh)
+  library(scrattch.io)
+  library(scrattch.vis)
+  library(shiny)
+  library(UpSetR)
+})
 options(stringsAsFactors = F)
 
 source("annocomp_functions.R")
@@ -396,7 +398,7 @@ server <- function(input, output, session) {
           filter_anno <- anno %>% 
             select(one_of(filter_id,filter_label)) %>%
             unique() %>%
-            arrange_(filter_id)
+            arrange(filter_id)
           names(filter_anno) <- c("id","label")
           
           # Make a named numeric for the options
@@ -590,14 +592,14 @@ server <- function(input, output, session) {
               filter_text <- paste0(filter_id," %in% c(",paste(filter_values,collapse=","),")")
               
               filtered <- filtered %>%
-                filter_(filter_text)
+                dplyr::filter(filter_text)
             } else if(filter_type == "num") {
               filter_text_low <- paste0("as.numeric(",filter_label,") >= ",filter_values[1])
               filter_text_high <- paste0("as.numeric(",filter_label,") <= ",filter_values[2])
               
               filtered <- filtered %>%
-                filter_(filter_text_low) %>%
-                filter_(filter_text_high)
+                dplyr::filter(filter_text_low) %>%
+                dplyr::filter(filter_text_high)
             }
             
           }
@@ -747,13 +749,13 @@ server <- function(input, output, session) {
     input$river_groups
   })
   
-  # Call dendrogram plot rendering funciton
+  # Call river plot rendering function
   output$river_plot <- renderRbokeh({
     req(river_anno())
     req(river_groups())
     
     available_width <- as.numeric(session$clientData$output_dendro_widthfinder_width)
-    # print(available_width)
+    print(available_width)
     
     anno <- river_anno()
     river_groups <- river_groups()
@@ -763,15 +765,37 @@ server <- function(input, output, session) {
                                             node_labels = "all",
                                             width = available_width)
     )
-    write("River plot built", stderr())
     
   })
   
-  # UI for dendrogram plot output
+  
+  output$downloadRiverPDF <- downloadHandler(
+    filename = "river.pdf",
+    content = function(file) {
+      req(river_anno())
+      req(river_groups())
+      
+      
+      anno <- river_anno()
+      river_groups <- river_groups()
+      
+      plot_river<-build_river_plot(anno = anno,
+                                   group_by = river_groups)
+      ggsave(file, 
+             plot = plot_river,
+             #device = device, 
+             width = as.numeric(input$dlw), 
+             height = as.numeric(input$dlh),
+             useDingbats = FALSE)
+    }
+  )
+  
+  # UI for river plot output
   output$river_plot_ui <- renderUI({
     req(rv_filtered())
     if(nrow(rv_filtered()) > 0) {
       rbokehOutput("river_plot", height = 800)
+      write("Plot should be up now.", stderr())
     } else {
       p("No cells meet the current filtering criteria.")
     }
@@ -1164,7 +1188,7 @@ server <- function(input, output, session) {
       data <- rv_filtered()
       
       data <- data %>%
-        group_by_(.dots = summary_labels) %>%
+        group_by(.dots = summary_labels) %>%
         summarise(n = n())
       
       names(data) <- c(summary_names,"n")

@@ -230,7 +230,7 @@ build_annocomp_plot <- function(anno,
       select(one_of("xpos",x_label)) %>%
       unique() %>%
       arrange(xpos) %>%
-      rename_("x_label" = x_label)
+      rename("x_label" = x_label)
     
   }
   
@@ -240,7 +240,7 @@ build_annocomp_plot <- function(anno,
       select(one_of("ypos",y_label)) %>%
       unique() %>%
       arrange(ypos) %>%
-      rename_("y_label" = y_label)
+      rename("y_label" = y_label)
     
   }
   
