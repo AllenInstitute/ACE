@@ -4,11 +4,11 @@ suppressPackageStartupMessages({
   #library(DT)
   library(feather)
   library(ggplot2)
-  #library(ggbeeswarm)
+  library(ggbeeswarm)
   #library(purrr)
   #library(rhdf5)
   library(rbokeh)
-  #library(scrattch.io)
+  library(scrattch.io)
   #library(scrattch.vis)
   library(shiny)
   library(UpSetR)
@@ -196,11 +196,11 @@ server <- function(input, output, session) {
             anno <- data.frame(sample_id=paste0("i",1:dim(anno)[1]),anno)
           }
 
+          anno <- auto_annotate(anno)
+
           # Rename sample ids as sample_id
           names(anno)[1] <- "sample_id"
-          
-          anno <- auto_annotate(anno)
-          
+                    
           setProgress(value = 1,
                       message = "Annotations Loaded")
           

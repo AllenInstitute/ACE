@@ -4,7 +4,12 @@ build_compare_jaccard_plot <- function (anno, x_group, y_group){
   y <- anno[,paste0(y_group,"_id")]
   y <- factor(anno[,paste0(y_group,"_label")], levels = anno[,paste0(y_group,"_label")][match(sort(unique(y)),y)])
   names(x) <- names(y) <- anno$sample_id
-  compare_plot(x,y)
+  
+  if(min(length(unique(x)),length(unique(y)))==1){
+    ggplot() + theme_void() + ggtitle("Visualization require multiple values for X and Y")
+  } else{
+    compare_plot(x,y)
+  }
 }
 
 
