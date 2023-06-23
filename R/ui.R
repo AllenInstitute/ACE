@@ -2,7 +2,7 @@ suppressPackageStartupMessages({
   library(shiny)
   library(dplyr)
   library(feather)
-  library(DT)
+  #library(DT)
   library(rbokeh)
   library(shinydashboard)
 })
@@ -34,10 +34,10 @@ ui <- function(request) {
                    solidHeader = TRUE, status = "primary", width = 12,
                    collapsible = TRUE, collapsed = FALSE,
                    fluidRow(
-                     column(11,
+                     column(10,
                             uiOutput("database_textbox")
                      ),
-                     column(1,
+                     column(2,
                             bookmarkButton()
                      )
                    ),
@@ -133,6 +133,50 @@ ui <- function(request) {
                                          column(4,textInput("annocomp_dlf","Font (pt)",6))),
                                        uiOutput("annocomp_downloadButton"))
                               )
+                     ),
+                     tabPanel("Pairwise Comparisons",
+                              fluidRow(
+                                column(2,
+                                       uiOutput("paircomp_x_selection")
+                                ),
+                                column(2,
+                                       uiOutput("paircomp_y_selection")
+                                ),
+                                column(2,
+                                       uiOutput("paircomp_threshold_selection")
+                                ),
+                                column(1,
+                                       uiOutput("paircomp_width_textbox")
+                                ),
+                                column(1,
+                                       uiOutput("paircomp_height_textbox")
+                                )
+                              ),
+                              fluidRow(
+                                column(6,
+                                       uiOutput("paircomp_jaccard_ui")
+                                ),
+                                column(6,
+                                       uiOutput("paircomp_heatmap_ui")
+                                )
+                              ),
+                              fluidRow(
+                                column(6,
+                                       strong("Download Options (Jaccard plot)"),
+                                       fluidRow(
+                                         column(4,textInput("paircomp_dlw","Width (in)",8)),
+                                         column(4,textInput("paircomp_dlh","Height (in)",8)),
+                                         column(4,textInput("paircomp_dlf","Font (pt)",10))),
+                                       uiOutput("paircomp_jaccard_downloadButton")
+                                ),
+                                column(6,
+                                         strong("Download Options (Heatmap plot)"),
+                                         fluidRow(
+                                           column(4,textInput("paircomp_dlw","Width (in)",8)),
+                                           column(4,textInput("paircomp_dlh","Height (in)",8)),
+                                           column(4,textInput("paircomp_dlf","Font (pt)",10))),
+                                           uiOutput("paircomp_heatmap_downloadButton"))
+                                )
                      )
                    )
                ),

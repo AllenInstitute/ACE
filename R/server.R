@@ -1,23 +1,25 @@
 suppressPackageStartupMessages({
   library(dplyr)
   library(data.table)
-  library(DT)
+  #library(DT)
   library(feather)
   library(ggplot2)
-  library(ggbeeswarm)
-  library(purrr)
-  library(rhdf5)
+  #library(ggbeeswarm)
+  #library(purrr)
+  #library(rhdf5)
   library(rbokeh)
-  library(scrattch.io)
-  library(scrattch.vis)
+  #library(scrattch.io)
+  #library(scrattch.vis)
   library(shiny)
   library(UpSetR)
+  #library(ggplotify)
 })
 options(stringsAsFactors = F)
 
 source("annocomp_functions.R")
 source("bookmark_functions.R")
 source("river_functions.R")
+source("pairwise_functions.R")
 
 enableBookmarking(store = "server")
 
@@ -1046,6 +1048,313 @@ server <- function(input, output, session) {
              height = out_h)
     }
   )
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  ##############################
+  ## Pairwise Comparisons Box ##
+  ##############################
+  
+  ## UI Elements
+  output$paircomp_x_selection <- renderUI({
+    req(init$vals)
+    req(rv_desc())
+    
+    desc <- rv_desc()
+    options <- desc$base[desc$type == "cat"]
+    names(options) <- desc$name[desc$type == "cat"]
+    
+    id <- "paircomp_x"
+    label <- "X-axis annotation"
+    
+    initial <- ifelse(length(init$vals[[id]]) > 0,
+                      init$vals[[id]],
+                      options[1])
+    
+    selectizeInput(inputId = id, 
+                   label = strong(label), 
+                   choices = options, 
+                   selected = initial,
+                   multiple = FALSE)
+  })
+  
+  output$paircomp_y_selection <- renderUI({
+    req(init$vals)
+    req(rv_desc())
+    
+    desc <- rv_desc()
+    options <- desc$base[desc$type == "cat"]
+    names(options) <- desc$name[desc$type == "cat"]
+    
+    id <- "paircomp_y"
+    label <- "Y-axis annotation"
+    
+    initial <- ifelse(length(init$vals[[id]]) > 0,
+                      init$vals[[id]],
+                      options[2])
+    
+    selectizeInput(inputId = id, 
+                   label = strong(label), 
+                   choices = options, 
+                   selected = initial,
+                   multiple = FALSE)
+  })
+  
+  
+  output$paircomp_threshold_selection <- renderUI({
+    req(init$vals)
+    
+    id <- "paircomp_threshold"
+    label <- "Heatmap Threshold"
+    
+    initial <- ifelse(length(init$vals[[id]]) > 0,
+                      init$vals[[id]],
+                      "0.2")
+    
+    textInput(inputId = id, 
+              label = strong(label), 
+              value = initial, 
+              width = "100%")
+    
+  })
+  
+  output$paircomp_height_textbox <- renderUI({
+    req(init$vals)
+    
+    id <- "paircomp_height"
+    label <- "Plot Height"
+    
+    initial <- ifelse(length(init$vals[[id]]) > 0,
+                      init$vals[[id]],
+                      "500px")
+    
+    textInput(inputId = id, 
+              label = strong(label), 
+              value = initial, 
+              width = "100%")
+    
+  })
+  
+  output$paircomp_width_textbox <- renderUI({
+    req(init$vals)
+    
+    id <- "paircomp_width"
+    label <- "Plot Width"
+    
+    initial <- ifelse(length(init$vals[[id]]) > 0,
+                      init$vals[[id]],
+                      "100%")
+    
+    textInput(inputId = id, 
+              label = strong(label), 
+              value = initial, 
+              width = "100%")
+    
+  })
+  
+  # Calculate and then builds Jaccard comparison plot
+  paircomp_jaccard_plot <- reactive({
+    req(rv_filtered())
+    req(input$paircomp_x)
+    req(input$paircomp_y)
+    
+    # Get input values
+    build_compare_jaccard_plot(anno = rv_filtered(), 
+                               x_group = input$paircomp_x, 
+                               y_group = input$paircomp_y)
+  })
+  
+  output$paircomp_jaccard_plot <- renderPlot({
+    paircomp_jaccard_plot()
+  })
+  
+  output$paircomp_jaccard_ui <- renderUI({
+    plotOutput("paircomp_jaccard_plot", height = input$paircomp_height, width = input$paircomp_width)
+  })
+  
+  
+  # download objects
+  output$paircomp_jaccard_downloadButton <- renderUI({
+    req(paircomp_jaccard_plot())
+    downloadButton('paircomp_jaccard_downloadPlot')
+  })
+  
+  
+  output$paircomp_jaccard_downloadPlot <- downloadHandler(
+    
+    filename = "paircomp_jaccard_plot.pdf",
+    content = function(file) {
+      
+      plot <- paircomp_jaccard_plot() + theme(text = element_text(size = as.numeric(input$paircomp_dlf)))
+      
+      out_h <- as.numeric(input$paircomp_dlh)
+      out_w <- as.numeric(input$paircomp_dlw)
+      
+      ggsave(file, 
+             plot = plot,
+             width = out_w, 
+             height = out_h)
+    }
+  )
+  
+  
+  # Calculate and then builds heatmap comparison plot
+  paircomp_heatmap_plot <- reactive({
+    req(rv_filtered())
+    req(input$paircomp_x)
+    req(input$paircomp_y)
+    req(input$paircomp_threshold)
+    
+    # Get input values
+    build_compare_heatmap_plot(anno = rv_filtered(), 
+                               x_group = input$paircomp_x, 
+                               y_group = input$paircomp_y,
+                               threshold = as.numeric(input$paircomp_threshold))
+  })
+  
+  output$paircomp_heatmap_plot <- renderPlot({
+    paircomp_heatmap_plot()
+  })
+  
+  output$paircomp_heatmap_ui <- renderUI({
+    plotOutput("paircomp_heatmap_plot", height = input$paircomp_height, width = input$paircomp_width)
+  })
+  
+  
+  # download objects
+  output$paircomp_heatmap_downloadButton <- renderUI({
+    req(paircomp_heatmap_plot())
+    downloadButton('paircomp_heatmap_downloadPlot')
+  })
+  
+  
+  output$paircomp_heatmap_downloadPlot <- downloadHandler(
+    
+    filename = "paircomp_heatmap_plot.pdf",
+    content = function(file) {
+      
+      plot <- paircomp_heatmap_plot() + theme(text = element_text(size = as.numeric(input$paircomp_dlf)))
+      
+      out_h <- as.numeric(input$paircomp_dlh)
+      out_w <- as.numeric(input$paircomp_dlw)
+      
+      ggsave(file, 
+             plot = plot,
+             width = out_w, 
+             height = out_h)
+    }
+  ) 
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
   
   ##########################
   ## Browse Selection Box ##
