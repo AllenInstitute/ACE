@@ -177,6 +177,21 @@ ui <- function(request) {
                                            column(4,textInput("paircomp_dlf","Font (pt)",10))),
                                            uiOutput("paircomp_heatmap_downloadButton"))
                                 )
+                     ),
+                     tabPanel("Annotation explorer",
+                              fluidRow(
+                                column(3,
+                                       uiOutput("explorer_group_selection")
+                                ),
+                                column(3,
+                                       uiOutput("explorer_annotation_selection")
+                                )
+                              ),
+                              fluidRow(
+                                column(12,
+                                       uiOutput("explorer_box_ui")
+                                )
+                              )
                      )
                    )
                ),

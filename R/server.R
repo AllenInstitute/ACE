@@ -1051,65 +1051,6 @@ server <- function(input, output, session) {
   
   
   
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
   ##############################
   ## Pairwise Comparisons Box ##
   ##############################
@@ -1336,7 +1277,84 @@ server <- function(input, output, session) {
   
   
   
+  ##############################
+  ## Annotation Explorer Box ##
+  ##############################
   
+  ## UI Elements
+  output$explorer_group_selection <- renderUI({
+    req(init$vals)
+    req(rv_desc())
+    
+    desc <- rv_desc()
+    options <- desc$base[desc$type == "cat"]
+    names(options) <- desc$name[desc$type == "cat"]
+    
+    id <- "explorer_group"
+    label <- "Annotation group"
+    
+    initial <- ifelse(length(init$vals[[id]]) > 0,
+                      init$vals[[id]],
+                      options[1])
+    
+    selectizeInput(inputId = id, 
+                   label = strong(label), 
+                   choices = options, 
+                   selected = initial,
+                   multiple = FALSE)
+  })
+  
+  output$explorer_annotation_selection <- renderUI({
+    req(init$vals)
+    req(rv_filtered())
+    req(input$explorer_group)
+    
+    # Get values for inputted annotation
+    x_group <- input$explorer_group
+    anno    <- rv_filtered()
+    x       <- anno[,paste0(x_group,"_id")]
+    x       <- anno[,paste0(x_group,"_label")][match(sort(unique(x)),x)]
+    options <- setNames(x,x)
+    
+    id <- "explorer_annotation"
+    label <- "Annotation value"
+    
+    initial <- ifelse(length(init$vals[[id]]) > 0,
+                      init$vals[[id]],
+                      options[1])
+    
+    selectizeInput(inputId = id, 
+                   label = strong(label), 
+                   choices = options, 
+                   selected = initial,
+                   multiple = FALSE)
+  })
+  
+  
+  output$paircomp_threshold_selection <- renderUI({
+    req(init$vals)
+    
+    id <- "paircomp_threshold"
+    label <- "Heatmap Threshold"
+    
+    initial <- ifelse(length(init$vals[[id]]) > 0,
+                      init$vals[[id]],
+                      "0.2")
+    
+    textInput(inputId = id, 
+              label = strong(label), 
+              value = initial, 
+              width = "100%")
+    
+  })
+  
+  # Placeholder for plots
+  output$explorer_box_ui <- renderUI({
+    req(input$explorer_annotation)
+    req(input$explorer_group)
+    
+    p(paste("Placeholder for:",input$explorer_annotation,"in group",input$explorer_group))
+  })
   
   
   
