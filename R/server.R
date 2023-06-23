@@ -592,14 +592,14 @@ server <- function(input, output, session) {
               filter_text <- paste0(filter_id," %in% c(",paste(filter_values,collapse=","),")")
               
               filtered <- filtered %>%
-                dplyr::filter(filter_text)
+                filter_(filter_text)
             } else if(filter_type == "num") {
               filter_text_low <- paste0("as.numeric(",filter_label,") >= ",filter_values[1])
               filter_text_high <- paste0("as.numeric(",filter_label,") <= ",filter_values[2])
               
               filtered <- filtered %>%
-                dplyr::filter(filter_text_low) %>%
-                dplyr::filter(filter_text_high)
+                filter_(filter_text_low) %>%
+                filter_(filter_text_high)
             }
             
           }
@@ -749,17 +749,18 @@ server <- function(input, output, session) {
     input$river_groups
   })
   
-  # Call river plot rendering function
+  
+  # Call dendrogram plot rendering funciton
   output$river_plot <- renderRbokeh({
     req(river_anno())
     req(river_groups())
     
-    available_width <- as.numeric(session$clientData$output_dendro_widthfinder_width)
+    available_width <- input$dimension[1]#as.numeric(session$clientData$output_dendro_widthfinder_width)
     print(available_width)
-    
+
     anno <- river_anno()
     river_groups <- river_groups()
-    
+        
     suppressWarnings(build_river_plot_bokeh(anno = anno,
                                             group_by = river_groups,
                                             node_labels = "all",
@@ -767,7 +768,6 @@ server <- function(input, output, session) {
     )
     
   })
-  
   
   output$downloadRiverPDF <- downloadHandler(
     filename = "river.pdf",
@@ -790,7 +790,8 @@ server <- function(input, output, session) {
     }
   )
   
-  # UI for river plot output
+  
+  # UI for dendrogram plot output
   output$river_plot_ui <- renderUI({
     req(rv_filtered())
     if(nrow(rv_filtered()) > 0) {
@@ -800,6 +801,7 @@ server <- function(input, output, session) {
     }
     
   })
+  
   
   
   ################################
@@ -1146,7 +1148,7 @@ server <- function(input, output, session) {
   ##############################
   ## Annotation Summaries Box ##
   ##############################
-  
+
   # UI for group selection in the Annotation Summaries tab
   output$summary_group_selection <- renderUI({
     req(cat_options)
