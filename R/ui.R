@@ -2,7 +2,7 @@ suppressPackageStartupMessages({
   library(shiny)
   library(dplyr)
   library(feather)
-  #library(DT)
+  library(DT)
   library(rbokeh)
   library(shinydashboard)
 })
@@ -34,8 +34,16 @@ ui <- function(request) {
                    solidHeader = TRUE, status = "primary", width = 12,
                    collapsible = TRUE, collapsed = FALSE,
                    fluidRow(
-                     column(10,
+                     column(8,
                             uiOutput("database_textbox")
+                     ),
+                     column(2,
+                            actionButton(inputId = "email1", 
+                                         icon = icon("envelope", lib = "font-awesome"), 
+                                         a("Comments/bugs?", 
+                                           href="mailto:jeremym@alleninstitute.org?
+                                           body=''
+                                           &subject='Annotation Comparison' app comments"))
                      ),
                      column(2,
                             bookmarkButton()
@@ -185,11 +193,15 @@ ui <- function(request) {
                                 ),
                                 column(3,
                                        uiOutput("explorer_annotation_selection")
+                                ),
+                                column(3,
+                                       uiOutput("explorer_comparison_selection")
                                 )
                               ),
                               fluidRow(
                                 column(12,
-                                       uiOutput("explorer_box_ui")
+                                       #uiOutput("explorer_box_ui")
+                                       dataTableOutput("explorer_table")
                                 )
                               )
                      )

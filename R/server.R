@@ -1,7 +1,7 @@
 suppressPackageStartupMessages({
   library(dplyr)
   library(data.table)
-  #library(DT)
+  library(DT)
   library(feather)
   library(ggplot2)
   library(ggbeeswarm)
@@ -119,7 +119,7 @@ server <- function(input, output, session) {
     
   })
   
-
+  
   #########################
   ## General UI Elements ##
   #########################
@@ -138,7 +138,7 @@ server <- function(input, output, session) {
     req(init$vals)
     
     id <- "db"
-    label <- "Feather Directory"
+    label <- "Location of annotation information"
     
     # If a stored db exists, pull the value from init$vals
     initial <- ifelse(length(init$vals[[id]]) > 0,
@@ -1246,37 +1246,6 @@ server <- function(input, output, session) {
   ) 
   
   
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
   ##############################
   ## Annotation Explorer Box ##
   ##############################
@@ -1331,32 +1300,86 @@ server <- function(input, output, session) {
   })
   
   
-  output$paircomp_threshold_selection <- renderUI({
+  output$explorer_comparison_selection <- renderUI({
     req(init$vals)
+    req(rv_desc())
     
-    id <- "paircomp_threshold"
-    label <- "Heatmap Threshold"
+    desc <- rv_desc()
+    options <- desc$base[desc$type == "cat"]
+    names(options) <- desc$name[desc$type == "cat"]
+    
+    id <- "explorer_comparison"
+    label <- "Comparison groups"
     
     initial <- ifelse(length(init$vals[[id]]) > 0,
                       init$vals[[id]],
-                      "0.2")
+                      options[2])
     
-    textInput(inputId = id, 
-              label = strong(label), 
-              value = initial, 
-              width = "100%")
-    
+    selectizeInput(inputId = id, 
+                   label = strong(label), 
+                   choices = options, 
+                   selected = initial,
+                   multiple = TRUE)
   })
+  
   
   # Placeholder for plots
   output$explorer_box_ui <- renderUI({
     req(input$explorer_annotation)
     req(input$explorer_group)
+    req(input$explorer_comparison)
     
-    p(paste("Placeholder for:",input$explorer_annotation,"in group",input$explorer_group))
+    p(paste0("Placeholder for: ",input$explorer_annotation," in group ",input$explorer_group,". ",
+            "Comparison groups: ",paste(input$explorer_comparison,collapse=", ")))
+    
   })
   
   
+  ## Table with 
+  
+  output$explorer_table <- DT::renderDataTable({
+    
+    req(input$explorer_annotation)
+    req(input$explorer_group)
+    req(input$explorer_comparison)
+    req(rv_filtered())
+    
+    # display top 5 rows at a time
+    options(DT.options = list(pageLength = 5))
+    
+    # Collect relevant inputs
+    anno = as.data.frame(rv_filtered())
+    anno = anno[anno[,paste0(input$explorer_group,"_label")]==input$explorer_annotation,]
+    anno = as.data.frame(anno)
+    cats = input$explorer_comparison # explorer comparison categories, short name
+    
+    # set up the data frame for max length
+    rows = 0
+    for (cat in cats) rows = max(rows,length(unique(anno[,paste0(cat,"_label")])))
+    df   = data.frame(matrix(NA,nrow = rows, ncol = 2*length(cats)))
+    cn   = NULL # Column names for data frame
+    for (cat in cats) cn <- c(cn,cat,paste0(cat,"_percent"))
+    colnames(df) = cn
+    
+    # Build the data frame
+    for (cat in cats){
+      value <- -sort(-table(as.character(anno[,paste0(cat,"_label")])))
+      value <- round(1000*value/sum(value))/10
+      df[1:length(value),cat] = names(value)
+      df[1:length(value),paste0(cat,"_percent")] = value
+      if(length(value)<rows){
+        df[(length(value)+1):rows,cat] = ""
+        df[(length(value)+1):rows,paste0(cat,"_percent")] = 0
+      }
+    }
+    
+    # set conditions and return the beautiful table
+    datatab <- datatable(df)
+    
+    # We can use conditional coloring, but I haven't figured this part out yet.
+    #datatab <- datatab %>% formatStyle(paste0(cats,"_percent"), backgroundColor = styleEqual((0:1000)/10, grey((0:1000)/1000)))
+    return(datatab)
+  })
   
   
   
