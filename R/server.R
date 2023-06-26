@@ -13,6 +13,7 @@ suppressPackageStartupMessages({
   library(shiny)
   library(UpSetR)
   #library(ggplotify)
+  library(anndata)
 })
 options(stringsAsFactors = F)
 
@@ -208,9 +209,42 @@ server <- function(input, output, session) {
           
         })
       } else {
-        write(paste(rv_path(),"does note exist."), stderr())
+        write(paste(rv_path(),"does not exist."), stderr())
+        return(NULL)
       }
-    # If not a csv file, we expect a directory with an anno.feather file
+    # If not a csv file, check for h5ad file in scrattch-mapping format
+    } else if(grepl(".h5ad$",rv_path())) {
+
+      if(file.exists(rv_path())) {
+        withProgress({
+          setProgress(value = 0.2,
+                      message = "Loading Annotations")
+          h5ad <- read_h5ad(rv_path(), backed="r")
+
+          anno <- as.data.frame(h5ad$obs)
+          
+          # Move sample_id to the first column
+          anno <- anno %>%
+            select("sample_id", everything())
+          
+          # Convert factors to characters
+          for (cn in colnames(anno)[grepl("_label",colnames(anno))])
+            if(is.factor(anno[,cn])) {
+              anno[,paste0(substr(cn,1,nchar(cn)-6),"_id")] <- as.numeric(anno[,cn])
+              anno[,cn] <- as.character(anno[,cn])
+            }
+          
+          setProgress(value = 1,
+                      message = "Annotations Loaded")
+          
+        })
+        return(anno)
+        
+      } else {
+        write(paste(rv_path(),"does not exist."), stderr())
+        return(NULL)
+      }
+    # If not a csv or h5ad file, we expect a directory with an anno.feather file
     } else {
       # use read_feather() from feather
       anno_file <- paste0(rv_path(),"/anno.feather")
@@ -238,11 +272,24 @@ server <- function(input, output, session) {
         return(anno)
         
       } else {
-        write(paste(rv_path(),"does note exist."), stderr())
+        write(paste(rv_path(),"does not exist."), stderr())
+        return(NULL)
       }
     } 
     
   }) # end rv_anno()
+  
+  
+  # Check for valid input
+  output$checkInput <- renderUI({
+    req(rv_anno)
+    if(is.null(rv_anno())){
+      p("INVALID INPUT")
+    } else {
+      p("")
+    }
+  })
+  
   
   # Build the annotation descriptions table
   # 
@@ -314,28 +361,28 @@ server <- function(input, output, session) {
   #   sf stands for selected filter
   #
   output$filter_selection <- renderUI({
-    req(filter_options)
+  req(filter_options)
     
-    filter_opts <- filter_options()
+  filter_opts <- filter_options()
+  
+  id <- "sf"
+  label <- "Choose Filter Set"
     
-    id <- "sf"
-    label <- "Choose Filter Set"
+  initial <- ifelse(length(init$vals[[id]]) > 0,
+                    init$vals[[id]],
+                    "")
     
-    initial <- ifelse(length(init$vals[[id]]) > 0,
-                      init$vals[[id]],
-                      "")
+  if(grepl(",", initial)) {
+    initial_split <- unlist(strsplit(initial,","))
+    initial <- filter_opts[match(initial_split, filter_opts)]
+  }
     
-    if(grepl(",", initial)) {
-      initial_split <- unlist(strsplit(initial,","))
-      initial <- filter_opts[match(initial_split, filter_opts)]
-    }
-    
-    selectizeInput(inputId = id,
-                   label = label,
-                   filter_opts,
-                   initial,
-                   multiple = T,
-                   width = "100%")
+  selectizeInput(inputId = id,
+                 label = label,
+                 filter_opts,
+                 initial,
+                 multiple = T,
+                 width = "100%")
   })
   
   # Reactive value to show/hide the filter panel

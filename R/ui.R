@@ -34,8 +34,11 @@ ui <- function(request) {
                    solidHeader = TRUE, status = "primary", width = 12,
                    collapsible = TRUE, collapsed = FALSE,
                    fluidRow(
-                     column(8,
+                     column(7,
                             uiOutput("database_textbox")
+                     ),
+                     column(1,
+                            uiOutput("checkInput")
                      ),
                      column(2,
                             actionButton(inputId = "email1", 
@@ -186,7 +189,7 @@ ui <- function(request) {
                                            uiOutput("paircomp_heatmap_downloadButton"))
                                 )
                      ),
-                     tabPanel("Annotation explorer",
+                     tabPanel("Annotation Explorer",
                               fluidRow(
                                 column(3,
                                        uiOutput("explorer_group_selection")
