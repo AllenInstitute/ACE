@@ -11,10 +11,39 @@ suppressPackageStartupMessages({
 ui <- function(request) {
   dashboardPage(
     
-    dashboardHeader(title = "Annotation_Comparison"),
+    title = 'SEA-AD annotation comparison',
+    ##
+    dashboardHeader(title = div(h3("SEA-AD", style="margin: 0;"),h4("Annotation comparison", style="margin: 0;"))),
     
+    ##
     dashboardSidebar(disable = TRUE),
     
+    # dashboardSidebar(
+    #   verticalLayout(
+    #     div(),
+    #     h6("Please select an option and click open table to begin.", 
+    #        style='justify-self: center; padding-left: 10px; padding-right: 10px; padding-bottom: 0px;margin-bottom: 0px; text-align: center;'),
+    #     ## Let the user filter tables to just one species
+    #     selectInput("Level", "Taxonomy Level", choices=c("All","Class","Subclass","Supertype"), selected="Class", multiple=FALSE),
+    #     actionButton("openTable", 
+    #                  "Open beta coefficent table",
+    #                  style = "color: #fff; background-color: #27ae60; border-color: #fff; padding: 10px 20px 10px px; margin: 5px 5px 5px 20px; "),
+    #   ),
+    #   br(),
+    #   htmlOutput("text1"),
+    #   tags$head(tags$style("#text1{color: white;
+    #                              font-size: 12px;
+    #                              text-align: center;
+    #                              }"
+    #   )
+    #   ),
+    #   div(
+    #     actionButton("showInfo","Show/Hide Info", style = "margin: 0px;"),
+    #     style="display: flex; align-content: center; justify-content: center; flex-wrap: wrap; padding-top: 10%"
+    #   )
+    # ),
+    
+    ##
     dashboardBody(
       tags$head(tags$script('var dimension = [0, 0];
                           $(document).on("shiny:connected", function(e) {
@@ -47,9 +76,6 @@ ui <- function(request) {
                                            href="mailto:jeremym@alleninstitute.org?
                                            body=''
                                            &subject='Annotation Comparison' app comments"))
-                     ),
-                     column(2,
-                            bookmarkButton()
                      )
                    ),
                    fluidRow(
@@ -75,76 +101,6 @@ ui <- function(request) {
                    solidHeader = TRUE, status = "primary", width = 12,
                    collapsible = TRUE, collapsed = FALSE, color = "green",
                    tabsetPanel(
-                     tabPanel("River Plot",
-                              fluidRow(
-                                column(11,
-                                       uiOutput("river_group_selection")
-                                ),
-                                column(1,
-                                       br(),
-                                       actionButton("river_go","GO!",
-                                                    style="color: #fff; background-color: #EC008C; border-color: #BE1E2D; font-weight: bold;")
-                                )
-                              ),
-                              fluidRow(
-                                column(12,
-                                       uiOutput("river_plot_ui"),
-                                       plotOutput("river_widthfinder",width = "100%",
-                                                  height = "10px")
-                                )
-                              ),
-                              fluidRow(
-                                column(4,
-                                       strong("Download Options"),
-                                       fluidRow(
-                                         column(4,textInput("dlw","Width (in)",12)),
-                                         column(4,textInput("dlh","Height (in)",8)),
-                                         column(4,textInput("dlf","Font (pt)",10))),
-                                       downloadButton('downloadRiverPDF',"Download PDF"))
-                              )
-                     ),
-                     tabPanel("Annotation Comparisons",
-                              # box(title = "Annotation Comparisons",
-                              #     solidHeader = TRUE, status = "primary", width = 12,
-                              #     collapsible = TRUE, collapsed = TRUE,
-                              fluidRow(
-                                column(2,
-                                       uiOutput("annocomp_x_selection")
-                                ),
-                                column(2,
-                                       uiOutput("annocomp_y_selection")
-                                ),
-                                column(2,
-                                       uiOutput("annocomp_color_selection")
-                                ),
-                                column(2,
-                                       uiOutput("annocomp_denom_selection")
-                                ),
-                                column(2,
-                                       uiOutput("annocomp_select_mode_selection")
-                                ),
-                                column(1,
-                                       uiOutput("annocomp_width_textbox")
-                                ),
-                                column(1,
-                                       uiOutput("annocomp_height_textbox")
-                                )
-                              ),
-                              fluidRow(
-                                column(12,
-                                       uiOutput("annocomp_plot_ui")
-                                )
-                              ),
-                              fluidRow(
-                                column(4,
-                                       strong("Download Options"),
-                                       fluidRow(
-                                         column(4,textInput("annocomp_dlw","Width (in)",8)),
-                                         column(4,textInput("annocomp_dlh","Height (in)",4)),
-                                         column(4,textInput("annocomp_dlf","Font (pt)",6))),
-                                       uiOutput("annocomp_downloadButton"))
-                              )
-                     ),
                      tabPanel("Pairwise Comparisons",
                               fluidRow(
                                 column(2,
@@ -154,22 +110,19 @@ ui <- function(request) {
                                        uiOutput("paircomp_y_selection")
                                 ),
                                 column(2,
-                                       uiOutput("paircomp_threshold_selection")
+                                       uiOutput("reorderY_selection")
                                 ),
-                                column(1,
+                                column(2,
                                        uiOutput("paircomp_width_textbox")
                                 ),
-                                column(1,
+                                column(2,
                                        uiOutput("paircomp_height_textbox")
                                 )
                               ),
                               fluidRow(
-                                column(6,
+                                column(12,
                                        uiOutput("paircomp_jaccard_ui")
                                 ),
-                                column(6,
-                                       uiOutput("paircomp_heatmap_ui")
-                                )
                               ),
                               fluidRow(
                                 column(6,
@@ -180,14 +133,7 @@ ui <- function(request) {
                                          column(4,textInput("paircomp_dlf","Font (pt)",10))),
                                        uiOutput("paircomp_jaccard_downloadButton")
                                 ),
-                                column(6,
-                                         strong("Download Options (Heatmap plot)"),
-                                         fluidRow(
-                                           column(4,textInput("paircomp_dlw","Width (in)",8)),
-                                           column(4,textInput("paircomp_dlh","Height (in)",8)),
-                                           column(4,textInput("paircomp_dlf","Font (pt)",10))),
-                                           uiOutput("paircomp_heatmap_downloadButton"))
-                                )
+                            )
                      ),
                      tabPanel("Annotation Explorer",
                               fluidRow(
@@ -209,48 +155,9 @@ ui <- function(request) {
                               )
                      )
                    )
-               ),
-               box(title = "Annotation Summaries",
-                   solidHeader = TRUE, status = "primary", width = 12,
-                   collapsible = TRUE, collapsed = TRUE,
-                   fluidRow(
-                     column(12,uiOutput("summary_group_selection"))
-                   ),
-                   fluidRow(
-                     column(12,dataTableOutput("summary_table"))
-                   ),
-                   fluidRow(
-                     column(12,downloadButton("summary_csv","Download Summary as CSV"))
-                   )
-               ),
-               box(title = "Browse Selection",
-                   solidHeader = TRUE, status = "primary", width = 12,
-                   collapsible = TRUE, collapsed = TRUE,
-                   fluidRow(
-                     column(2,
-                            uiOutput("browse_show_ids_checkbox")
-                     ),
-                     column(2,
-                            uiOutput("browse_show_colors_checkbox")
-                     ),
-                     column(2,
-                            uiOutput("browse_truncate_long_checkbox")
-                     )
-                   ),
-                   fluidRow(
-                     column(12,
-                            div(style = 'overflow-x: scroll',
-                                dataTableOutput("browse_table")
-                            )
-                     )
-                   ),
-                   downloadButton("browse_csv","Download Selection as CSV")
                )
-               
-               
       ),
-      fluidRow(width = 12,
-               br(),br(),br(),br(),br(),br(),br())
+      fluidRow(width = 12, br(),br())
       
     )
   )

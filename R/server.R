@@ -5,21 +5,15 @@ suppressPackageStartupMessages({
   library(feather)
   library(ggplot2)
   library(ggbeeswarm)
-  #library(purrr)
-  #library(rhdf5)
   library(rbokeh)
   library(scrattch.io)
-  #library(scrattch.vis)
   library(shiny)
   library(UpSetR)
-  #library(ggplotify)
   library(anndata)
 })
 options(stringsAsFactors = F)
 
-source("annocomp_functions.R")
-source("bookmark_functions.R")
-source("river_functions.R")
+source("multistudy_functions.R")
 source("pairwise_functions.R")
 
 enableBookmarking(store = "server")
@@ -1103,6 +1097,7 @@ server <- function(input, output, session) {
   ##############################
   
   ## UI Elements
+
   output$paircomp_x_selection <- renderUI({
     req(init$vals)
     req(rv_desc())
@@ -1147,22 +1142,11 @@ server <- function(input, output, session) {
                    multiple = FALSE)
   })
   
-  
-  output$paircomp_threshold_selection <- renderUI({
-    req(init$vals)
-    
-    id <- "paircomp_threshold"
-    label <- "Heatmap Threshold"
-    
-    initial <- ifelse(length(init$vals[[id]]) > 0,
-                      init$vals[[id]],
-                      "0.2")
-    
-    textInput(inputId = id, 
-              label = strong(label), 
-              value = initial, 
-              width = "100%")
-    
+  output$reorderY_selection <- renderUI({
+    id <- "reorderY"
+    label <- "Reorder query?"
+    initial <- TRUE
+    selectInput(id, label, c("Yes" = TRUE,"No"= FALSE))
   })
   
   output$paircomp_height_textbox <- renderUI({
@@ -1173,7 +1157,7 @@ server <- function(input, output, session) {
     
     initial <- ifelse(length(init$vals[[id]]) > 0,
                       init$vals[[id]],
-                      "500px")
+                      "600px")
     
     textInput(inputId = id, 
               label = strong(label), 
@@ -1204,11 +1188,13 @@ server <- function(input, output, session) {
     req(rv_filtered())
     req(input$paircomp_x)
     req(input$paircomp_y)
+    req(input$reorderY)
     
     # Get input values
     build_compare_jaccard_plot(anno = rv_filtered(), 
                                x_group = input$paircomp_x, 
-                               y_group = input$paircomp_y)
+                               y_group = input$paircomp_y,
+                               reorderY = input$reorderY)
   })
   
   output$paircomp_jaccard_plot <- renderPlot({
@@ -1243,54 +1229,6 @@ server <- function(input, output, session) {
              height = out_h)
     }
   )
-  
-  
-  # Calculate and then builds heatmap comparison plot
-  paircomp_heatmap_plot <- reactive({
-    req(rv_filtered())
-    req(input$paircomp_x)
-    req(input$paircomp_y)
-    req(input$paircomp_threshold)
-    
-    # Get input values
-    build_compare_heatmap_plot(anno = rv_filtered(), 
-                               x_group = input$paircomp_x, 
-                               y_group = input$paircomp_y,
-                               threshold = as.numeric(input$paircomp_threshold))
-  })
-  
-  output$paircomp_heatmap_plot <- renderPlot({
-    paircomp_heatmap_plot()
-  })
-  
-  output$paircomp_heatmap_ui <- renderUI({
-    plotOutput("paircomp_heatmap_plot", height = input$paircomp_height, width = input$paircomp_width)
-  })
-  
-  
-  # download objects
-  output$paircomp_heatmap_downloadButton <- renderUI({
-    req(paircomp_heatmap_plot())
-    downloadButton('paircomp_heatmap_downloadPlot')
-  })
-  
-  
-  output$paircomp_heatmap_downloadPlot <- downloadHandler(
-    
-    filename = "paircomp_heatmap_plot.pdf",
-    content = function(file) {
-      
-      plot <- paircomp_heatmap_plot() + theme(text = element_text(size = as.numeric(input$paircomp_dlf)))
-      
-      out_h <- as.numeric(input$paircomp_dlh)
-      out_w <- as.numeric(input$paircomp_dlw)
-      
-      ggsave(file, 
-             plot = plot,
-             width = out_w, 
-             height = out_h)
-    }
-  ) 
   
   
   ##############################
@@ -1419,206 +1357,14 @@ server <- function(input, output, session) {
         df[(length(value)+1):rows,paste0(cat,"_percent")] = 0
       }
     }
-    
+
     # set conditions and return the beautiful table
-    datatab <- datatable(df)
-    
-    # We can use conditional coloring, but I haven't figured this part out yet.
-    #datatab <- datatab %>% formatStyle(paste0(cats,"_percent"), backgroundColor = styleEqual((0:1000)/10, grey((0:1000)/1000)))
-    return(datatab)
+    return(format_datatable(df,cats))
   })
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  ##########################
-  ## Browse Selection Box ##
-  ##########################
-  
-  # Show IDs checkbox
-  output$browse_show_ids_checkbox <- renderUI({
-    req(init$vals)
-    
-    id <- "browse_show_ids"
-    label <- "Show ID Columns"
-    
-    initial <- ifelse(length(init$vals[[id]]) > 0,
-                      init$vals[[id]],
-                      FALSE)
-    
-    checkboxInput(inputId = id,
-                  label = label,
-                  initial)
-    
-  })
-  # Show Colors checkbox
-  output$browse_show_colors_checkbox <- renderUI({
-    req(init$vals)
-    
-    id <- "browse_show_colors"
-    label <- "Show Color Columns"
-    
-    initial <- ifelse(length(init$vals[[id]]) > 0,
-                      init$vals[[id]],
-                      FALSE)
-    
-    checkboxInput(inputId = id,
-                  label = label,
-                  initial)
-    
-  })
-  # Truncate Long Values checkbox
-  output$browse_truncate_long_checkbox <- renderUI({
-    req(init$vals)
-    
-    id <- "browse_truncate_long"
-    label <- "Truncate long values"
-    
-    initial <- ifelse(length(init$vals[[id]]) > 0,
-                      init$vals[[id]],
-                      TRUE)
-    
-    checkboxInput(inputId = id,
-                  label = label,
-                  initial)
-    
-  })
-  
-  # datatable showing all of the rv_filtered values
-  output$browse_table <- renderDataTable({
-    
-    show_table <- rv_filtered() %>% group_annotations()
-    
-    if(!input$browse_show_ids) {
-      keep_cols <- names(show_table)[!grepl("_id",names(show_table))]
-      keep_cols <- c("sample_id",keep_cols)
-      show_table <- show_table %>%
-        select(one_of(keep_cols))
-    }
-    
-    if(!input$browse_show_colors) {
-      keep_cols <- names(show_table)[!grepl("_color",names(show_table))]
-      show_table <- show_table %>%
-        select(one_of(keep_cols))
-    }
-    
-    if(input$browse_truncate_long) {
-      show_table <- as.data.frame(lapply(show_table, function(x) {
-        if(is.character(x)) {
-          lens <- nchar(x, allowNA = TRUE)
-          too_long <- lens > 50
-          missing <- is.na(x)
-          x[too_long & !missing] <- paste(substr(x[too_long & !missing],1,50),"...")
-          x
-        } else {
-          x
-        }
-      }))
-    }
-    
-    datatable(show_table)
-    
-  })
-  
-  # Download handler for Browse Selection tab.
-  output$browse_csv <- downloadHandler(
-    filename = function() {"distillery_selection.csv"},
-    content = function(file) {
-      out_table <- rv_filtered()
-      write.csv(out_table, file, quote = T, row.names = F)
-    }
-  )
-  
-  ##############################
-  ## Annotation Summaries Box ##
-  ##############################
-
-  # UI for group selection in the Annotation Summaries tab
-  output$summary_group_selection <- renderUI({
-    req(cat_options)
-    anno_opts <- cat_options()
-    
-    id <- "summary_groups"
-    label <- "Summary Grouping"
-    
-    initial <- ifelse(length(init$vals[[id]]) > 0,
-                      init$vals[[id]],
-                      "")
-    
-    if(grepl(",", initial)) {
-      initial_split <- unlist(strsplit(initial,","))
-      initial <- anno_opts[match(initial_split, anno_opts)]
-    }
-    
-    selectizeInput(inputId = id,
-                   label = label,
-                   anno_opts,
-                   initial,
-                   multiple = T,
-                   width = "100%")
-  })
-  
-  # Summary functions based on selected grouping
-  summarize_filtered <- reactive({
-    req(input$summary_groups)
-    req(rv_filtered())
-    req(rv_desc())
-    
-    desc <- rv_desc()
-    
-    if(!identical(input$summary_groups,"")) {
-      summary_labels <- paste0(input$summary_groups, "_label")
-      summary_names <- desc$name[match(input$summary_groups, desc$base)]
-      
-      data <- rv_filtered()
-      
-      data <- data %>%
-        group_by(.dots = summary_labels) %>%
-        summarise(n = n())
-      
-      names(data) <- c(summary_names,"n")
-      
-      data
-    } else {
-      
-      data <- data.frame(selected_cells = nrow(rv_filtered))
-      
-      data
-    }
-    
-  })
-  
-  # datatable for displaying the summarize_filtered() table
-  output$summary_table <- renderDataTable({
-    req(summarize_filtered())
-    show_table <- summarize_filtered()
-    datatable(show_table)
-    
-  })
-  
-  # Download handler for the summarize_filtered() table
-  output$summary_csv <- downloadHandler(
-    filename = function() {"distillery_summary.csv"},
-    content = function(file) {
-      out_table <- summarize_filtered()
-      write.csv(out_table, file, quote = T, row.names = F)
-    }
-  )
-
-  # Batch dendrograms
-  # Legends for annotation comparisons
   
 }
+
+
+
+
+
