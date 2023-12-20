@@ -1,13 +1,16 @@
-build_compare_jaccard_plot <- function (anno, x_group, y_group, reorderY){
+build_compare_jaccard_plot <- function (anno, x_group, y_group, reorderY, maxInputs = 50){
   x <- anno[,paste0(x_group,"_id")]
   x <- factor(anno[,paste0(x_group,"_label")], levels = anno[,paste0(x_group,"_label")][match(sort(unique(x)),x)])
   y <- anno[,paste0(y_group,"_id")]
   y <- factor(anno[,paste0(y_group,"_label")], levels = anno[,paste0(y_group,"_label")][match(sort(unique(y)),y)])
   names(x) <- names(y) <- anno$sample_id
+  numInputs <- length(levels(x))+length(levels(y))
   
   if(min(length(unique(x)),length(unique(y)))==1){
-    ggplot() + theme_void() + ggtitle("Visualization require multiple values for X and Y")
-  } else{
+    ggplot() + theme_void() + ggtitle("     Visualization require multiple values for X and Y.")
+  } else if (numInputs>maxInputs){
+    ggplot() + theme_void() + ggtitle("     Too many unique X+Y values to plot. Filter data or increase window size.")
+  } else {
     compare_plot(x, y, reorderY)
   }
 }

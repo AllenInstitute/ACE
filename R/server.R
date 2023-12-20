@@ -27,7 +27,8 @@ guess_type <- function(x) {
 }
 
 default_vals <- list(db = "//allen/programs/celltypes/workgroups/humancelltypes/JeremyM/github/annotation_comparison/example",
-                     sf = "")
+                     sf = "",
+                     metadata = "")
 
 server <- function(input, output, session) {
 
@@ -133,7 +134,7 @@ server <- function(input, output, session) {
     req(init$vals)
     
     id <- "db"
-    label <- "Location of annotation information"
+    label <- "Location of annotation information for each CELL"
     
     # If a stored db exists, pull the value from init$vals
     initial <- ifelse(length(init$vals[[id]]) > 0,
@@ -147,6 +148,24 @@ server <- function(input, output, session) {
     
   })
   
+  
+  output$metadata_textbox <- renderUI({
+    req(init$vals)
+    
+    id <- "metadata"
+    label <- "Location of cluster information (optional; csv file)"
+    
+    # If a stored metadata exists, pull the value from init$vals
+    initial <- ifelse(length(init$vals[[id]]) > 0,
+                      init$vals[[id]],
+                      "")
+    
+    textInput(inputId = id, 
+              label = strong(label), 
+              value = initial, 
+              width = "100%")
+    
+  })
   
   ##################################
   ## Loading tables from input$db ##
@@ -166,7 +185,14 @@ server <- function(input, output, session) {
     input$db
   })
   
-  # Read the annotations table from the dataset
+  rv_path_metadata <- reactive({
+    req(input$metadata)
+    write("Checking and setting input$metadata.", stderr())
+
+    input$metadata
+  })
+  
+  # Read the CELL annotations table from the dataset
   #
   # rv_anno() - a data.frame
   #
@@ -289,9 +315,9 @@ server <- function(input, output, session) {
   output$checkInput <- renderUI({
     req(rv_anno)
     if(is.null(rv_anno())){
-      p("INVALID INPUT")
+      p("ENTER VALID CELL ANNOTATION FILE.")
     } else {
-      p("")
+      p(" ")
     }
   })
   
@@ -319,6 +345,42 @@ server <- function(input, output, session) {
     return(desc_table)
  
   }) # end of rv_desc()
+  
+  
+  
+  # Read the CLUSTER annotations table from the dataset (if present)
+  #
+  # rv_anno_metadata() - a data.frame
+  #
+  rv_anno_metadata <- reactive({
+    req(rv_path_metadata())
+    write("Reading cluster anno.", stderr())
+
+    # If a .csv file, use read.csv
+    if(grepl(".csv$",rv_path_metadata())) {
+      
+      if(file.exists(rv_path_metadata())) {
+        anno <- fread(rv_path_metadata())
+        anno <- as.data.frame(anno)
+        return(anno)
+      } else {
+        write(paste(rv_path_metadata(),"does not exist."), stderr())
+        return(NULL)
+      }
+    }
+    
+  }) # end rv_anno_metadat()
+  
+  # Check for valid input
+  output$metadata_checkInput <- renderUI({
+    req(rv_anno_metadata)
+    if(is.null(rv_anno_metadata())){
+      p("Cluster information file not available.")
+    } else {
+      p(" ")
+    }
+  })
+  
   
   #############################
   ## Filtering and Filter UI ##
@@ -1196,16 +1258,34 @@ server <- function(input, output, session) {
   
   # Calculate and then builds Jaccard comparison plot
   paircomp_jaccard_plot <- reactive({
-    req(rv_filtered())
+    # Inputs for the plot
+    req(rv_filtered())   
     req(input$paircomp_x)
     req(input$paircomp_y)
     req(input$reorderY)
+    # Inputs for the frame size
+    req(input$dimension)
+    req(input$paircomp_height)
+    req(input$paircomp_width)
+    
+    # Get the frame size to avoid printing gigantic plots on screen
+    height <- input$paircomp_height
+    height <- as.numeric(gsub("([0-9]+).*$", "\\1", height))
+    width  <- input$paircomp_width
+    if(substr(width,nchar(width),nchar(width))=="%"){
+      width <- as.numeric(substr(width,1,nchar(width)-1))
+      width <- width*input$dimension[1]/100
+    } else {
+      width <- as.numeric(gsub("([0-9]+).*$", "\\1", width))
+    }
+    maxInputs <- (width*height)/3000  # This value of 3000 could be adjusted later or made interactive, if needed
     
     # Get input values
     build_compare_jaccard_plot(anno = rv_filtered(), 
                                x_group = input$paircomp_x, 
                                y_group = input$paircomp_y,
-                               reorderY = input$reorderY)
+                               reorderY = input$reorderY,
+                               maxInputs = maxInputs)
   })
   
   output$paircomp_jaccard_plot <- renderPlot({
@@ -1320,7 +1400,7 @@ server <- function(input, output, session) {
   
   output$explorer_plot_type_selection <- renderUI({
     id <- "explorer_plot_type"
-    label <- "Show plots too?"
+    label <- "Show plots?"
     initial <- FALSE
     selectInput(id, label, c("No"= FALSE,"Yes" = TRUE))
   })
@@ -1342,15 +1422,15 @@ server <- function(input, output, session) {
     
   })
   
-  output$explorer_width_textbox <- renderUI({
+  output$explorer_maxtypes_textbox <- renderUI({
     req(init$vals)
     
-    id <- "explorer_width"
-    label <- "Plot Width"
+    id <- "explorer_maxtypes"
+    label <- "Max to plot"
     
     initial <- ifelse(length(init$vals[[id]]) > 0,
                       init$vals[[id]],
-                      "100%")
+                      "10")
     
     textInput(inputId = id, 
               label = strong(label), 
@@ -1371,7 +1451,7 @@ server <- function(input, output, session) {
     req(rv_filtered())
     
     # display top 5 rows at a time
-    options(DT.options = list(pageLength = 5))
+    options(DT.options = list(pageLength = 5, selection=list(mode="single", target="cell")))
     
     # Collect relevant inputs
     anno = as.data.frame(rv_filtered())
@@ -1410,16 +1490,16 @@ server <- function(input, output, session) {
     return(format_datatable(df,cats))
   })
   
-
+  
   # Plots with top annotation comparisons, if desired
   explorer_box_plot <- reactive({
     req(input$explorer_annotation)
     req(input$explorer_group)
     req(input$explorer_comparison)
     req(input$explorer_plot_type)
+    req(input$explorer_maxtypes)
     req(rv_filtered())
     
-    # If no plot requested, return void
     if (input$explorer_plot_type){
       # Collect relevant inputs
       anno = as.data.frame(rv_filtered())
@@ -1454,8 +1534,8 @@ server <- function(input, output, session) {
         df[,paste0(cat,"_direction")][is.na(df[,paste0(cat,"_direction")])] = "none"
       }
       
-      labeled_barplot_summary(df,cats)
-    } else {
+      labeled_barplot_summary(df,cats,maxTypes = as.numeric(input$explorer_maxtypes))
+    } else {     # If no plot requested, return void
       ggplot() + theme_void()
     } 
 
@@ -1466,11 +1546,24 @@ server <- function(input, output, session) {
   })
   
   output$explorer_box_ui <- renderUI({
-    plotOutput("explorer_box_plot", height = input$explorer_height, width = input$explorer_width)
+    if (input$explorer_plot_type){
+      height = input$explorer_height
+    } else {
+      height = "10px"
+    }
+    plotOutput("explorer_box_plot", height = height, width = "100%")
   })
   
   
+  output$selected_cluster_table <- DT::renderDataTable({
+    req(input$explorer_table_cell_clicked)
+    req(rv_anno_metadata())
+    
+    metadata <- rv_anno_metadata()
+    cluster  <- input$explorer_table_cell_clicked$value
   
+    return(cluster_datatable(cluster,metadata))
+  })
   
 }
 

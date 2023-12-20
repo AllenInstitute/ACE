@@ -1,6 +1,6 @@
 ## Plot a labeled barplot based on the table information in the annotation explorer
 
-labeled_barplot_summary <- function(df, cats, maxTypes = 5, minPercent = 2){
+labeled_barplot_summary <- function(df, cats, maxTypes = 10, minPercent = 2){
   Data <- NULL
   maxTypes <- min(maxTypes,dim(df)[1])
   for (cat in cats){
@@ -37,9 +37,10 @@ format_datatable <- function (df, cats, range = c(0.1,100), minPercent = 2,
     df[df[paste0(cat,"_percent")]<minPercent,paste0(cat,"_direction")] = "none"
   }
   
-  toHide  <- which(!is.element(colnames(df),cats))
-  datatab <- datatable(df, options = list(dom = 't',pageLength = 50,
-                       columnDefs = list(list(visible=FALSE, targets=toHide))))
+  toHide  <- c(0,which(!is.element(colnames(df),cats)))
+  datatab <- datatable(df, options = list(dom = 't',pageLength = 10,
+                             columnDefs = list(list(visible=FALSE, targets=toHide))),
+                           selection = list(mode="single", target="cell"))
   
   for (cat in cats){
     datatab <- datatab %>% formatStyle(cat, paste0(cat,"_percent"),
@@ -56,7 +57,29 @@ format_datatable <- function (df, cats, range = c(0.1,100), minPercent = 2,
 }
   
 
+# Return a formatted data table showing cluster information for selected cluster
+cluster_datatable <- function(cluster,metadata){
+  
+  if(is.null(metadata)){
+    df  <- data.frame(Annotation = c("cluster","description"), Value = c(cluster,"**No cluster annotations available**"))
+  } else {
+    whichRow <- which(metadata==cluster, arr.ind = TRUE)
+    if(dim(whichRow)[1]==0){
+      df  <- data.frame(Annotation = c("cluster","description"), Value = c(cluster,"**No cluster annotations available**"))
+    } else {
+      row <- as.numeric(whichRow[1,1])
+      df  <- data.frame(Annotation=colnames(metadata),Value=as.character(metadata[row,]))
+    }
+  }
+  datatab <- datatable(df, options = list(dom = 't',pageLength = 10))
+  return(datatab)
+}
 
+
+
+
+
+##########################
 
 # Need an updated auto_annotate function to exclude "_direction" columns
 auto_annotate <- function (anno, scale_num = "predicted", na_val_num = 0, colorset_num = c("darkblue", 

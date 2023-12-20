@@ -66,7 +66,7 @@ ui <- function(request) {
                      column(7,
                             uiOutput("database_textbox")
                      ),
-                     column(1,
+                     column(2,
                             uiOutput("checkInput")
                      ),
                      column(2,
@@ -77,6 +77,14 @@ ui <- function(request) {
                                            body=''
                                            &subject='Annotation Comparison' app comments"))
                      )
+                   ),
+                   fluidRow(
+                     column(7,
+                            uiOutput("metadata_textbox")
+                     ),
+                     column(2,
+                            uiOutput("metadata_checkInput")
+                     ),
                    ),
                    fluidRow(
                      column(3,
@@ -150,9 +158,9 @@ ui <- function(request) {
                                        uiOutput("explorer_plot_type_selection")
                                 ),
                                 column(1,
-                                       uiOutput("explorer_width_textbox")
+                                       uiOutput("explorer_maxtypes_textbox")
                                 ),
-                                column(1,
+                                column(2,
                                        uiOutput("explorer_height_textbox")
                                 )
                               ),
@@ -162,11 +170,16 @@ ui <- function(request) {
                                 ),
                               ),
                               fluidRow(
-                                width=12, br(), br(), br()
+                                width=12, br(), 
                               ),
                               fluidRow(
                                 column(12,
                                        uiOutput("explorer_box_ui")
+                                )
+                              ),
+                              fluidRow(
+                                column(12,
+                                       dataTableOutput("selected_cluster_table")
                                 )
                               )
                      )
