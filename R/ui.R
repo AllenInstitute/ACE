@@ -137,20 +137,36 @@ ui <- function(request) {
                      ),
                      tabPanel("Annotation Explorer",
                               fluidRow(
-                                column(3,
+                                column(2,
                                        uiOutput("explorer_group_selection")
                                 ),
-                                column(3,
+                                column(2,
                                        uiOutput("explorer_annotation_selection")
                                 ),
                                 column(3,
                                        uiOutput("explorer_comparison_selection")
+                                ),
+                                column(2,
+                                       uiOutput("explorer_plot_type_selection")
+                                ),
+                                column(1,
+                                       uiOutput("explorer_width_textbox")
+                                ),
+                                column(1,
+                                       uiOutput("explorer_height_textbox")
                                 )
                               ),
                               fluidRow(
                                 column(12,
-                                       #uiOutput("explorer_box_ui")
                                        dataTableOutput("explorer_table")
+                                ),
+                              ),
+                              fluidRow(
+                                width=12, br(), br(), br()
+                              ),
+                              fluidRow(
+                                column(12,
+                                       uiOutput("explorer_box_ui")
                                 )
                               )
                      )

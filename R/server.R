@@ -191,10 +191,10 @@ server <- function(input, output, session) {
             anno <- data.frame(sample_id=paste0("i",1:dim(anno)[1]),anno)
           }
 
+          names(anno)[1] <- "sample_id" # Rename sample ids as sample_id
+          # Add labels and colors, if needed
           anno <- auto_annotate(anno)
-
-          # Rename sample ids as sample_id
-          names(anno)[1] <- "sample_id"
+          names(anno)[1] <- "sample_id" # Rename sample ids as sample_id again
                     
           setProgress(value = 1,
                       message = "Annotations Loaded")
@@ -206,7 +206,7 @@ server <- function(input, output, session) {
         write(paste(rv_path(),"does not exist."), stderr())
         return(NULL)
       }
-    # If not a csv file, check for h5ad file in scrattch-mapping format
+    # If not a csv file, check for h5ad file with annotations in obs (e.g., in scrattch-mapping format)
     } else if(grepl(".h5ad$",rv_path())) {
 
       if(file.exists(rv_path())) {
@@ -217,9 +217,20 @@ server <- function(input, output, session) {
 
           anno <- as.data.frame(h5ad$obs)
           
-          # Move sample_id to the first column
+          # Move sample_id to the first column, if it exists
           anno <- anno %>%
             select("sample_id", everything())
+          
+          # Check if first column is unique IDs, and if not, create a new column
+          if (length(anno[,1])!=length(unique(anno[,1]))){
+            colnames(anno)[colnames(anno)=="cluster_id"] = "cluster_id2"
+            anno <- data.frame(sample_id=paste0("i",1:dim(anno)[1]),anno)
+          }
+          
+          names(anno)[1] <- "sample_id" # Rename sample ids as sample_id
+          # Add labels and colors, if needed
+          anno <- auto_annotate(anno)
+          names(anno)[1] <- "sample_id" # Rename sample ids as sample_id again
           
           # Convert factors to characters
           for (cn in colnames(anno)[grepl("_label",colnames(anno))])
@@ -1307,20 +1318,50 @@ server <- function(input, output, session) {
                    multiple = TRUE)
   })
   
+  output$explorer_plot_type_selection <- renderUI({
+    id <- "explorer_plot_type"
+    label <- "Show plots too?"
+    initial <- FALSE
+    selectInput(id, label, c("No"= FALSE,"Yes" = TRUE))
+  })
   
-  # Placeholder for plots
-  output$explorer_box_ui <- renderUI({
-    req(input$explorer_annotation)
-    req(input$explorer_group)
-    req(input$explorer_comparison)
+  output$explorer_height_textbox <- renderUI({
+    req(init$vals)
     
-    p(paste0("Placeholder for: ",input$explorer_annotation," in group ",input$explorer_group,". ",
-            "Comparison groups: ",paste(input$explorer_comparison,collapse=", ")))
+    id <- "explorer_height"
+    label <- "Plot Height"
+    
+    initial <- ifelse(length(init$vals[[id]]) > 0,
+                      init$vals[[id]],
+                      "600px")
+    
+    textInput(inputId = id, 
+              label = strong(label), 
+              value = initial, 
+              width = "100%")
+    
+  })
+  
+  output$explorer_width_textbox <- renderUI({
+    req(init$vals)
+    
+    id <- "explorer_width"
+    label <- "Plot Width"
+    
+    initial <- ifelse(length(init$vals[[id]]) > 0,
+                      init$vals[[id]],
+                      "100%")
+    
+    textInput(inputId = id, 
+              label = strong(label), 
+              value = initial, 
+              width = "100%")
     
   })
   
   
-  ## Table with 
+  
+  ## Table with top annotation comparisons
   
   output$explorer_table <- DT::renderDataTable({
     
@@ -1357,10 +1398,79 @@ server <- function(input, output, session) {
         df[(length(value)+1):rows,paste0(cat,"_percent")] = 0
       }
     }
+    
+    # Add a direction column, if available
+    # --- This is typically only used in disease studies
+    for (cat in cats) if(is.element(paste0(cat,"_direction"),colnames(anno))){
+      df[,paste0(cat,"_direction")] <- anno[,paste0(cat,"_direction")][match(df[,cat],anno[,paste0(cat,"_label")])]
+      df[,paste0(cat,"_direction")][is.na(df[,paste0(cat,"_direction")])] = "none"
+    }
 
     # set conditions and return the beautiful table
     return(format_datatable(df,cats))
   })
+  
+
+  # Plots with top annotation comparisons, if desired
+  explorer_box_plot <- reactive({
+    req(input$explorer_annotation)
+    req(input$explorer_group)
+    req(input$explorer_comparison)
+    req(input$explorer_plot_type)
+    req(rv_filtered())
+    
+    # If no plot requested, return void
+    if (input$explorer_plot_type){
+      # Collect relevant inputs
+      anno = as.data.frame(rv_filtered())
+      anno = anno[anno[,paste0(input$explorer_group,"_label")]==input$explorer_annotation,]
+      anno = as.data.frame(anno)
+      cats = input$explorer_comparison # explorer comparison categories, short name
+      
+      # set up the data frame for max length
+      rows = 0
+      for (cat in cats) rows = max(rows,length(unique(anno[,paste0(cat,"_label")])))
+      df   = data.frame(matrix(NA,nrow = rows, ncol = 2*length(cats)))
+      cn   = NULL # Column names for data frame
+      for (cat in cats) cn <- c(cn,cat,paste0(cat,"_percent"))
+      colnames(df) = cn
+      
+      # Build the data frame
+      for (cat in cats){
+        value <- -sort(-table(as.character(anno[,paste0(cat,"_label")])))
+        value <- round(1000*value/sum(value))/10
+        df[1:length(value),cat] = names(value)
+        df[1:length(value),paste0(cat,"_percent")] = value
+        if(length(value)<rows){
+          df[(length(value)+1):rows,cat] = ""
+          df[(length(value)+1):rows,paste0(cat,"_percent")] = 0
+        }
+      }
+      
+      # Add a direction column, if available
+      # --- This is typically only used in disease studies
+      for (cat in cats) if(is.element(paste0(cat,"_direction"),colnames(anno))){
+        df[,paste0(cat,"_direction")] <- anno[,paste0(cat,"_direction")][match(df[,cat],anno[,paste0(cat,"_label")])]
+        df[,paste0(cat,"_direction")][is.na(df[,paste0(cat,"_direction")])] = "none"
+      }
+      
+      labeled_barplot_summary(df,cats)
+    } else {
+      ggplot() + theme_void()
+    } 
+
+  })
+  
+  output$explorer_box_plot <- renderPlot({
+    explorer_box_plot()
+  })
+  
+  output$explorer_box_ui <- renderUI({
+    plotOutput("explorer_box_plot", height = input$explorer_height, width = input$explorer_width)
+  })
+  
+  
+  
   
 }
 
