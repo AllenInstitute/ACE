@@ -1449,6 +1449,7 @@ server <- function(input, output, session) {
     req(input$explorer_group)
     req(input$explorer_comparison)
     req(rv_filtered())
+    req(rv_anno_metadata())
     
     # display top 5 rows at a time
     options(DT.options = list(pageLength = 5, selection=list(mode="single", target="cell")))
@@ -1481,11 +1482,24 @@ server <- function(input, output, session) {
     
     # Add a direction column, if available
     # --- This is typically only used in disease studies
+    # First check in the anno
     for (cat in cats) if(is.element(paste0(cat,"_direction"),colnames(anno))){
       df[,paste0(cat,"_direction")] <- anno[,paste0(cat,"_direction")][match(df[,cat],anno[,paste0(cat,"_label")])]
       df[,paste0(cat,"_direction")][is.na(df[,paste0(cat,"_direction")])] = "none"
     }
-
+    # Next check in the metadata table, if available
+    metadata <- rv_anno_metadata()
+    if(!is.null(metadata)) if(is.element("direction",colnames(metadata)))
+      for (cat in cats) for (i in 1:dim(df)[1]){
+        cluster  <- as.character(df[i,cat])
+        whichRow <- which(metadata==cluster, arr.ind = TRUE)
+        if(dim(whichRow)[1]>0){
+          direction <- as.character(metadata[as.character(whichRow[1,1]),"direction"])
+          if(!is.element(direction,c("none", "up","down"))) direction = "none"  # REMOVE THIS HARDCODED LINE
+          df[i,paste0(cat,"_direction")] = direction
+        }
+      }
+    
     # set conditions and return the beautiful table
     return(format_datatable(df,cats))
   })
@@ -1529,10 +1543,24 @@ server <- function(input, output, session) {
       
       # Add a direction column, if available
       # --- This is typically only used in disease studies
+      # First check in the anno
       for (cat in cats) if(is.element(paste0(cat,"_direction"),colnames(anno))){
         df[,paste0(cat,"_direction")] <- anno[,paste0(cat,"_direction")][match(df[,cat],anno[,paste0(cat,"_label")])]
         df[,paste0(cat,"_direction")][is.na(df[,paste0(cat,"_direction")])] = "none"
       }
+      # Next check in the metadata table, if available
+      metadata <- rv_anno_metadata()
+      if(!is.null(metadata)) if(is.element("direction",colnames(metadata)))
+        for (cat in cats) for (i in 1:dim(df)[1]){
+          cluster  <- as.character(df[i,cat])
+          whichRow <- which(metadata==cluster, arr.ind = TRUE)
+          if(dim(whichRow)[1]>0){
+            direction <- as.character(metadata[as.character(whichRow[1,1]),"direction"])
+            if(!is.element(direction,c("none", "up","down"))) direction = "none"  # REMOVE THIS HARDCODED LINE
+            df[i,paste0(cat,"_direction")] = direction
+          }
+        }
+      
       
       labeled_barplot_summary(df,cats,maxTypes = as.numeric(input$explorer_maxtypes))
     } else {     # If no plot requested, return void

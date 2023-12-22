@@ -30,7 +30,7 @@ labeled_barplot_summary <- function(df, cats, maxTypes = 10, minPercent = 2){
 
 
 # Return a formatted data table showing bar plots sized by percentages and colored by changes with AD
-format_datatable <- function (df, cats, range = c(0.1,100), minPercent = 2, 
+format_datatable <- function (df, cats, range = c(0.1,100), minPercent = 2, pageLength = 5,
                               dir_values = c("none", "up","down"), dir_colors = c('white', 'pink','lightblue')) {
   
   if(sum(grepl("_direction",colnames(df)))>0) for (cat in cats){
@@ -38,7 +38,7 @@ format_datatable <- function (df, cats, range = c(0.1,100), minPercent = 2,
   }
   
   toHide  <- c(0,which(!is.element(colnames(df),cats)))
-  datatab <- datatable(df, options = list(dom = 't',pageLength = 10,
+  datatab <- datatable(df, options = list(dom = 't',pageLength = pageLength,
                              columnDefs = list(list(visible=FALSE, targets=toHide))),
                            selection = list(mode="single", target="cell"))
   

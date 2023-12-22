@@ -1,0 +1,329 @@
+cell_type,level,study,direction,description
+exc,class,SEA-AD,none,All excitatory neurons
+glia,class,SEA-AD,none,All non-neuronal cells (glial and non-neural types)
+inh,class,SEA-AD,none,All inhibitory neurons
+Astro,subclass,SEA-AD,up,Astrocytes
+Chandelier,subclass,SEA-AD,none,Chandelier MGE interneurons
+Endo,subclass,SEA-AD,none,Endothelial cells
+L2/3 IT,subclass,SEA-AD,down,Layer 2/3 intratelencephalic neurons
+L4 IT,subclass,SEA-AD,none,Layer 4 intratelencephalic neurons
+L5 ET,subclass,SEA-AD,none,Layer 5 extratelencephalic neurons
+L5 IT,subclass,SEA-AD,none,Layer 5 intratelencephalic neurons
+L5/6 NP,subclass,SEA-AD,none,Layer 5/6 near projecting neurons
+L6 CT,subclass,SEA-AD,none,Layer 6 cortico-thalamic
+L6 IT,subclass,SEA-AD,none,Layer 6 intratelencephalic neurons
+L6 IT Car3,subclass,SEA-AD,none,"Layer 6, Car3 subtype intratelencephalic neurons"
+L6b,subclass,SEA-AD,none,Layer 6b excitatory neurons
+Lamp5,subclass,SEA-AD,none,Lamp CGE interneurons
+Lamp5_Lhx6,subclass,SEA-AD,none,Lamp5_Lhx6 interneurons
+Micro-PVM,subclass,SEA-AD,up,Microglia / Perivascular macrophages
+Oligo,subclass,SEA-AD,down,Oligodendrocytes
+OPC,subclass,SEA-AD,none,Oligodendrocyte precursor cells
+Pax6,subclass,SEA-AD,none,Pax6 CGE interneurons
+Pvalb,subclass,SEA-AD,none,Pvalb MGE interneurons
+Sncg,subclass,SEA-AD,none,Sncg CGE interneurons
+Sst,subclass,SEA-AD,down,Sst MGE interneurons
+Sst Chodl,subclass,SEA-AD,none,Sst Chodl projecting MGE interneurons
+Vip,subclass,SEA-AD,none,Vip CGE interneurons
+VLMC,subclass,SEA-AD,none,Vascular and leptomeningeal cells
+Astro_1,supertype,SEA-AD,none,Astro_1 supertype cell
+Astro_2,supertype,SEA-AD,up,Astro_2 supertype cell
+Astro_3,supertype,SEA-AD,none,Astro_3 supertype cell
+Astro_4,supertype,SEA-AD,none,Astro_4 supertype cell
+Astro_5,supertype,SEA-AD,none,Astro_5 supertype cell
+Astro_6-SEAAD,supertype,SEA-AD,none,Astro_6-SEAAD supertype cell
+Chandelier_1,supertype,SEA-AD,none,Chandelier_1 supertype cell
+Chandelier_2,supertype,SEA-AD,none,Chandelier_2 supertype cell
+Endo_1,supertype,SEA-AD,none,Endo_1 supertype cell
+Endo_2,supertype,SEA-AD,none,Endo_2 supertype cell
+Endo_3,supertype,SEA-AD,none,Endo_2 supertype cell
+L2/3 IT_1,supertype,SEA-AD,down,L2/3 IT_1 supertype cell
+L2/3 IT_10,supertype,SEA-AD,none,L2/3 IT_10 supertype cell
+L2/3 IT_12,supertype,SEA-AD,none,L2/3 IT_12 supertype cell
+L2/3 IT_13,supertype,SEA-AD,down,L2/3 IT_13 supertype cell
+L2/3 IT_2,supertype,SEA-AD,none,L2/3 IT_2 supertype cell
+L2/3 IT_3,supertype,SEA-AD,down,L2/3 IT_3 supertype cell
+L2/3 IT_5,supertype,SEA-AD,down,L2/3 IT_5 supertype cell
+L2/3 IT_6,supertype,SEA-AD,down,L2/3 IT_6 supertype cell
+L2/3 IT_7,supertype,SEA-AD,none,L2/3 IT_7 supertype cell
+L2/3 IT_8,supertype,SEA-AD,down,L2/3 IT_8 supertype cell
+L4 IT_1,supertype,SEA-AD,none,L4 IT_1 supertype cell
+L4 IT_2,supertype,SEA-AD,none,L4 IT_2 supertype cell
+L4 IT_3,supertype,SEA-AD,none,L4 IT_3 supertype cell
+L4 IT_4,supertype,SEA-AD,none,L4 IT_4 supertype cell
+L5 ET_1,supertype,SEA-AD,none,L5 ET_1 supertype cell
+L5 ET_2,supertype,SEA-AD,none,L5 ET_2 supertype cell
+L5 IT_1,supertype,SEA-AD,none,L5 IT_1 supertype cell
+L5 IT_2,supertype,SEA-AD,none,L5 IT_2 supertype cell
+L5 IT_3,supertype,SEA-AD,none,L5 IT_3 supertype cell
+L5 IT_5,supertype,SEA-AD,none,L5 IT_5 supertype cell
+L5 IT_6,supertype,SEA-AD,none,L5 IT_6 supertype cell
+L5 IT_7,supertype,SEA-AD,down,L5 IT_7 supertype cell
+L5/6 NP_1,supertype,SEA-AD,none,L5/6 NP_1 supertype cell
+L5/6 NP_2,supertype,SEA-AD,down,L5/6 NP_2 supertype cell
+L5/6 NP_3,supertype,SEA-AD,none,L5/6 NP_3 supertype cell
+L5/6 NP_4,supertype,SEA-AD,none,L5/6 NP_4 supertype cell
+L5/6 NP_6,supertype,SEA-AD,none,L5/6 NP_6 supertype cell
+L6 CT_1,supertype,SEA-AD,none,L6 CT_1 supertype cell
+L6 CT_2,supertype,SEA-AD,down,L6 CT_2 supertype cell
+L6 CT_3,supertype,SEA-AD,none,L6 CT_3 supertype cell
+L6 CT_4,supertype,SEA-AD,none,L6 CT_4 supertype cell
+L6 IT Car3_1,supertype,SEA-AD,none,L6 IT Car3_1 supertype cell
+L6 IT Car3_2,supertype,SEA-AD,none,L6 IT Car3_2 supertype cell
+L6 IT Car3_3,supertype,SEA-AD,none,L6 IT Car3_3 supertype cell
+L6 IT_1,supertype,SEA-AD,none,L6 IT_1 supertype cell
+L6 IT_2,supertype,SEA-AD,down,L6 IT_2 supertype cell
+L6b_1,supertype,SEA-AD,none,L6b_1 supertype cell
+L6b_2,supertype,SEA-AD,none,L6b_2 supertype cell
+L6b_3,supertype,SEA-AD,none,L6b_3 supertype cell
+L6b_4,supertype,SEA-AD,none,L6b_4 supertype cell
+L6b_5,supertype,SEA-AD,none,L6b_5 supertype cell
+L6b_6,supertype,SEA-AD,none,L6b_6 supertype cell
+Lamp5_1,supertype,SEA-AD,none,Lamp5_1 supertype cell
+Lamp5_2,supertype,SEA-AD,none,Lamp5_2 supertype cell
+Lamp5_3,supertype,SEA-AD,none,Lamp5_3 supertype cell
+Lamp5_4,supertype,SEA-AD,down,Lamp5_4 supertype cell
+Lamp5_5,supertype,SEA-AD,down,Lamp5_5 supertype cell
+Lamp5_6,supertype,SEA-AD,none,Lamp5_6 supertype cell
+Lamp5_Lhx6_1,supertype,SEA-AD,none,Lamp5_Lhx6_1 supertype cell
+Lymphocyte,supertype,SEA-AD,none,Lymphocyte supertype cell
+Micro-PVM_1,supertype,SEA-AD,none,Micro-PVM_1 supertype cell
+Micro-PVM_2,supertype,SEA-AD,none,Micro-PVM_2 supertype cell
+Micro-PVM_3,supertype,SEA-AD,up,Micro-PVM_3 supertype cell
+Micro-PVM_2_1-SEAAD,supertype,SEA-AD,none,Micro-PVM_2_1-SEAAD supertype cell
+Micro-PVM_2_2-SEAAD,supertype,SEA-AD,none,Micro-PVM_2_2-SEAAD supertype cell
+Micro-PVM_2_3-SEAAD,supertype,SEA-AD,none,Micro-PVM_2_3-SEAAD supertype cell
+Micro-PVM_3-SEAAD,supertype,SEA-AD,up,Micro-PVM_3-SEAAD supertype cell
+Micro-PVM_4-SEAAD,supertype,SEA-AD,none,Micro-PVM_4-SEAAD supertype cell
+Monocyte,supertype,SEA-AD,none,Monocyte supertype cell
+Oligo_1,supertype,SEA-AD,down,Oligo_1 supertype cell
+Oligo_2,supertype,SEA-AD,down,Oligo_2 supertype cell
+Oligo_3,supertype,SEA-AD,none,Oligo_3 supertype cell
+Oligo_4,supertype,SEA-AD,down,Oligo_4 supertype cell
+OPC_1,supertype,SEA-AD,none,OPC_1 supertype cell
+OPC_2,supertype,SEA-AD,none,OPC_2 supertype cell
+OPC_2_1-SEAAD,supertype,SEA-AD,none,OPC_2_1-SEAAD supertype cell
+OPC_2_2-SEAAD,supertype,SEA-AD,none,OPC_2_2-SEAAD supertype cell
+Pax6_1,supertype,SEA-AD,none,Pax6_1 supertype cell
+Pax6_2,supertype,SEA-AD,none,Pax6_2 supertype cell
+Pax6_3,supertype,SEA-AD,none,Pax6_3 supertype cell
+Pax6_4,supertype,SEA-AD,none,Pax6_4 supertype cell
+Pericyte_1,supertype,SEA-AD,none,Pericyte_1 supertype cell
+Pericyte_2-SEAAD,supertype,SEA-AD,none,Pericyte_2-SEAAD supertype cell
+Pvalb_1,supertype,SEA-AD,none,Pvalb_1 supertype cell
+Pvalb_10,supertype,SEA-AD,down,Pvalb_10 supertype cell
+Pvalb_12,supertype,SEA-AD,down,Pvalb_12 supertype cell
+Pvalb_13,supertype,SEA-AD,none,Pvalb_13 supertype cell
+Pvalb_14,supertype,SEA-AD,down,Pvalb_14 supertype cell
+Pvalb_15,supertype,SEA-AD,none,Pvalb_15 supertype cell
+Pvalb_2,supertype,SEA-AD,none,Pvalb_2 supertype cell
+Pvalb_3,supertype,SEA-AD,down,Pvalb_3 supertype cell
+Pvalb_5,supertype,SEA-AD,none,Pvalb_5 supertype cell
+Pvalb_6,supertype,SEA-AD,none,Pvalb_6 supertype cell
+Pvalb_7,supertype,SEA-AD,none,Pvalb_7 supertype cell
+Pvalb_8,supertype,SEA-AD,down,Pvalb_8 supertype cell
+Pvalb_9,supertype,SEA-AD,none,Pvalb_9 supertype cell
+SMC-SEAAD,supertype,SEA-AD,none,SMC-SEAAD supertype cell
+Sncg_1,supertype,SEA-AD,down,Sncg_1 supertype cell
+Sncg_2,supertype,SEA-AD,none,Sncg_2 supertype cell
+Sncg_3,supertype,SEA-AD,none,Sncg_3 supertype cell
+Sncg_4,supertype,SEA-AD,none,Sncg_4 supertype cell
+Sncg_5,supertype,SEA-AD,down,Sncg_5 supertype cell
+Sncg_6,supertype,SEA-AD,none,Sncg_6 supertype cell
+Sncg_8,supertype,SEA-AD,none,Sncg_8 supertype cell
+Sst Chodl_1,supertype,SEA-AD,down,Sst Chodl_1 supertype cell
+Sst Chodl_2,supertype,SEA-AD,none,Sst Chodl_2 supertype cell
+Sst_1,supertype,SEA-AD,none,Sst_1 supertype cell
+Sst_10,supertype,SEA-AD,none,Sst_10 supertype cell
+Sst_11,supertype,SEA-AD,down,Sst_11 supertype cell
+Sst_12,supertype,SEA-AD,none,Sst_12 supertype cell
+Sst_13,supertype,SEA-AD,none,Sst_13 supertype cell
+Sst_19,supertype,SEA-AD,down,Sst_19 supertype cell
+Sst_2,supertype,SEA-AD,down,Sst_2 supertype cell
+Sst_20,supertype,SEA-AD,down,Sst_20 supertype cell
+Sst_22,supertype,SEA-AD,down,Sst_22 supertype cell
+Sst_23,supertype,SEA-AD,down,Sst_23 supertype cell
+Sst_25,supertype,SEA-AD,down,Sst_25 supertype cell
+Sst_3,supertype,SEA-AD,down,Sst_3 supertype cell
+Sst_4,supertype,SEA-AD,none,Sst_4 supertype cell
+Sst_5,supertype,SEA-AD,none,Sst_5 supertype cell
+Sst_7,supertype,SEA-AD,none,Sst_7 supertype cell
+Sst_9,supertype,SEA-AD,down,Sst_9 supertype cell
+Vip_1,supertype,SEA-AD,down,Vip_1 supertype cell
+Vip_11,supertype,SEA-AD,none,Vip_11 supertype cell
+Vip_12,supertype,SEA-AD,none,Vip_12 supertype cell
+Vip_13,supertype,SEA-AD,none,Vip_13 supertype cell
+Vip_14,supertype,SEA-AD,none,Vip_14 supertype cell
+Vip_15,supertype,SEA-AD,none,Vip_15 supertype cell
+Vip_16,supertype,SEA-AD,none,Vip_16 supertype cell
+Vip_18,supertype,SEA-AD,none,Vip_18 supertype cell
+Vip_19,supertype,SEA-AD,none,Vip_19 supertype cell
+Vip_2,supertype,SEA-AD,down,Vip_2 supertype cell
+Vip_21,supertype,SEA-AD,none,Vip_21 supertype cell
+Vip_23,supertype,SEA-AD,none,Vip_23 supertype cell
+Vip_4,supertype,SEA-AD,none,Vip_4 supertype cell
+Vip_5,supertype,SEA-AD,none,Vip_5 supertype cell
+Vip_6,supertype,SEA-AD,none,Vip_6 supertype cell
+Vip_9,supertype,SEA-AD,none,Vip_9 supertype cell
+VLMC_1,supertype,SEA-AD,none,VLMC_1 supertype cell
+VLMC_2,supertype,SEA-AD,none,VLMC_2 supertype cell
+astrocytes_C,cell_type,Cain_2022,none,Astrocytes
+endothelials_C,cell_type,Cain_2022,none,Endothelial cells
+Exc_C,cell_type,Cain_2022,none,All excitatory neurons
+Inh_C,cell_type,Cain_2022,none,All inhibitory neurons
+microglia_C,cell_type,Cain_2022,none,Microglia / Perivascular macrophages
+oligodendrocytes_C,cell_type,Cain_2022,none,Oligodendrocytes
+opcs_C,cell_type,Cain_2022,none,Oligodendrocyte precursor cells
+pericytes_C,cell_type,Cain_2022,none,Pericytes
+VLMC_C,cell_type,Cain_2022,none,Vascular and leptomeningeal cells
+Ast.1_C,subtype,Cain_2022,none,homeostatic protoplasmic-like astrocyte
+Ast.2_C,subtype,Cain_2022,down,nonhomeostatic astrocytes 
+Ast.3_C,subtype,Cain_2022,none,interlaminar-like astrocytes 
+Ast.4_C,subtype,Cain_2022,up,stress astrocytes 
+Ast.5_C,subtype,Cain_2022,none,interferon-responding astrocytes 
+End.1_C,subtype,Cain_2022,none,capillary endothelial cell 1
+End.2_C,subtype,Cain_2022,up,capillary endothelial cell 2
+End.3_C,subtype,Cain_2022,none,capillary endothelial cell 3
+End.4_C,subtype,Cain_2022,none,venous endothelial cell
+End.5_C,subtype,Cain_2022,none,arterial endothelial cell
+End.6_C,subtype,Cain_2022,none,smooth muscle cell
+Exc.1_C,subtype,Cain_2022,none,"Exc.1, L1,L2-3 CUX2+"
+Exc.10_C,subtype,Cain_2022,none,"Exc.10, L6 RGS12+THEMIS+"
+Exc.2_C,subtype,Cain_2022,none,"Exc.2, L4 DCC+RORB+"
+Exc.3_C,subtype,Cain_2022,none,"Exc.3, L4-5 PLCH1+RORB+"
+Exc.4_C,subtype,Cain_2022,none,"Exc.4, L4-5 TMSB10+RORB+ "
+Exc.5_C,subtype,Cain_2022,none,"Exc.5, L4 ADGRL4+RORB+"
+Exc.6_C,subtype,Cain_2022,none,"Exc.6, L5 HTR2C+FEZF2+"
+Exc.7_C,subtype,Cain_2022,none,"Exc.7, L6 THEMIS+"
+Exc.8_C,subtype,Cain_2022,none,"Exc.8, L6 NFIA+FEZF2+"
+Exc.9_C,subtype,Cain_2022,none,"Exc.9, L6 TRPM3+FEZF2+"
+Inh.1_C,subtype,Cain_2022,none,Pvalb MGE interneurons
+Inh.2_C,subtype,Cain_2022,none,Vip CGE interneurons
+Inh.3_C,subtype,Cain_2022,down,Sst MGE interneurons
+Inh.4_C,subtype,Cain_2022,none,Inh.4 RELN+CNR1+
+Inh.5_C,subtype,Cain_2022,none,Inh.5 NRG1+KIT+
+Inh.6_C,subtype,Cain_2022,none,Inh.6 PTPRK+PV+
+Inh.7_C,subtype,Cain_2022,none,Inh.7 TOX+NOS1+
+Mic.1_C,subtype,Cain_2022,none,surveilling microglia
+Mic.2_C,subtype,Cain_2022,none,stress response/anti-inflammatory microglia
+Mic.3_C,subtype,Cain_2022,up,enhanced redox microglia
+Mic.4_C,subtype,Cain_2022,none,interferon-response microglia
+Mic.5_C,subtype,Cain_2022,none,proliferative microglia
+oligodendrocytes_C,subtype,Cain_2022,none,oligodendrocytes subtype cell
+opcs_C,subtype,Cain_2022,none,opcs subtype cell
+pericytes_C,subtype,Cain_2022,none,pericytes subtype cell
+VLMC_C,subtype,Cain_2022,none,VLMC subtype cell
+Astrocyte_G,cell_type,Green_2023,none,Astrocytes
+CD8+ T Cells_G,cell_type,Green_2023,none,CD8+ T Cells
+COP_G,cell_type,Green_2023,none,Differentiation-committed oligodendrocyte precursors
+Endothelial_G,cell_type,Green_2023,none,Endothelial cells
+Erythrocytes_G,cell_type,Green_2023,none,Erythrocytes
+Excitatory Neurons_G,cell_type,Green_2023,none,All excitatory neurons
+Fibroblast_G,cell_type,Green_2023,none,Fibroblasts
+Inhibitory Neurons_G,cell_type,Green_2023,none,All inhibitory neurons
+Macrophages_G,cell_type,Green_2023,none,Macrophages
+Microglia_G,cell_type,Green_2023,none,Microglia
+Monocytes_G,cell_type,Green_2023,none,Monocytes
+Neutrophils_G,cell_type,Green_2023,none,Neutrophils
+NFOL/MOL_G,cell_type,Green_2023,none,Newly formed oligodendrocytes
+NK Cells_G,cell_type,Green_2023,none,NK Cells
+Oligodendrocytes_G,cell_type,Green_2023,none,Oligodendrocytes
+OPCs_G,cell_type,Green_2023,none,Oligodendrocyte precursor cells
+Pericytes_G,cell_type,Green_2023,none,Pericytes
+SMC_G,cell_type,Green_2023,none,Smooth muscle cells
+Arteriole_G,state,Green_2023,none,Arterioles
+Ast.1_G,state,Green_2023,none,homeostatic-like astrocyte (Ast.1)
+Ast.10_G,state,Green_2023,up,stress response / human AD elevated astrocyte (Ast.10)
+Ast.2_G,state,Green_2023,none,homeostatic-like astrocyte (Ast.2)
+Ast.3_G,state,Green_2023,none,enhanced-mitophagy astrocyte (Ast.3)
+Ast.4_G,state,Green_2023,none,"reactive-like, fibrous-like astrocyte (Ast.4)"
+Ast.5_G,state,Green_2023,none,reactive-like astrocyte (Ast.5)
+Ast.6_G,state,Green_2023,none,???? astrocyte (Ast.6)
+Ast.7_G,state,Green_2023,none,interferon-responding astrocyte (Ast.7)
+Ast.8_G,state,Green_2023,none,stress response astrocyte (Ast.8)
+Ast.9_G,state,Green_2023,none,stress response astrocyte (Ast.9)
+CD8+ T Cells_G,state,Green_2023,none,CD8+ T Cells state cells
+COP_G,state,Green_2023,none,COP state cells
+End.1_G,state,Green_2023,up,capillary endothelial cells 1
+End.2_G,state,Green_2023,none,capillary endothelial cells 2
+End.3_G,state,Green_2023,up,capillary endothelial cells 3 (ECM genes)
+End.4_G,state,Green_2023,none,capillary endothelial cells 4 
+End.5_G,state,Green_2023,none,capillary endothelial cells 5 (AD risk genes)
+Erythrocytes_G,state,Green_2023,none,Erythrocytes state cells
+Exc.1_G,state,Green_2023,down,Exc.1 state cells
+Exc.10_G,state,Green_2023,none,Exc.10 state cells
+Exc.11_G,state,Green_2023,none,Exc.11 state cells
+Exc.12_G,state,Green_2023,none,Exc.12 state cells
+Exc.13_G,state,Green_2023,none,Exc.13 state cells
+Exc.14_G,state,Green_2023,none,Exc.14 state cells
+Exc.15_G,state,Green_2023,none,Exc.15 state cells
+Exc.16_G,state,Green_2023,none,Exc.16 state cells
+Exc.2_G,state,Green_2023,none,Exc.2 state cells
+Exc.3_G,state,Green_2023,none,Exc.3 state cells
+Exc.4_G,state,Green_2023,none,Exc.4 state cells
+Exc.5_G,state,Green_2023,none,Exc.5 state cells
+Exc.6_G,state,Green_2023,none,Exc.6 state cells
+Exc.7_G,state,Green_2023,none,Exc.7 state cells
+Exc.8_G,state,Green_2023,none,Exc.8 state cells
+Exc.9_G,state,Green_2023,none,Exc.9 state cells
+Fib.1_G,state,Green_2023,none,Fib.1 state cells
+Fib.2_G,state,Green_2023,none,Fib.2 state cells
+Fib.3_G,state,Green_2023,none,Fib.3 state cells
+Inh.1_G,state,Green_2023,none,??? interneuron (Inh.1)
+Inh.10_G,state,Green_2023,none,VIP interneuron (Inh.10)
+Inh.11_G,state,Green_2023,none,VIP interneuron (Inh.11)
+Inh.12_G,state,Green_2023,none,??? interneuron (Inh.12)
+Inh.13_G,state,Green_2023,none,PVALB interneuron (Inh.13)
+Inh.14_G,state,Green_2023,none,PVALB interneuron (Inh.14)
+Inh.15_G,state,Green_2023,none,PVALB interneuron (Inh.15)
+Inh.16_G,state,Green_2023,up,PVALB interneuron (Inh.16)
+Inh.2_G,state,Green_2023,none,KIT interneuron (Inh.2)
+Inh.3_G,state,Green_2023,none,??? interneuron (Inh.3)
+Inh.4_G,state,Green_2023,none,KIT interneuron (Inh.4)
+Inh.5_G,state,Green_2023,none,SST interneuron (Inh.5)
+Inh.6_G,state,Green_2023,down,SST interneuron (Inh.6)
+Inh.7_G,state,Green_2023,none,SST interneuron (Inh.7)
+Inh.8_G,state,Green_2023,none,KIT interneuron (Inh.8)
+Inh.9_G,state,Green_2023,none,VIP interneuron (Inh.9)
+Macrophages_G,state,Green_2023,none,Macrophages state cells
+Mic.1_G,state,Green_2023,up,proliferative microglia (Mic.1)
+Mic.10_G,state,Green_2023,none,enhanced-redox microglia (Mic.10)
+Mic.11_G,state,Green_2023,none,stress response microglia (Mic.11) 
+Mic.12_G,state,Green_2023,up,lipid-associated / DAM / A? / APOE microglia (Mic.12) 
+Mic.13_G,state,Green_2023,up,lipid-associated / DAM / A? / APOE microglia (Mic.13) 
+Mic.14_G,state,Green_2023,none,interferon response microglia (Mic.14)
+Mic.15_G,state,Green_2023,none,inflammatory / DAM microglia (Mic.15)
+Mic.16_G,state,Green_2023,none,SERPINE1 expressing microglia (Mic.16)
+Mic.2_G,state,Green_2023,none,surveilling microglia (Mic.2)
+Mic.3_G,state,Green_2023,none,surveilling microglia (Mic.3)
+Mic.4_G,state,Green_2023,none,surveilling microglia (Mic.4)
+Mic.5_G,state,Green_2023,none,surveilling microglia (Mic.5)
+Mic.6_G,state,Green_2023,none,reacting microglia (Mic.6)
+Mic.7_G,state,Green_2023,none,reacting microglia (Mic.7)
+Mic.8_G,state,Green_2023,none,reacting microglia (Mic.8)
+Mic.9_G,state,Green_2023,none,enhanced-redox microglia (Mic.9)
+Monocytes_G,state,Green_2023,none,Monocytes state cells
+Neutrophils_G,state,Green_2023,none,Neutrophils state cells
+NFOL/MOL_G,state,Green_2023,none,NFOL/MOL state cells
+NK Cells_G,state,Green_2023,none,NK Cells state cells
+Oli.1_G,state,Green_2023,none,Oli.1 state cells
+Oli.10_G,state,Green_2023,none,Oli.10 state cells
+Oli.11_G,state,Green_2023,none,Oli.11 state cells
+Oli.12_G,state,Green_2023,up,Oli.12 state cells
+Oli.13_G,state,Green_2023,up,stress response Oli.13 state cells
+Oli.2_G,state,Green_2023,none,Oli.2 state cells
+Oli.3_G,state,Green_2023,none,Oli.3 state cells
+Oli.4_G,state,Green_2023,none,Oli.4 state cells
+Oli.5_G,state,Green_2023,down,Oli.5 state cells
+Oli.6_G,state,Green_2023,up,Oli.6 state cells
+Oli.7_G,state,Green_2023,down,Oli.7 state cells
+Oli.8_G,state,Green_2023,none,Oli.8 state cells
+Oli.9_G,state,Green_2023,down,Oli.9 state cells
+OPC.1_G,state,Green_2023,none,OPC.1 state cells
+OPC.2_G,state,Green_2023,none,OPC.2 state cells
+OPC.3_G,state,Green_2023,none,OPC.3 state cells
+Peri.1_G,state,Green_2023,none,extracellular matrix-(M) pericytes
+Peri.2_G,state,Green_2023,none,transporter (T) pericytes
+SMC.1_G,state,Green_2023,none,SMC.1 state cells
+SMC.2_G,state,Green_2023,none,SMC.2 state cells
+Venule_G,state,Green_2023,none,Venule state cells
