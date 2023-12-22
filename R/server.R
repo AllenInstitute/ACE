@@ -26,9 +26,9 @@ guess_type <- function(x) {
   }
 }
 
-default_vals <- list(db = "//allen/programs/celltypes/workgroups/humancelltypes/JeremyM/github/annotation_comparison/example",
+default_vals <- list(db = "https://raw.githubusercontent.com/AllenInstitute/annotation_comparison/multi_taxonomy_comparison/data/DLPFC_SEAAD_cell_annotations_for_app.csv",
                      sf = "",
-                     metadata = "")
+                     metadata = "https://raw.githubusercontent.com/AllenInstitute/annotation_comparison/multi_taxonomy_comparison/data/AD_study_cell_types_for_app.csv")
 
 server <- function(input, output, session) {
 
@@ -203,12 +203,17 @@ server <- function(input, output, session) {
     # If a .csv file, use read.csv
     if(grepl(".csv$",rv_path())) {
       
-      if(file.exists(rv_path())) {
+      withProgress({
+        setProgress(value = 0.2,
+                    message = "Reading csv file, if it exists.")
+        
+        anno <- try(fread(rv_path()))
+      })
+      
+      if(class(anno)[1]!="try-error") {
         withProgress({
           setProgress(value = 0.2,
                       message = "Loading Annotations")
-          
-          anno <- fread(rv_path())
           
           anno <- as.data.frame(anno)
           
@@ -359,8 +364,8 @@ server <- function(input, output, session) {
     # If a .csv file, use read.csv
     if(grepl(".csv$",rv_path_metadata())) {
       
-      if(file.exists(rv_path_metadata())) {
-        anno <- fread(rv_path_metadata())
+      anno <- fread(rv_path_metadata())
+      if(class(anno)[1]!="try-error"){ 
         anno <- as.data.frame(anno)
         return(anno)
       } else {
