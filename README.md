@@ -1,7 +1,9 @@
 # annotation_comparison
 R Shiny app for comparison of annotations such as (i) cell type assignments (e.g., from different mapping/clustering algorithms), (ii) donor metadata (e.g., donor, sex, age), and (iii) cell metadata (e.g., anatomic location, QC metrics).
 
-![image](https://github.com/AllenInstitute/annotation_comparison/assets/25486679/086cc28a-9529-489f-b291-c21d7da4f1e4)
+The multi_taxonomy_comparison branch is a dev branch aimed at comparing results across more than two taxonomies as once.  The two primary use cases are (1) annotating a novel taxonomy with information from multiple existing taxonomies and (2) comparison of data from multiple studies of Alzheimer's disease (like in the example below).
+
+![image](https://github.com/AllenInstitute/annotation_comparison/assets/25486679/489af7e8-1497-4a6c-9971-f0458dcfb78c)
 
 ## How to use
 ### Setup RStudio
@@ -10,7 +12,8 @@ R Shiny app for comparison of annotations such as (i) cell type assignments (e.g
 2. Install RStudio
 3. Install the following packages in R Studio:
 ```
-packages <- setdiff(c("remotes","dplyr","data.table","DT","feather","ggplot2","ggbeeswarm","rbokeh","shiny","UpSetR","anndata"), installed.packages()[,"Package"])
+packages <- setdiff(c("remotes","dplyr","data.table","DT","feather","ggplot2","ggbeeswarm","rbokeh",
+                      "shiny","shinydashboard","UpSetR","anndata"), installed.packages()[,"Package"])
 if(length(packages)>0) install.packages(packages)
 remotes::install_github("AllenInstitute/scrattch.io")
 ```
@@ -24,4 +27,4 @@ remotes::install_github("AllenInstitute/scrattch.io")
 ## Reporting issues or suggestions
 
 Please share any comments, suggestions, bugs, or any other thoughts using the button in the app.
-![image](https://github.com/AllenInstitute/annotation_comparison/assets/25486679/3d0fd022-98c9-470e-bcff-1397de96c35f)
+![comments_box](https://github.com/AllenInstitute/annotation_comparison/assets/25486679/df756e0d-036c-4e0d-a14d-2e18bd42a34e)
