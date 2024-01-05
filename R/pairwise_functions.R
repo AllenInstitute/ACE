@@ -44,10 +44,10 @@ compare_plot <- function (x, y, reorderY=TRUE)
   
   g <- ggplot2::ggplot(tb.df, ggplot2::aes(x = x, y = y)) + 
     ggplot2::geom_point(aes(size = sqrt(Freq), color = jaccard)) + 
-    ggplot2::theme(axis.text.x = ggplot2::element_text(vjust = 0.1, 
-                                                       hjust = 0.2, angle = 90, size = 7), axis.text.y = ggplot2::element_text(size = 6)) + 
+    ggplot2::theme(axis.text.x = ggplot2::element_text(vjust = 0.3, hjust = 1, angle = 90, size = 10),
+                   axis.text.y = ggplot2::element_text(vjust = 0.3, hjust = 1, size = 10)) + 
     ggplot2::scale_color_gradient(low = "yellow", high = "darkblue") + 
-    ggplot2::scale_size(range = c(0, 3))
+    ggplot2::scale_size(range = c(0, 5))
   g
 }
 

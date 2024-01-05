@@ -71,7 +71,7 @@ cluster_datatable <- function(cluster,metadata){
       df  <- data.frame(Annotation=colnames(metadata),Value=as.character(metadata[row,]))
     }
   }
-  datatab <- datatable(df, options = list(dom = 't',pageLength = 10))
+  datatab <- datatable(df, options = list(dom = 't',pageLength = 50))
   return(datatab)
 }
 
