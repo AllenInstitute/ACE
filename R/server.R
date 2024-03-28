@@ -4,11 +4,11 @@ suppressPackageStartupMessages({
   library(DT)
   library(feather)
   library(ggplot2)
-  library(ggbeeswarm)
+  #library(ggbeeswarm) # I don't think this is needed
   library(rbokeh)
   library(scrattch.io)
   library(shiny)
-  library(UpSetR)
+  #library(UpSetR)  # I don't think this is needed
   library(anndata)
 })
 options(stringsAsFactors = F)
