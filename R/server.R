@@ -364,7 +364,7 @@ server <- function(input, output, session) {
     # If a .csv file, use read.csv
     if(grepl(".csv$",rv_path_metadata())) {
       
-      anno <- fread(rv_path_metadata())
+      anno <- fread(rv_path_metadata(),header=TRUE)
       if(class(anno)[1]!="try-error"){ 
         anno <- as.data.frame(anno)
         return(anno)

@@ -1,4 +1,4 @@
-cell_type,level,study,direction,direction_new,description,
+cell_type,level,study,direction,direction_new,description,notes
 exc,class,SEA-AD,none,not_assessed,All excitatory neurons,
 glia,class,SEA-AD,none,not_assessed,All non-neuronal cells (glial and non-neural types),
 inh,class,SEA-AD,none,not_assessed,All inhibitory neurons,
