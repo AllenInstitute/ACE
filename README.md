@@ -3,7 +3,8 @@ R Shiny app for comparison of annotations such as (i) cell type assignments (e.g
 
 The multi_taxonomy_comparison branch is a dev branch aimed at comparing results across more than two taxonomies as once.  The two primary use cases are (1) annotating a novel taxonomy with information from multiple existing taxonomies and (2) comparison of data from multiple studies of Alzheimer's disease (like in the example below).
 
-![image](https://github.com/AllenInstitute/annotation_comparison/assets/25486679/489af7e8-1497-4a6c-9971-f0458dcfb78c)
+![image](https://github.com/AllenInstitute/annotation_comparison/assets/25486679/2d35e50c-9d79-4fd1-9305-344c8715a5b4)
+
 
 ## How to use
 ### Setup RStudio
