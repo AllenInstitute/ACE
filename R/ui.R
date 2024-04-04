@@ -181,13 +181,13 @@ ui <- function(request) {
                                        uiOutput("paircomp_jaccard_downloadButton")
                                 ),
                                 column(6,
-                                         strong("Download Options (Heatmap plot)"),
-                                         fluidRow(
-                                           column(4,textInput("paircomp_dlw","Width (in)",8)),
-                                           column(4,textInput("paircomp_dlh","Height (in)",8)),
-                                           column(4,textInput("paircomp_dlf","Font (pt)",10))),
-                                           uiOutput("paircomp_heatmap_downloadButton"))
-                                )
+                                       strong("Download Options (Heatmap plot)"),
+                                       fluidRow(
+                                         column(4,textInput("paircomp_dlw","Width (in)",8)),
+                                         column(4,textInput("paircomp_dlh","Height (in)",8)),
+                                         column(4,textInput("paircomp_dlf","Font (pt)",10))),
+                                       uiOutput("paircomp_heatmap_downloadButton"))
+                              )
                      ),
                      tabPanel("Annotation Explorer",
                               fluidRow(
