@@ -30,11 +30,13 @@ default_vals <- list(db = "Enter a file path or URL here, or choose from dropdow
                      sf = "Enter a file path or URL here, or choose from dropdown above."
                      )
 
-table_info <- data.frame(table_name   = c("Basal Ganglia example data","Alzheimer's cell mapping"),
+table_info <- data.frame(table_name   = c("Basal Ganglia example data","Alzheimer's cell mapping","Whole mouse brain region comparison (test)"),
                          table_loc    = c("//allen/programs/celltypes/workgroups/humancelltypes/JeremyM/github/annotation_comparison/example",
-                                          "https://raw.githubusercontent.com/AllenInstitute/annotation_comparison/multi_taxonomy_comparison/data/DLPFC_SEAAD_cell_annotations_for_app.csv"),
-                         metadata_loc = c(" ", # No metadata for BG study example data
-                                          "https://raw.githubusercontent.com/AllenInstitute/annotation_comparison/multi_taxonomy_comparison/data/AD_study_cell_types_for_app.csv")
+                                          "https://raw.githubusercontent.com/AllenInstitute/annotation_comparison/dev/data/DLPFC_SEAAD_cell_annotations_for_app.csv.gz",
+                                          "https://raw.githubusercontent.com/AllenInstitute/annotation_comparison/dev/data/MERFISH_whole_brain_test.csv.gz"),
+                         metadata_loc = c("", # No metadata for BG study example data
+                                          "https://raw.githubusercontent.com/AllenInstitute/annotation_comparison/dev/data/AD_study_cell_types_for_app.csv",
+                                          "", # No metadata for BG study example data, YET)
 )
 
 server <- function(input, output, session) {
@@ -181,8 +183,8 @@ server <- function(input, output, session) {
     req(rv_path())
     write("Reading anno.", stderr())
     
-    # If a .csv file, use read.csv
-    if(grepl(".csv$",rv_path())) {
+    # If a .csv file, use fread.  These can be gzipped
+    if(grepl(".csv$",rv_path())|grepl(".gz$",rv_path())) {
       
       withProgress({
         setProgress(value = 0.2,
@@ -342,8 +344,8 @@ server <- function(input, output, session) {
     req(rv_path_metadata())
     write("Reading cluster anno.", stderr())
     
-    # If a .csv file, use read.csv
-    if(grepl(".csv$",rv_path_metadata())) {
+    # If a .csv file, use fread; can be gzipped
+    if(grepl(".csv$",rv_path_metadata())|grepl(".gz$",rv_path_metadata())) {
       
       anno <- fread(rv_path_metadata(),header=TRUE)
       if(class(anno)[1]!="try-error"){ 
