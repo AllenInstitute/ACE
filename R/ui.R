@@ -35,9 +35,9 @@ ui <- function(request) {
                    collapsible = TRUE, collapsed = FALSE,
                    fluidRow(
                      column(7,
-                            uiOutput("database_textbox")
+                            uiOutput("select_textbox")
                      ),
-                     column(1,
+                     column(2,
                             uiOutput("checkInput")
                      ),
                      column(2,
@@ -47,9 +47,11 @@ ui <- function(request) {
                                            href="mailto:jeremym@alleninstitute.org?
                                            body=''
                                            &subject='Annotation Comparison' app comments"))
-                     ),
-                     column(2,
-                            bookmarkButton()
+                     )
+                   ),
+                   fluidRow(
+                     column(12,
+                            uiOutput("database_textbox")
                      )
                    ),
                    fluidRow(

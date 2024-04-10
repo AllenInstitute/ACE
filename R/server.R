@@ -5,24 +5,17 @@ suppressPackageStartupMessages({
   library(feather)
   library(ggplot2)
   library(ggbeeswarm)
-  #library(purrr)
-  #library(rhdf5)
   library(rbokeh)
   library(scrattch.io)
-  #library(scrattch.vis)
   library(shiny)
   library(UpSetR)
-  #library(ggplotify)
   library(anndata)
 })
 options(stringsAsFactors = F)
 
 source("annocomp_functions.R")
-source("bookmark_functions.R")
 source("river_functions.R")
 source("pairwise_functions.R")
-
-enableBookmarking(store = "server")
 
 guess_type <- function(x) {
   if(try(sum(is.na(as.numeric(x))) > 0,silent = T)) {
@@ -32,39 +25,19 @@ guess_type <- function(x) {
   }
 }
 
-default_vals <- list(db = "//allen/programs/celltypes/workgroups/humancelltypes/JeremyM/github/annotation_comparison/example",
-                     sf = "")
+default_vals <- list(db = "Enter a file path or URL here, or choose from downdown above.",
+                     sf = ""
+                     )
+
+table_info <- data.frame(table_name = c("Basal Ganglia example data","Alzheimer's cell mapping"),
+                         table_loc  = c("//allen/programs/celltypes/workgroups/humancelltypes/JeremyM/github/annotation_comparison/example",
+                                        "https://raw.githubusercontent.com/AllenInstitute/annotation_comparison/multi_taxonomy_comparison/data/DLPFC_SEAAD_cell_annotations_for_app.csv"))
 
 server <- function(input, output, session) {
 
-  ##########################################
-  ## Bookmarking and State Initialization ##
-  ##########################################
-  write("Reading bookmarks and setting state.", stderr())
-  
-  # When the bookmark button is clicked, store the input values as a string
-  onBookmark(function(state) {
-    
-    # build_storage_string() is in bookmark_functions.R
-    state$values$vals <- build_storage_string(input, keep_empty = FALSE)
-    
-  })
-  
-  # When the page is restored from a bookmark, read the stored values as a reactive list
-  restored_vals <- reactiveValues(vals = list())
-  
-  onRestore(function(state) {
-    
-    store <- state$values$vals
-    
-    if(!is.null(store)) {
-      
-      # parse_storage_string() is in bookmark_functions.R
-      restored_vals$vals <- parse_storage_string(store)
-      
-    }
-    
-  })
+  ##########################
+  ## State Initialization ##
+  ##########################
   
   init <- reactiveValues(vals = list())
   
@@ -72,7 +45,7 @@ server <- function(input, output, session) {
   # These are used to set the state of the input values for UI elements
   
   # First from default_vals,
-  # then restored_vals,
+  # then dropdown_vals,
   # then from URL parsing
   
   observe({
@@ -81,19 +54,8 @@ server <- function(input, output, session) {
     # defined in the default_vals list before the server() call, above.
     vals <- default_vals
     
-    # restored values
-    # defined by the stored input value string, parsed in onRestore(), above.
-    # These supercede the defaults
-    restored <- restored_vals$vals
-    
-    # Substitute default values for
-    if(length(restored) > 0) {
-      for(val in names(restored)) {
-        vals[[val]] <- restored[[val]]
-        
-      }
-      
-    }
+    # Choose a value from the default table, if selected
+    updateSelectInput(session, inputId = "select_textbox", label = "Select an annotation table:", choices = c(table_info$table_name, "Enter your own location"))
     
     # URL values
     # defined in the URL
@@ -111,47 +73,48 @@ server <- function(input, output, session) {
     
   })
   
-  # Direct link based on input parsing
-  # This can be used to provide a direct URL to users that can be bookmarked.
-  output$url <- renderUI({
-    req(input)
-    url <- build_url(session, input)
-    a("Direct Link", href = url)
-    
-  })
-  
-  
+
   #########################
   ## General UI Elements ##
   #########################
   
-  # Database selection textbox.
+  # Database selection textbox and dropdown.
   # Users provide the network path to the dataset
   # This is in the server.R section so that the default value can be
   #   set using the init$vals reactive values based on defaults, 
-  #   bookmarks, and URL parsing
+  #   a drop-down menu, and URL parsing
   #
   # output$database_textbox - Textbox UI Object
   #
   # input$db - character object
-  #
+  # 
+  output$select_textbox <- renderUI({
+    
+    selectInput("select_textbox", "select name", choices = "")
+    
+  })
+  
+
   output$database_textbox <- renderUI({
     req(init$vals)
     
     id <- "db"
-    label <- "Location of annotation information"
+    label <- "Input location of annotation information"
     
-    # If a stored db exists, pull the value from init$vals
-    initial <- ifelse(length(init$vals[[id]]) > 0,
-                      init$vals[[id]],
-                      "")
-    
+    if (!input$select_textbox == 'Enter your own location') {
+      initial = table_info[table_info$table_name==input$select_textbox,"table_loc"]
+    }
+    else {
+      initial = input$Not_on_list
+    }
+
     textInput(inputId = id, 
               label = strong(label), 
               value = initial, 
               width = "100%")
     
   })
+  
   
   
   ##################################
