@@ -191,6 +191,11 @@ ui <- function(request) {
                      ),
                      tabPanel("Explore an individual annotation",
                               fluidRow(
+                                column(12,
+                                       helpText("Note that this visualization will only work if a properly-formatted metadata table is provided.")
+                                )
+                              ),
+                              fluidRow(
                                 column(2,
                                        uiOutput("explorer_group_selection")
                                 ),

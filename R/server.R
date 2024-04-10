@@ -36,7 +36,7 @@ table_info <- data.frame(table_name   = c("Basal Ganglia example data","Alzheime
                                           "https://raw.githubusercontent.com/AllenInstitute/annotation_comparison/dev/data/MERFISH_whole_brain_test.csv.gz"),
                          metadata_loc = c("", # No metadata for BG study example data
                                           "https://raw.githubusercontent.com/AllenInstitute/annotation_comparison/dev/data/AD_study_cell_types_for_app.csv",
-                                          "", # No metadata for BG study example data, YET)
+                                          "") # No metadata for BG study example data, YET
 )
 
 server <- function(input, output, session) {
@@ -105,7 +105,7 @@ server <- function(input, output, session) {
     req(init$vals)
     
     id <- "db"
-    label <- "Input location of annotation information"
+    label <- "Input location of cell-level annotation information"
     
     if (!input$select_textbox == 'Enter your own location') {
       initial = table_info[table_info$table_name==input$select_textbox,"table_loc"]
@@ -125,7 +125,7 @@ server <- function(input, output, session) {
     req(init$vals)
     
     id <- "metadata"
-    label <- "Location of cluster information (optional; csv file)"
+    label <- "Location of metadata (e.g., cluster) information (optional; csv file)"
     
     if (!input$select_textbox == 'Enter your own location') {
       initial = table_info[table_info$table_name==input$select_textbox,"metadata_loc"]
