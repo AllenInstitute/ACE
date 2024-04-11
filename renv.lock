@@ -100,6 +100,17 @@
       ],
       "Hash": "1a00d4828f33a9d690806e98bd17150c"
     },
+    "PKI": {
+      "Package": "PKI",
+      "Version": "0.1-12",
+      "Source": "Repository",
+      "Repository": "RSPM",
+      "Requirements": [
+        "R",
+        "base64enc"
+      ],
+      "Hash": "999d7960fe5a5fd98267d0b68fd10065"
+    },
     "R6": {
       "Package": "R6",
       "Version": "2.5.1",
@@ -934,6 +945,18 @@
       ],
       "Hash": "2a0dc8c6adfb6f032e4d4af82d258ab5"
     },
+    "packrat": {
+      "Package": "packrat",
+      "Version": "0.9.2",
+      "Source": "Repository",
+      "Repository": "RSPM",
+      "Requirements": [
+        "R",
+        "tools",
+        "utils"
+      ],
+      "Hash": "55ddd2d4a1959535f18393478b0c14a6"
+    },
     "pillar": {
       "Package": "pillar",
       "Version": "1.9.0",
@@ -1165,6 +1188,36 @@
         "R"
       ],
       "Hash": "1de7ab598047a87bba48434ba35d497d"
+    },
+    "rsconnect": {
+      "Package": "rsconnect",
+      "Version": "1.2.2",
+      "Source": "Repository",
+      "Repository": "RSPM",
+      "Requirements": [
+        "PKI",
+        "R",
+        "cli",
+        "curl",
+        "digest",
+        "jsonlite",
+        "lifecycle",
+        "openssl",
+        "packrat",
+        "renv",
+        "rlang",
+        "rstudioapi",
+        "tools",
+        "yaml"
+      ],
+      "Hash": "77e9ed1307e84cd7ca1c7fb2cd7bbfe2"
+    },
+    "rstudioapi": {
+      "Package": "rstudioapi",
+      "Version": "0.16.0",
+      "Source": "Repository",
+      "Repository": "RSPM",
+      "Hash": "96710351d642b70e8f02ddeb237c46a7"
     },
     "sass": {
       "Package": "sass",

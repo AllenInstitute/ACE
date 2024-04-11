@@ -1,0 +1,12 @@
+name: annotation_comparison_dev
+title: annotation_comparison_dev
+username: jeremym
+account: jeremym
+server: ibs-bosiljkat-ux1
+hostUrl: http://ibs-bosiljkat-ux1/__api__
+appId: 37
+bundleId: 309
+url: http://ibs-bosiljkat-ux1/content/14149054-ad26-4613-8d29-6ab5b468b245/
+version: 1
+asMultiple: FALSE
+asStatic: FALSE
