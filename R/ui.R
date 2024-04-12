@@ -11,7 +11,7 @@ suppressPackageStartupMessages({
 ui <- function(request) {
   dashboardPage(
     
-    dashboardHeader(title = "Annotation comparison viewer"),
+    dashboardHeader(title = "Annotation Comparison Explorer (ACE)", titleWidth = 400),
     
     dashboardSidebar(disable = TRUE),
     
