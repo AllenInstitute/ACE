@@ -1,6 +1,5 @@
 suppressPackageStartupMessages({
   library(dplyr)
-  library(data.table)
   library(DT)
   library(feather)
   library(ggplot2)
@@ -10,6 +9,7 @@ suppressPackageStartupMessages({
   library(shiny)
   library(UpSetR)
   library(anndata)
+  library(vroom)
 })
 options(stringsAsFactors = F)
 
@@ -30,13 +30,18 @@ default_vals <- list(db = "Enter a file path or URL here, or choose from dropdow
                      sf = "Enter a file path or URL here, or choose from dropdown above."
                      )
 
-table_info <- data.frame(table_name   = c("Basal Ganglia example data","Alzheimer's cell mapping","Whole mouse brain region comparison (test)"),
+table_info <- data.frame(table_name   = c("Basal Ganglia example data",
+                                          "Alzheimer's cell mapping",
+                                          "Whole mouse brain region comparison (test)",
+                                          "Human MTG 10x studies (SEA-AD, GA, CA)"),
                          table_loc    = c("//allen/programs/celltypes/workgroups/humancelltypes/JeremyM/github/annotation_comparison/example",
                                           "https://raw.githubusercontent.com/AllenInstitute/annotation_comparison/dev/data/DLPFC_SEAAD_cell_annotations_for_app.csv.gz",
-                                          "https://raw.githubusercontent.com/AllenInstitute/annotation_comparison/dev/data/MERFISH_whole_brain_test.csv.gz"),
-                         metadata_loc = c("", # No metadata for BG study example data
+                                          "https://raw.githubusercontent.com/AllenInstitute/annotation_comparison/dev/data/MERFISH_whole_brain_test.csv.gz",
+                                          "https://raw.githubusercontent.com/AllenInstitute/annotation_comparison/dev/data/MTG_cell_metadata.csv.gz"),
+                         metadata_loc = c("", # No metadata yet
                                           "https://raw.githubusercontent.com/AllenInstitute/annotation_comparison/dev/data/AD_study_cell_types_for_app.csv",
-                                          "") # No metadata for BG study example data, YET
+                                          "", # No metadata yet
+                                          "") # No metadata yet
 )
 
 server <- function(input, output, session) {
@@ -183,14 +188,14 @@ server <- function(input, output, session) {
     req(rv_path())
     write("Reading anno.", stderr())
     
-    # If a .csv file, use fread.  These can be gzipped
+    # If a .csv file, use vroom.  These can be gzipped
     if(grepl(".csv$",rv_path())|grepl(".gz$",rv_path())) {
       
       withProgress({
         setProgress(value = 0.2,
                     message = "Reading csv file, if it exists.")
         
-        anno <- try(fread(rv_path()))
+        anno <- try(vroom(rv_path()))
       })
       
       if(class(anno)[1]!="try-error") {
@@ -344,10 +349,10 @@ server <- function(input, output, session) {
     req(rv_path_metadata())
     write("Reading cluster anno.", stderr())
     
-    # If a .csv file, use fread; can be gzipped
+    # If a .csv file, use vroom; can be gzipped
     if(grepl(".csv$",rv_path_metadata())|grepl(".gz$",rv_path_metadata())) {
       
-      anno <- fread(rv_path_metadata(),header=TRUE)
+      anno <- vroom(rv_path_metadata())
       if(class(anno)[1]!="try-error"){ 
         anno <- as.data.frame(anno)
         return(anno)
