@@ -1,6 +1,5 @@
 suppressPackageStartupMessages({
   library(dplyr)
-  library(R.utils)
   library(data.table)
   library(DT)
   library(feather)
@@ -97,7 +96,7 @@ server <- function(input, output, session) {
   # 
   output$select_textbox <- renderUI({
     
-    selectInput("select_textbox", "select name", choices = "")
+        selectInput("select_textbox", "select name", choices = "")
     
   })
   
