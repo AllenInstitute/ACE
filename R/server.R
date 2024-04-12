@@ -1,5 +1,6 @@
 suppressPackageStartupMessages({
   library(dplyr)
+  library(R.utils)
   library(data.table)
   library(DT)
   library(feather)
