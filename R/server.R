@@ -41,7 +41,11 @@ table_info <- data.frame(table_name   = c("Basal Ganglia example data",
                          metadata_loc = c("", # No metadata yet
                                           "https://raw.githubusercontent.com/AllenInstitute/annotation_comparison/dev/data/AD_study_cell_types_for_app.csv",
                                           "", # No metadata yet
-                                          "") # No metadata yet
+                                          ""), # No metadata yet
+                         description  = c("Small example file pointing at subsampled data from NHP basal ganglia.",
+                                          "Data and associated cell type assignments from multiple studies of Alzheimer's disease.  All data sets were mapped to SEA-AD data and their mappings as well as original cluster assignments are included in the tables.  In addition, each cell type's change in abundance in AD from the original study, as well as some basic information about the cell types are included.  Data is subsampled to 100 cells per SEA-AD supertype.  The way data is encoded, comparisons between each data set an SEA-AD are valid, but comparsisons CANNOT be accurately made between external data sets.",
+                                          "Data about brain cell types AND brain regions from mouse whole brain (Yao et al 2023).  This includes BOTH scRNA-seq data and MERFISH data, subsampled to 50 cells per cluster. The ROI slot encodes DIFFERENT regional informaiton for MERFISH and single cell data so it probably makes sense to limit the analysis to one or the other of the platforms, but not both.  This table is a work in progress.",
+                                          "Cluster assignments from the human great ape (GA) and cross-areal (CA) study alongside SEA-AD calls for each level of the taxonomy in MTG.  This table will be extended to Hodge et al in the future.")
 )
 
 server <- function(input, output, session) {
@@ -126,6 +130,7 @@ server <- function(input, output, session) {
     
   })
   
+  
   output$metadata_textbox <- renderUI({
     req(init$vals)
     
@@ -143,6 +148,21 @@ server <- function(input, output, session) {
               label = strong(label), 
               value = initial, 
               width = "100%")
+    
+  })
+  
+  
+  output$dataset_description <- renderUI({
+    req(init$vals)
+    
+    if (!input$select_textbox == 'Enter your own location') {
+      text_desc = table_info[table_info$table_name==input$select_textbox,"description"]
+    }
+    else {
+      text_desc = "User-provided data and (optionally) metadata files."
+    }
+    
+    div(style = "font-size:14px;", strong("Dataset description"),br(),text_desc)
     
   })
   

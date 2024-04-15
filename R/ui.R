@@ -30,12 +30,18 @@ ui <- function(request) {
                           ')),
       fluidRow(width = 12,
                
-               box(title = "Data Selection",
+               box(title = "Select data set",
                    solidHeader = TRUE, status = "primary", width = 12,
                    collapsible = TRUE, collapsed = FALSE,
                    fluidRow(
-                     column(7,
+                     column(5,
                             uiOutput("select_textbox")
+                     ),
+                     column(2,
+                            actionButton(inputId = "guide", 
+                                         icon = icon("hand-spock", lib = "font-awesome"), 
+                                         a("USER GUIDE", 
+                                           href="https://alleninstitute-my.sharepoint.com/:b:/g/personal/jeremym_alleninstitute_org/EfJlPVQ7Jy1GrhUz_og_w-sBMwXLcz9Rd3b0HoQzL3D_5g?e=tjOjzZ"))
                      ),
                      column(2,
                             actionButton(inputId = "email1", 
@@ -60,8 +66,17 @@ ui <- function(request) {
                      ),
                      column(2,
                             uiOutput("metadata_checkInput")
-                     ),
+                     )
                    ),
+                   fluidRow(
+                     column(11,
+                            uiOutput("dataset_description")
+                     )
+                   ),
+               ),
+               box(title = "Filter cells in dataset",
+                   solidHeader = TRUE, status = "primary", width = 12,
+                   collapsible = TRUE, collapsed = FALSE,
                    fluidRow(
                      column(3,
                             uiOutput("filter_selection")
