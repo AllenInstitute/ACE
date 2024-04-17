@@ -117,7 +117,10 @@ ui <- function(request) {
                                 column(2,
                                        uiOutput("annocomp_denom_selection")
                                 ),
-                                column(2,
+                                column(1,
+                                       uiOutput("annocomp_reorderY_selection")
+                                ),
+                                column(1,
                                        uiOutput("annocomp_select_mode_selection")
                                 ),
                                 column(1,

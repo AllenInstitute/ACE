@@ -1017,12 +1017,12 @@ server <- function(input, output, session) {
     
   })
   
+  
   output$annocomp_denom_selection <- renderUI({
+    
     req(rv_desc())
     req(input$annocomp_x)
     req(input$annocomp_y)
-    
-    
     
     desc <- rv_desc()
     cat_anno <- desc$base[desc$type == "cat"]
@@ -1059,6 +1059,27 @@ server <- function(input, output, session) {
       
     }
   })
+  
+  
+  output$annocomp_reorderY_selection <- renderUI({
+    
+    req(rv_desc())
+    req(input$annocomp_x)
+    req(input$annocomp_y)
+    
+    desc <- rv_desc()
+    cat_anno <- desc$base[desc$type == "cat"]
+    
+    if(input$annocomp_x %in% cat_anno & input$annocomp_y %in% cat_anno) {
+      
+      id <- "anno_reorderY"
+      label <- "Reorder query?"
+      initial <- TRUE
+      selectInput(id, label, c("Yes" = TRUE,"No"= FALSE), multiple = FALSE)
+    }
+    
+  })
+  
   
   output$annocomp_select_mode_selection <- renderUI({
     req(init$vals)
@@ -1179,7 +1200,7 @@ server <- function(input, output, session) {
   
   
   ##############################
-  ## Pairwise Comparisons Box ##
+  ## Pairwise Comparisons Box ##  Also called 'Jaccard distance' or 'confusion matrix'
   ##############################
   
   ## UI Elements
