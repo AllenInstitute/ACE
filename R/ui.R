@@ -19,10 +19,8 @@ ui <- function(request) {
                   
       h3("What is ACE?"),
       p("Annotation Comparison Explorer (ACE) is a versitile application for comparison of two or more annotations such as (i) cell type assignments (e.g., from different mapping/clustering algorithms), (ii) donor metadata (e.g., donor, sex, age), and (iii) cell metadata (e.g., anatomic location, QC metrics). Several example annotation tables are included, or you can point it at your own files.  Read the user guide linked below for more details and send a message if you have any comments."),
-      p(""),
-      
-      h3("Actions:"),
-         
+      br(),
+
       actionButton(inputId = "guide", 
                    icon = icon("hand-spock", lib = "font-awesome"), 
                    a("USER GUIDE",
@@ -38,7 +36,7 @@ ui <- function(request) {
                                   body=''
                                   &subject='Annotation Comparison' app comments")
       ),
-      p("."),
+      br(),
       p("Click the three lines next to the title above to minimize this sidebar.")
     ),
     
