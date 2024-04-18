@@ -17,6 +17,9 @@ source("annocomp_functions.R")
 source("river_functions.R")
 source("pairwise_functions.R")
 source("multistudy_functions.R")
+source("bookmark_functions.R")    # this shouldn't be required at all, as it is a workaround for regular bookmarking (both are currently broken)
+
+enableBookmarking("url")  # It was "server", but it doesn't seem to work either way
 
 guess_type <- function(x) {
   if(try(sum(is.na(as.numeric(x))) > 0,silent = T)) {
@@ -50,10 +53,27 @@ table_info <- data.frame(table_name   = c("Basal Ganglia example data",
 
 server <- function(input, output, session) {
 
-  ##########################
-  ## State Initialization ##
-  ##########################
+  ##########################################
+  ## Bookmarking and State Initialization ##
+  ##########################################
   
+  # When the page is restored from a bookmark, read the stored values as a reactive list
+  restored_vals <- reactiveValues(vals = list())
+  
+  onRestore(function(state) {
+    
+    store <- state$values$vals
+    
+    if(!is.null(store)) {
+      
+      # parse_storage_string() is in bookmark_functions.R
+      restored_vals$vals <- parse_storage_string(store)
+      
+    }
+    
+  })
+  
+
   init <- reactiveValues(vals = list())
   
   # Build initial values list
@@ -68,6 +88,20 @@ server <- function(input, output, session) {
     # default values
     # defined in the default_vals list before the server() call, above.
     vals <- default_vals
+    
+    # restored values
+    # defined by the stored input value string, parsed in onRestore(), above.
+    # These supercede the defaults
+    restored <- restored_vals$vals
+    
+    # Substitute default values for initialized values
+    if(length(restored) > 0) {
+      for(val in names(restored)) {
+        vals[[val]] <- restored[[val]]
+        
+      }
+      
+    }
     
     # Choose a value from the default table, if selected
     updateSelectInput(session, inputId = "select_textbox", label = "Select an annotation table:", choices = c(table_info$table_name, "Enter your own location"))
@@ -88,6 +122,16 @@ server <- function(input, output, session) {
     
   })
   
+  
+  # Direct link based on input parsing
+  # This can be used to provide a direct URL to users that can be bookmarked.
+  output$url <- renderUI({
+    req(input)
+    url <- build_url(session, input)
+    a("Direct Link", href = url)
+    
+  })
+  
 
   #########################
   ## General UI Elements ##
@@ -97,7 +141,7 @@ server <- function(input, output, session) {
   # Users provide the network path to the dataset
   # This is in the server.R section so that the default value can be
   #   set using the init$vals reactive values based on defaults, 
-  #   a drop-down menu, and URL parsing
+  #   bookmarks, a drop-down menu, and URL parsing
   #
   # output$database_textbox - Textbox UI Object
   #
@@ -115,6 +159,12 @@ server <- function(input, output, session) {
     
     id <- "db"
     label <- "Input location of cell-level annotation information"
+    
+    # For Bookmarking... does not work
+    # If a stored db exists, pull the value from init$vals
+    initial <- ifelse(length(init$vals[[id]]) > 0,
+                      init$vals[[id]],
+                      "")
     
     if (!input$select_textbox == 'Enter your own location') {
       initial = table_info[table_info$table_name==input$select_textbox,"table_loc"]
@@ -136,6 +186,12 @@ server <- function(input, output, session) {
     
     id <- "metadata"
     label <- "Location of metadata (e.g., cluster) information (optional; csv file)"
+    
+    # For Bookmarking... does not work
+    # If a stored db exists, pull the value from init$vals
+    initial <- ifelse(length(init$vals[[id]]) > 0,
+                      init$vals[[id]],
+                      "")
     
     if (!input$select_textbox == 'Enter your own location') {
       initial = table_info[table_info$table_name==input$select_textbox,"metadata_loc"]

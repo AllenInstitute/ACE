@@ -13,7 +13,34 @@ ui <- function(request) {
     
     dashboardHeader(title = "Annotation Comparison Explorer (ACE)", titleWidth = 400),
     
-    dashboardSidebar(disable = TRUE),
+    dashboardSidebar(title = tags$img(src='ACE_logo.png', width = '120', style= 'display: block; margin-left: auto; margin-right: auto;'), #), #disable = TRUE
+    
+      width = 250,
+                  
+      h3("What is ACE?"),
+      p("Annotation Comparison Explorer (ACE) is a versitile application for comparison of two or more annotations such as (i) cell type assignments (e.g., from different mapping/clustering algorithms), (ii) donor metadata (e.g., donor, sex, age), and (iii) cell metadata (e.g., anatomic location, QC metrics). Several example annotation tables are included, or you can point it at your own files.  Read the user guide linked below for more details and send a message if you have any comments."),
+      p(""),
+      
+      h3("Actions:"),
+         
+      actionButton(inputId = "guide", 
+                   icon = icon("hand-spock", lib = "font-awesome"), 
+                   a("USER GUIDE",
+                     style="color: #000000; border-color: #2e6da4",
+                     href="https://github.com/AllenInstitute/annotation_comparison/blob/dev/ACE_User_Guide.pdf")
+      ),
+      
+      actionButton(inputId = "email1", 
+                   icon = icon("envelope", lib = "font-awesome"), 
+                   a("FEEDBACK", 
+                     style="color: #000000; border-color: #2e6da4",
+                     href="mailto:jeremym@alleninstitute.org?
+                                  body=''
+                                  &subject='Annotation Comparison' app comments")
+      ),
+      p("."),
+      p("Click the three lines next to the title above to minimize this sidebar.")
+    ),
     
     dashboardBody(
       tags$head(tags$script('var dimension = [0, 0];
@@ -34,22 +61,11 @@ ui <- function(request) {
                    solidHeader = TRUE, status = "primary", width = 12,
                    collapsible = TRUE, collapsed = FALSE,
                    fluidRow(
-                     column(5,
+                     column(7,
                             uiOutput("select_textbox")
                      ),
-                     column(2,
-                            actionButton(inputId = "guide", 
-                                         icon = icon("hand-spock", lib = "font-awesome"), 
-                                         a("USER GUIDE", 
-                                           href="https://alleninstitute-my.sharepoint.com/:b:/g/personal/jeremym_alleninstitute_org/EfJlPVQ7Jy1GrhUz_og_w-sBMwXLcz9Rd3b0HoQzL3D_5g?e=tjOjzZ"))
-                     ),
-                     column(2,
-                            actionButton(inputId = "email1", 
-                                         icon = icon("envelope", lib = "font-awesome"), 
-                                         a("Comments/bugs?", 
-                                           href="mailto:jeremym@alleninstitute.org?
-                                           body=''
-                                           &subject='Annotation Comparison' app comments"))
+                     column(1,
+                            bookmarkButton(label="Bookmark (BROKEN)")  # This button does nothing when clicked but SHOULD pop open the URL to copy
                      )
                    ),
                    fluidRow(
