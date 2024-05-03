@@ -1,4 +1,7 @@
 # annotation_comparison
+
+*(NOTE: This branch is currently out of date. Use [the dev branch](https://github.com/AllenInstitute/ACE/tree/dev) for now.  I'll merge them soon).*
+
 R Shiny app for comparison of annotations such as (i) cell type assignments (e.g., from different mapping/clustering algorithms), (ii) donor metadata (e.g., donor, sex, age), and (iii) cell metadata (e.g., anatomic location, QC metrics).
 
 ![image](https://github.com/AllenInstitute/annotation_comparison/assets/25486679/086cc28a-9529-489f-b291-c21d7da4f1e4)
