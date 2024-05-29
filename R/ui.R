@@ -114,86 +114,8 @@ ui <- function(request) {
                    solidHeader = TRUE, status = "primary", width = 12,
                    collapsible = TRUE, collapsed = FALSE, color = "green",
                    tabsetPanel(
-                     tabPanel("Annotation Comparisons",
-                              # box(title = "Annotation Comparisons",
-                              #     solidHeader = TRUE, status = "primary", width = 12,
-                              #     collapsible = TRUE, collapsed = TRUE,
-                              fluidRow(
-                                column(2,
-                                       uiOutput("annocomp_x_selection")
-                                ),
-                                column(2,
-                                       uiOutput("annocomp_y_selection")
-                                ),
-                                column(2,
-                                       uiOutput("annocomp_color_selection")
-                                ),
-                                column(2,
-                                       uiOutput("annocomp_denom_selection")
-                                ),
-                                column(1,
-                                       uiOutput("annocomp_reorderY_selection")
-                                ),
-                                column(1,
-                                       uiOutput("annocomp_select_mode_selection")
-                                ),
-                                column(1,
-                                       uiOutput("annocomp_width_textbox")
-                                ),
-                                column(1,
-                                       uiOutput("annocomp_height_textbox")
-                                )
-                              ),
-                              fluidRow(
-                                column(12,
-                                       uiOutput("annocomp_plot_ui")
-                                )
-                              ),
-                              fluidRow(
-                                column(4,
-                                       strong("Download Options"),
-                                       fluidRow(
-                                         column(4,textInput("annocomp_dlw","Width (in)",8)),
-                                         column(4,textInput("annocomp_dlh","Height (in)",4)),
-                                         column(4,textInput("annocomp_dlf","Font (pt)",6))),
-                                       uiOutput("annocomp_downloadButton"))
-                              )
-                     ),
-                     tabPanel("Confusion Matrix",
-                              fluidRow(
-                                column(2,
-                                       uiOutput("paircomp_x_selection")
-                                ),
-                                column(2,
-                                       uiOutput("paircomp_y_selection")
-                                ),
-                                column(2,
-                                       uiOutput("reorderY_selection")
-                                ),
-                                column(2,
-                                       uiOutput("paircomp_width_textbox")
-                                ),
-                                column(2,
-                                       uiOutput("paircomp_height_textbox")
-                                )
-                              ),
-                              fluidRow(
-                                column(12,
-                                       uiOutput("paircomp_jaccard_ui")
-                                ),
-                              ),
-                              fluidRow(
-                                column(6,
-                                       strong("Download Options (Jaccard plot)"),
-                                       fluidRow(
-                                         column(4,textInput("paircomp_dlw","Width (in)",8)),
-                                         column(4,textInput("paircomp_dlh","Height (in)",8)),
-                                         column(4,textInput("paircomp_dlf","Font (pt)",10))),
-                                       uiOutput("paircomp_jaccard_downloadButton")
-                                ),
-                              )
-                     ),
-                     tabPanel("River Plot",
+                     # Put the river plot first for now, since it is the only one with a GO button.  This avoids slow computations before filtering.
+                     tabPanel("River plot linking 2+ annotations",
                               fluidRow(
                                 column(11,
                                        uiOutput("river_group_selection")
@@ -221,6 +143,86 @@ ui <- function(request) {
                                        downloadButton('downloadRiverPDF',"Download PDF"))
                               )
                      ),
+                     tabPanel("Compare pairs of annotations",
+                              # box(title = "Annotation Comparisons",
+                              #     solidHeader = TRUE, status = "primary", width = 12,
+                              #     collapsible = TRUE, collapsed = TRUE,
+                              fluidRow(
+                                column(2,
+                                       uiOutput("annocomp_x_selection")
+                                ),
+                                column(2,
+                                       uiOutput("annocomp_y_selection")
+                                ),
+                                column(2,
+                                       uiOutput("annocomp_color_selection")
+                                ),
+                                column(2,
+                                       uiOutput("annocomp_denom_selection")
+                                ),
+                                column(1,
+                                       uiOutput("annocomp_reorderY_selection")
+                                ),
+                                #column(1,
+                                #       uiOutput("annocomp_select_mode_selection")
+                                #),
+                                column(1,
+                                       uiOutput("annocomp_width_textbox")
+                                ),
+                                column(1,
+                                       uiOutput("annocomp_height_textbox")
+                                )
+                              ),
+                              fluidRow(
+                                column(12,
+                                       uiOutput("annocomp_plot_ui")
+                                )
+                              ),
+                              fluidRow(
+                                column(4,
+                                       strong("Download Options"),
+                                       fluidRow(
+                                         column(4,textInput("annocomp_dlw","Width (in)",8)),
+                                         column(4,textInput("annocomp_dlh","Height (in)",4)),
+                                         column(4,textInput("annocomp_dlf","Font (pt)",6))),
+                                       uiOutput("annocomp_downloadButton"))
+                              )
+                     ),
+                     # Hiding the confusion matrix in the main version until I can merge them in properly with above.
+                     # tabPanel("Confusion Matrix",
+                     #          fluidRow(
+                     #            column(2,
+                     #                   uiOutput("paircomp_x_selection")
+                     #            ),
+                     #            column(2,
+                     #                   uiOutput("paircomp_y_selection")
+                     #            ),
+                     #            column(2,
+                     #                   uiOutput("reorderY_selection")
+                     #            ),
+                     #            column(2,
+                     #                   uiOutput("paircomp_width_textbox")
+                     #            ),
+                     #            column(2,
+                     #                   uiOutput("paircomp_height_textbox")
+                     #            )
+                     #          ),
+                     #          fluidRow(
+                     #            column(12,
+                     #                   uiOutput("paircomp_jaccard_ui")
+                     #            ),
+                     #          ),
+                     #          fluidRow(
+                     #            column(6,
+                     #                   strong("Download Options (Jaccard plot)"),
+                     #                   fluidRow(
+                     #                     column(4,textInput("paircomp_dlw","Width (in)",8)),
+                     #                     column(4,textInput("paircomp_dlh","Height (in)",8)),
+                     #                     column(4,textInput("paircomp_dlf","Font (pt)",10))),
+                     #                   uiOutput("paircomp_jaccard_downloadButton")
+                     #            ),
+                     #          )
+                     # ),
                      tabPanel("Explore an individual annotation",
                               fluidRow(
                                 column(12,

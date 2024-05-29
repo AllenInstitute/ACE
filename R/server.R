@@ -34,21 +34,28 @@ default_vals <- list(db = "Enter a file path or URL here, or choose from dropdow
                      )
 
 table_info <- data.frame(table_name   = c("Basal Ganglia example data",
-                                          "Alzheimer's cell mapping",
-                                          "Whole mouse brain region comparison (test)",
-                                          "Human MTG 10x studies (SEA-AD, GA, CA)"),
+                                          "SEA-AD: Alzheimer's cell type mapping",
+                                          "Whole mouse brain (AIT21) MERFISH",
+                                          "Human MTG 10x studies (SEA-AD, GA, CA)",
+                                          "Mouse Cortex + Hippocampus to Whole mouse brain (AIT21)"),
                          table_loc    = c("//allen/programs/celltypes/workgroups/humancelltypes/JeremyM/github/annotation_comparison/example",
                                           "https://raw.githubusercontent.com/AllenInstitute/annotation_comparison/dev/data/DLPFC_SEAAD_cell_annotations_for_app.csv.gz",
-                                          "https://raw.githubusercontent.com/AllenInstitute/annotation_comparison/dev/data/WMB_MERFISH_subset.csv.gz",
-                                          "https://raw.githubusercontent.com/AllenInstitute/annotation_comparison/dev/data/MTG_cell_metadata.csv.gz"),
+                                          "//allen/programs/celltypes/workgroups/hct/cellTaxonomy/whole_mouse_brain/WMB_MERFISH_subset.csv.gz",
+                                          #"https://raw.githubusercontent.com/AllenInstitute/annotation_comparison/dev/data/WMB_MERFISH_subset.csv.gz",  # GITHUB FILE CRASHES
+                                          "https://raw.githubusercontent.com/AllenInstitute/annotation_comparison/dev/data/MTG_cell_metadata.csv.gz",  
+                                          "//allen/programs/celltypes/workgroups/humancelltypes/JeremyM/github/annotation_comparison/data/CtxHip_WMB_translation.csv.gz"),
+                                          #"https://raw.githubusercontent.com/AllenInstitute/annotation_comparison/dev/data/CtxHip_WMB_translation.csv.gz"), # GITHUB FILE CRASHES (not a sample_id issue)
                          metadata_loc = c("", # No metadata yet
                                           "https://raw.githubusercontent.com/AllenInstitute/annotation_comparison/dev/data/AD_study_cell_types_for_app.csv",
                                           "https://raw.githubusercontent.com/AllenInstitute/annotation_comparison/dev/data/WMB_cluster_annotations.csv.gz",
-                                          ""), # No metadata yet
+                                          "", # No metadata yet
+                                          "https://raw.githubusercontent.com/AllenInstitute/annotation_comparison/dev/data/WMB_cluster_annotations.csv.gz"),
                          description  = c("Small example file pointing at subsampled data from NHP basal ganglia. Note that if you are runnign this from a non-Allen Institute computer, this example will not work.",
                                           "Data and associated cell type assignments from multiple studies of Alzheimer's disease.  All data sets were mapped to SEA-AD data and their mappings as well as original cluster assignments are included in the tables.  In addition, each cell type's change in abundance in AD from the original study, as well as some basic information about the cell types are included.  Data is subsampled to 100 cells per SEA-AD supertype.  The way data is encoded, comparisons between each data set an SEA-AD are valid, but comparsisons CANNOT be accurately made between external data sets.",
-                                          "Data about brain cell types AND brain regions from mouse whole brain (Yao et al 2023).  This includes cell type assignments and spatial positions for MERFISH data, subsampled to 50 cells per cluster + 5000 cells per section. Cells have been assigned to CCF parcillations to allow direct matching between cell types and anatomic structures. I'm particularly interested if this table works properly.",
-                                          "Cluster assignments from the human great ape (GA) and cross-areal (CA) study alongside SEA-AD calls for each level of the taxonomy in MTG.  This table will be extended to Hodge et al in the future.")
+                                          "Data about brain cell types AND brain regions from mouse whole brain (Yao et al 2023).  This includes cell type assignments and spatial positions for MERFISH data, subsampled to 50 cells per cluster + 5000 cells per section. Cells have been assigned to CCF parcillations to allow direct matching between cell types and anatomic structures. I'm particularly interested if this table works properly.  Right now this file is loading from on prem, but an identical file is on GitHub (which crashes for some reason...).",
+                                          "Cluster assignments from the human great ape (GA) and cross-areal (CA) study alongside SEA-AD calls for each level of the taxonomy in MTG.  This table will be extended to Hodge et al in the future.",
+                                          "Data about brain cell types from mouse whole brain (Yao et al 2023; AIT21) and their mapping to mouse cortex + hippocampus (Yao et al 2021).  This includes data from AIT21 downsampled to only include 100 cells per cluster from cortex+hippocampus.  Any clusters from whole brain that are NOT listed are either rare or absent in mouse cortex + hippocampus.  We recommend using this table to translate forward (e.g., from the older to the newer taxonomy)."
+                                          )
 )
 
 server <- function(input, output, session) {
@@ -1051,8 +1058,8 @@ server <- function(input, output, session) {
       options <- c("none",desc$base)
       names(options) <- c("None",desc$name)
     } else {
-      options <- c("none",input$annocomp_x, input$annocomp_y)
-      names(options) <- c("None",
+      options <- c("Jaccard","none",input$annocomp_x, input$annocomp_y)
+      names(options) <- c("Jaccard","None",
                           desc$name[desc$base == input$annocomp_x],
                           desc$name[desc$base == input$annocomp_y])
     }
@@ -1063,6 +1070,8 @@ server <- function(input, output, session) {
     initial <- ifelse(length(init$vals[[id]]) > 0,
                       init$vals[[id]],
                       "none")
+    if(length(options)>=1) if(is.element("Jaccard",options))
+      initial = "Jaccard"
     
     selectizeInput(inputId = id, 
                    label = strong(label), 
@@ -1079,11 +1088,12 @@ server <- function(input, output, session) {
     req(rv_desc())
     req(input$annocomp_x)
     req(input$annocomp_y)
+    req(input$annocomp_color)
     
     desc <- rv_desc()
     cat_anno <- desc$base[desc$type == "cat"]
     
-    if(input$annocomp_x %in% cat_anno & input$annocomp_y %in% cat_anno) {
+    if((input$annocomp_x %in% cat_anno & input$annocomp_y %in% cat_anno) & (input$annocomp_color!="Jaccard")) {
       
       denom_options <- c("none",input$annocomp_x, input$annocomp_y)
       names(denom_options) <- c("None",desc$name[desc$base == input$annocomp_x],
@@ -1202,7 +1212,7 @@ server <- function(input, output, session) {
     req(input$annocomp_x)
     req(input$annocomp_y)
     req(input$annocomp_color)
-    req(input$annocomp_select_mode)
+    #req(input$annocomp_select_mode)
     
     stats <- build_annocomp_stats(anno = rv_filtered(),
                                   desc = rv_desc(),
@@ -1217,7 +1227,8 @@ server <- function(input, output, session) {
                         y_group = input$annocomp_y, 
                         c_group = input$annocomp_color, 
                         denom = input$annocomp_denom,
-                        filter_mode = input$annocomp_select_mode)
+                        reorderY = input$anno_reorderY,
+                        filter_mode = "filter")#input$annocomp_select_mode)
   })
   
   output$annocomp_plot <- renderPlot({
@@ -1259,157 +1270,159 @@ server <- function(input, output, session) {
   ## Pairwise Comparisons Box ##  Also called 'Jaccard distance' or 'confusion matrix'
   ##############################
   
+  # NO LONGER NEEDED. This is now baked into the annotation comparison panel above.
+  
   ## UI Elements
   
-  output$paircomp_x_selection <- renderUI({
-    req(init$vals)
-    req(rv_desc())
-    
-    desc <- rv_desc()
-    options <- desc$base[desc$type == "cat"]
-    names(options) <- desc$name[desc$type == "cat"]
-    
-    id <- "paircomp_x"
-    label <- "X-axis annotation"
-    
-    initial <- ifelse(length(init$vals[[id]]) > 0,
-                      init$vals[[id]],
-                      options[1])
-    
-    selectizeInput(inputId = id, 
-                   label = strong(label), 
-                   choices = options, 
-                   selected = initial,
-                   multiple = FALSE)
-  })
-  
-  output$paircomp_y_selection <- renderUI({
-    req(init$vals)
-    req(rv_desc())
-    
-    desc <- rv_desc()
-    options <- desc$base[desc$type == "cat"]
-    names(options) <- desc$name[desc$type == "cat"]
-    
-    id <- "paircomp_y"
-    label <- "Y-axis annotation"
-    
-    initial <- ifelse(length(init$vals[[id]]) > 0,
-                      init$vals[[id]],
-                      options[2])
-    
-    selectizeInput(inputId = id, 
-                   label = strong(label), 
-                   choices = options, 
-                   selected = initial,
-                   multiple = FALSE)
-  })
-  
-  output$reorderY_selection <- renderUI({
-    id <- "reorderY"
-    label <- "Reorder query?"
-    initial <- TRUE
-    selectInput(id, label, c("Yes" = TRUE,"No"= FALSE))
-  })
-  
-  output$paircomp_height_textbox <- renderUI({
-    req(init$vals)
-    
-    id <- "paircomp_height"
-    label <- "Plot Height"
-    
-    initial <- ifelse(length(init$vals[[id]]) > 0,
-                      init$vals[[id]],
-                      "600px")
-    
-    textInput(inputId = id, 
-              label = strong(label), 
-              value = initial, 
-              width = "100%")
-    
-  })
-  
-  output$paircomp_width_textbox <- renderUI({
-    req(init$vals)
-    
-    id <- "paircomp_width"
-    label <- "Plot Width"
-    
-    initial <- ifelse(length(init$vals[[id]]) > 0,
-                      init$vals[[id]],
-                      "100%")
-    
-    textInput(inputId = id, 
-              label = strong(label), 
-              value = initial, 
-              width = "100%")
-    
-  })
-  
-  # Calculate and then builds Jaccard comparison plot
-  paircomp_jaccard_plot <- reactive({
-    # Inputs for the plot
-    req(rv_filtered())   
-    req(input$paircomp_x)
-    req(input$paircomp_y)
-    req(input$reorderY)
-    # Inputs for the frame size
-    req(input$dimension)
-    req(input$paircomp_height)
-    req(input$paircomp_width)
-    
-    # Get the frame size to avoid printing gigantic plots on screen
-    height <- input$paircomp_height
-    height <- as.numeric(gsub("([0-9]+).*$", "\\1", height))
-    width  <- input$paircomp_width
-    if(substr(width,nchar(width),nchar(width))=="%"){
-      width <- as.numeric(substr(width,1,nchar(width)-1))
-      width <- width*input$dimension[1]/100
-    } else {
-      width <- as.numeric(gsub("([0-9]+).*$", "\\1", width))
-    }
-    maxInputs <- (width*height)/3000  # This value of 3000 could be adjusted later or made interactive, if needed
-    
-    # Get input values
-    build_compare_jaccard_plot(anno = rv_filtered(), 
-                               x_group = input$paircomp_x, 
-                               y_group = input$paircomp_y,
-                               reorderY = input$reorderY,
-                               maxInputs = maxInputs)
-  })
-  
-  output$paircomp_jaccard_plot <- renderPlot({
-    paircomp_jaccard_plot()
-  })
-  
-  output$paircomp_jaccard_ui <- renderUI({
-    plotOutput("paircomp_jaccard_plot", height = input$paircomp_height, width = input$paircomp_width)
-  })
-  
-  
-  # download objects
-  output$paircomp_jaccard_downloadButton <- renderUI({
-    req(paircomp_jaccard_plot())
-    downloadButton('paircomp_jaccard_downloadPlot')
-  })
-  
-  
-  output$paircomp_jaccard_downloadPlot <- downloadHandler(
-    
-    filename = "paircomp_jaccard_plot.pdf",
-    content = function(file) {
-      
-      plot <- paircomp_jaccard_plot() + theme(text = element_text(size = as.numeric(input$paircomp_dlf)))
-      
-      out_h <- as.numeric(input$paircomp_dlh)
-      out_w <- as.numeric(input$paircomp_dlw)
-      
-      ggsave(file, 
-             plot = plot,
-             width = out_w, 
-             height = out_h)
-    }
-  )
+  # output$paircomp_x_selection <- renderUI({
+  #   req(init$vals)
+  #   req(rv_desc())
+  #   
+  #   desc <- rv_desc()
+  #   options <- desc$base[desc$type == "cat"]
+  #   names(options) <- desc$name[desc$type == "cat"]
+  #   
+  #   id <- "paircomp_x"
+  #   label <- "X-axis annotation"
+  #   
+  #   initial <- ifelse(length(init$vals[[id]]) > 0,
+  #                     init$vals[[id]],
+  #                     options[1])
+  #   
+  #   selectizeInput(inputId = id, 
+  #                  label = strong(label), 
+  #                  choices = options, 
+  #                  selected = initial,
+  #                  multiple = FALSE)
+  # })
+  # 
+  # output$paircomp_y_selection <- renderUI({
+  #   req(init$vals)
+  #   req(rv_desc())
+  #   
+  #   desc <- rv_desc()
+  #   options <- desc$base[desc$type == "cat"]
+  #   names(options) <- desc$name[desc$type == "cat"]
+  #   
+  #   id <- "paircomp_y"
+  #   label <- "Y-axis annotation"
+  #   
+  #   initial <- ifelse(length(init$vals[[id]]) > 0,
+  #                     init$vals[[id]],
+  #                     options[2])
+  #   
+  #   selectizeInput(inputId = id, 
+  #                  label = strong(label), 
+  #                  choices = options, 
+  #                  selected = initial,
+  #                  multiple = FALSE)
+  # })
+  # 
+  # output$reorderY_selection <- renderUI({
+  #   id <- "reorderY"
+  #   label <- "Reorder query?"
+  #   initial <- TRUE
+  #   selectInput(id, label, c("Yes" = TRUE,"No"= FALSE))
+  # })
+  # 
+  # output$paircomp_height_textbox <- renderUI({
+  #   req(init$vals)
+  #   
+  #   id <- "paircomp_height"
+  #   label <- "Plot Height"
+  #   
+  #   initial <- ifelse(length(init$vals[[id]]) > 0,
+  #                     init$vals[[id]],
+  #                     "600px")
+  #   
+  #   textInput(inputId = id, 
+  #             label = strong(label), 
+  #             value = initial, 
+  #             width = "100%")
+  #   
+  # })
+  # 
+  # output$paircomp_width_textbox <- renderUI({
+  #   req(init$vals)
+  #   
+  #   id <- "paircomp_width"
+  #   label <- "Plot Width"
+  #   
+  #   initial <- ifelse(length(init$vals[[id]]) > 0,
+  #                     init$vals[[id]],
+  #                     "100%")
+  #   
+  #   textInput(inputId = id, 
+  #             label = strong(label), 
+  #             value = initial, 
+  #             width = "100%")
+  #   
+  # })
+  # 
+  # # Calculate and then builds Jaccard comparison plot
+  # paircomp_jaccard_plot <- reactive({
+  #   # Inputs for the plot
+  #   req(rv_filtered())   
+  #   req(input$paircomp_x)
+  #   req(input$paircomp_y)
+  #   req(input$reorderY)
+  #   # Inputs for the frame size
+  #   req(input$dimension)
+  #   req(input$paircomp_height)
+  #   req(input$paircomp_width)
+  #   
+  #   # Get the frame size to avoid printing gigantic plots on screen
+  #   height <- input$paircomp_height
+  #   height <- as.numeric(gsub("([0-9]+).*$", "\\1", height))
+  #   width  <- input$paircomp_width
+  #   if(substr(width,nchar(width),nchar(width))=="%"){
+  #     width <- as.numeric(substr(width,1,nchar(width)-1))
+  #     width <- width*input$dimension[1]/100
+  #   } else {
+  #     width <- as.numeric(gsub("([0-9]+).*$", "\\1", width))
+  #   }
+  #   maxInputs <- (width*height)/3000  # This value of 3000 could be adjusted later or made interactive, if needed
+  #   
+  #   # Get input values
+  #   build_compare_jaccard_plot(anno = rv_filtered(), 
+  #                              x_group = input$paircomp_x, 
+  #                              y_group = input$paircomp_y,
+  #                              reorderY = input$reorderY,
+  #                              maxInputs = maxInputs)
+  # })
+  # 
+  # output$paircomp_jaccard_plot <- renderPlot({
+  #   paircomp_jaccard_plot()
+  # })
+  # 
+  # output$paircomp_jaccard_ui <- renderUI({
+  #   plotOutput("paircomp_jaccard_plot", height = input$paircomp_height, width = input$paircomp_width)
+  # })
+  # 
+  # 
+  # # download objects
+  # output$paircomp_jaccard_downloadButton <- renderUI({
+  #   req(paircomp_jaccard_plot())
+  #   downloadButton('paircomp_jaccard_downloadPlot')
+  # })
+  # 
+  # 
+  # output$paircomp_jaccard_downloadPlot <- downloadHandler(
+  #   
+  #   filename = "paircomp_jaccard_plot.pdf",
+  #   content = function(file) {
+  #     
+  #     plot <- paircomp_jaccard_plot() + theme(text = element_text(size = as.numeric(input$paircomp_dlf)))
+  #     
+  #     out_h <- as.numeric(input$paircomp_dlh)
+  #     out_w <- as.numeric(input$paircomp_dlw)
+  #     
+  #     ggsave(file, 
+  #            plot = plot,
+  #            width = out_w, 
+  #            height = out_h)
+  #   }
+  # )
   
   
   ##############################

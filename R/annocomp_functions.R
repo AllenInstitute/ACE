@@ -107,6 +107,7 @@ build_annocomp_plot <- function(anno,
                                 y_group, 
                                 c_group, 
                                 denom, 
+                                reorderY,
                                 filter_mode = "filter") {
   
   cat_annotations <- desc$base[desc$type == "cat"]
@@ -121,6 +122,16 @@ build_annocomp_plot <- function(anno,
   y_label <- paste0(y_group,"_label")
   y_type <- ifelse(y_group %in% cat_annotations,"cat","num")
   y_name <- desc$name[desc$base == y_group]
+  
+  if(c_group=="Jaccard"){
+    # These functions are located in "pairwise_functions.R" currently
+    p <- build_compare_jaccard_plot(anno = anno, 
+                                    x_group = x_group, 
+                                    y_group = y_group,
+                                    reorderY = reorderY,
+                                    maxInputs = 10000000)  # Can fix later to avoid hard-coding
+    
+  } else {
   
   point_color <- paste0(c_group,"_color")
   
@@ -360,7 +371,7 @@ build_annocomp_plot <- function(anno,
       scale_x_continuous(x_name, breaks = x_labels$xpos, labels = x_labels$x_label) +
       scale_y_continuous(y_name, breaks = y_labels$ypos, labels = y_labels$y_label) +
       theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.3))
-    
+    }
   }
   
   return(p)

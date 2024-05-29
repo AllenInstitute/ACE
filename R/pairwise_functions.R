@@ -2,7 +2,7 @@ build_compare_jaccard_plot <- function (anno, x_group, y_group, reorderY, maxInp
   x <- anno[,paste0(x_group,"_id")]
   x <- factor(anno[,paste0(x_group,"_label")], levels = anno[,paste0(x_group,"_label")][match(sort(unique(x)),x)])
   y <- anno[,paste0(y_group,"_id")]
-  y <- factor(anno[,paste0(y_group,"_label")], levels = anno[,paste0(y_group,"_label")][match(sort(unique(y)),y)])
+  y <- factor(anno[,paste0(y_group,"_label")], levels = anno[,paste0(y_group,"_label")][match(sort(unique(y), decreasing = TRUE),y)])
   names(x) <- names(y) <- anno$sample_id
   numInputs <- length(levels(x))+length(levels(y))
   
