@@ -59,7 +59,10 @@ ui <- function(request) {
                    solidHeader = TRUE, status = "primary", width = 12,
                    collapsible = TRUE, collapsed = FALSE,
                    fluidRow(
-                     column(7,
+                     column(4,
+                            uiOutput("select_category")
+                     ),
+                     column(4,
                             uiOutput("select_textbox")
                      ),
                      column(1,

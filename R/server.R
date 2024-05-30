@@ -13,6 +13,7 @@ suppressPackageStartupMessages({
 })
 options(stringsAsFactors = F)
 
+source("initialization.R")
 source("annocomp_functions.R")
 source("river_functions.R")
 source("pairwise_functions.R")
@@ -31,32 +32,13 @@ guess_type <- function(x) {
 
 default_vals <- list(db = "Enter a file path or URL here, or choose from dropdown above.",
                      sf = "Enter a file path or URL here, or choose from dropdown above."
-                     )
-
-table_info <- data.frame(table_name   = c("Basal Ganglia example data",
-                                          "SEA-AD: Alzheimer's cell type mapping",
-                                          "Whole mouse brain (AIT21) MERFISH",
-                                          "Human MTG 10x studies (SEA-AD, GA, CA)",
-                                          "Mouse Cortex + Hippocampus to Whole mouse brain (AIT21)"),
-                         table_loc    = c("//allen/programs/celltypes/workgroups/humancelltypes/JeremyM/github/annotation_comparison/example",
-                                          "https://raw.githubusercontent.com/AllenInstitute/annotation_comparison/dev/data/DLPFC_SEAAD_cell_annotations_for_app.csv.gz",
-                                          "//allen/programs/celltypes/workgroups/hct/cellTaxonomy/whole_mouse_brain/WMB_MERFISH_subset.csv.gz",
-                                          #"https://raw.githubusercontent.com/AllenInstitute/annotation_comparison/dev/data/WMB_MERFISH_subset.csv.gz",  # GITHUB FILE CRASHES
-                                          "https://raw.githubusercontent.com/AllenInstitute/annotation_comparison/dev/data/MTG_cell_metadata.csv.gz",  
-                                          "//allen/programs/celltypes/workgroups/humancelltypes/JeremyM/github/annotation_comparison/data/CtxHip_WMB_translation.csv.gz"),
-                                          #"https://raw.githubusercontent.com/AllenInstitute/annotation_comparison/dev/data/CtxHip_WMB_translation.csv.gz"), # GITHUB FILE CRASHES (not a sample_id issue)
-                         metadata_loc = c("", # No metadata yet
-                                          "https://raw.githubusercontent.com/AllenInstitute/annotation_comparison/dev/data/AD_study_cell_types_for_app.csv",
-                                          "https://raw.githubusercontent.com/AllenInstitute/annotation_comparison/dev/data/WMB_cluster_annotations.csv.gz",
-                                          "", # No metadata yet
-                                          "https://raw.githubusercontent.com/AllenInstitute/annotation_comparison/dev/data/WMB_cluster_annotations.csv.gz"),
-                         description  = c("Small example file pointing at subsampled data from NHP basal ganglia. Note that if you are runnign this from a non-Allen Institute computer, this example will not work.",
-                                          "Data and associated cell type assignments from multiple studies of Alzheimer's disease.  All data sets were mapped to SEA-AD data and their mappings as well as original cluster assignments are included in the tables.  In addition, each cell type's change in abundance in AD from the original study, as well as some basic information about the cell types are included.  Data is subsampled to 100 cells per SEA-AD supertype.  The way data is encoded, comparisons between each data set an SEA-AD are valid, but comparsisons CANNOT be accurately made between external data sets.",
-                                          "Data about brain cell types AND brain regions from mouse whole brain (Yao et al 2023).  This includes cell type assignments and spatial positions for MERFISH data, subsampled to 50 cells per cluster + 5000 cells per section. Cells have been assigned to CCF parcillations to allow direct matching between cell types and anatomic structures. I'm particularly interested if this table works properly.  Right now this file is loading from on prem, but an identical file is on GitHub (which crashes for some reason...).",
-                                          "Cluster assignments from the human great ape (GA) and cross-areal (CA) study alongside SEA-AD calls for each level of the taxonomy in MTG.  This table will be extended to Hodge et al in the future.",
-                                          "Data about brain cell types from mouse whole brain (Yao et al 2023; AIT21) and their mapping to mouse cortex + hippocampus (Yao et al 2021).  This includes data from AIT21 downsampled to only include 100 cells per cluster from cortex+hippocampus.  Any clusters from whole brain that are NOT listed are either rare or absent in mouse cortex + hippocampus.  We recommend using this table to translate forward (e.g., from the older to the newer taxonomy)."
-                                          )
 )
+
+
+######################################################
+## Default table information is in initialization.R ##
+######################################################
+
 
 server <- function(input, output, session) {
 
@@ -89,6 +71,15 @@ server <- function(input, output, session) {
   # First from default_vals,
   # then dropdown_vals,
   # then from URL parsing
+  updateSelectInput(session, inputId = "select_category", label = "Select annotation category:", choices = names(table_name)) # "Enter your own location"
+  
+  observeEvent(input$select_category, {
+    # Choose a value from the default table, if selected
+    # This is updated to be a list of lists
+    if(length(input$select_category)>0) category = input$select_category
+    updateSelectInput(session, inputId = "select_textbox", label = "Select comparison table:", choices = table_name[[category]])
+    
+  })
   
   observe({
     
@@ -109,9 +100,6 @@ server <- function(input, output, session) {
       }
       
     }
-    
-    # Choose a value from the default table, if selected
-    updateSelectInput(session, inputId = "select_textbox", label = "Select an annotation table:", choices = c(table_info$table_name, "Enter your own location"))
     
     # URL values
     # defined in the URL
@@ -154,9 +142,14 @@ server <- function(input, output, session) {
   #
   # input$db - character object
   # 
+  output$select_category <- renderUI({
+    
+    selectInput("select_category", "choose a category", choices = names(table_name))
+    
+  })
   output$select_textbox <- renderUI({
     
-        selectInput("select_textbox", "select name", choices = "")
+    selectInput("select_textbox", "select a table", choices = "")
     
   })
   
@@ -173,7 +166,7 @@ server <- function(input, output, session) {
                       init$vals[[id]],
                       "")
     
-    if (!input$select_textbox == 'Enter your own location') {
+    if (!is.element(input$select_textbox,c("Select comparison table...",'Enter your own location'))) {
       initial = table_info[table_info$table_name==input$select_textbox,"table_loc"]
     }
     else {
@@ -200,7 +193,7 @@ server <- function(input, output, session) {
                       init$vals[[id]],
                       "")
     
-    if (!input$select_textbox == 'Enter your own location') {
+    if (!is.element(input$select_textbox,c("Select comparison table...",'Enter your own location'))) {
       initial = table_info[table_info$table_name==input$select_textbox,"metadata_loc"]
     }
     else {
@@ -218,11 +211,12 @@ server <- function(input, output, session) {
   output$dataset_description <- renderUI({
     req(init$vals)
     
-    if (!input$select_textbox == 'Enter your own location') {
-      text_desc = table_info[table_info$table_name==input$select_textbox,"description"]
-    }
-    else {
+    if (input$select_textbox == 'Enter your own location') {
       text_desc = "User-provided data and (optionally) metadata files."
+    } else if (input$select_textbox == 'Select comparison table...') {
+      text_desc = "Select a category and a comparison table from the boxes above.  Then please wait for the annotation table to load.  Once loaded, the controls above and below will become responsive."
+    } else {
+      text_desc = table_info[table_info$table_name==input$select_textbox,"description"]
     }
     
     div(style = "font-size:14px;", strong("Dataset description"),br(),text_desc)
