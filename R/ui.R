@@ -117,33 +117,11 @@ ui <- function(request) {
                    solidHeader = TRUE, status = "primary", width = 12,
                    collapsible = TRUE, collapsed = FALSE, color = "green",
                    tabsetPanel(
-                     # Put the river plot first for now, since it is the only one with a GO button.  This avoids slow computations before filtering.
-                     tabPanel("River plot linking 2+ annotations",
-                              fluidRow(
-                                column(11,
-                                       uiOutput("river_group_selection")
-                                ),
-                                column(1,
-                                       br(),
-                                       actionButton("river_go","GO!",
-                                                    style="color: #fff; background-color: #EC008C; border-color: #BE1E2D; font-weight: bold;")
-                                )
-                              ),
+                     tabPanel("Intro",
                               fluidRow(
                                 column(12,
-                                       uiOutput("river_plot_ui"),
-                                       plotOutput("river_widthfinder",width = "100%",
-                                                  height = "10px")
+                                       includeHTML("www/vis_info_panel.html")
                                 )
-                              ),
-                              fluidRow(
-                                column(4,
-                                       strong("Download Options"),
-                                       fluidRow(
-                                         column(4,textInput("dlw","Width (in)",12)),
-                                         column(4,textInput("dlh","Height (in)",8)),
-                                         column(4,textInput("dlf","Font (pt)",10))),
-                                       downloadButton('downloadRiverPDF',"Download PDF"))
                               )
                      ),
                      tabPanel("Compare pairs of annotations",
@@ -191,42 +169,35 @@ ui <- function(request) {
                                        uiOutput("annocomp_downloadButton"))
                               )
                      ),
-                     # Hiding the confusion matrix in the main version until I can merge them in properly with above.
-                     # tabPanel("Confusion Matrix",
-                     #          fluidRow(
-                     #            column(2,
-                     #                   uiOutput("paircomp_x_selection")
-                     #            ),
-                     #            column(2,
-                     #                   uiOutput("paircomp_y_selection")
-                     #            ),
-                     #            column(2,
-                     #                   uiOutput("reorderY_selection")
-                     #            ),
-                     #            column(2,
-                     #                   uiOutput("paircomp_width_textbox")
-                     #            ),
-                     #            column(2,
-                     #                   uiOutput("paircomp_height_textbox")
-                     #            )
-                     #          ),
-                     #          fluidRow(
-                     #            column(12,
-                     #                   uiOutput("paircomp_jaccard_ui")
-                     #            ),
-                     #          ),
-                     #          fluidRow(
-                     #            column(6,
-                     #                   strong("Download Options (Jaccard plot)"),
-                     #                   fluidRow(
-                     #                     column(4,textInput("paircomp_dlw","Width (in)",8)),
-                     #                     column(4,textInput("paircomp_dlh","Height (in)",8)),
-                     #                     column(4,textInput("paircomp_dlf","Font (pt)",10))),
-                     #                   uiOutput("paircomp_jaccard_downloadButton")
-                     #            ),
-                     #          )
-                     # ),
-                     tabPanel("Explore an individual annotation",
+                     tabPanel("Link 2+ annotations (river plots)",
+                              fluidRow(
+                                column(11,
+                                       uiOutput("river_group_selection")
+                                ),
+                                column(1,
+                                       br(),
+                                       actionButton("river_go","GO!",
+                                                    style="color: #fff; background-color: #EC008C; border-color: #BE1E2D; font-weight: bold;")
+                                )
+                              ),
+                              fluidRow(
+                                column(12,
+                                       uiOutput("river_plot_ui"),
+                                       plotOutput("river_widthfinder",width = "100%",
+                                                  height = "10px")
+                                )
+                              ),
+                              fluidRow(
+                                column(4,
+                                       strong("Download Options"),
+                                       fluidRow(
+                                         column(4,textInput("dlw","Width (in)",12)),
+                                         column(4,textInput("dlh","Height (in)",8)),
+                                         column(4,textInput("dlf","Font (pt)",10))),
+                                       downloadButton('downloadRiverPDF',"Download PDF"))
+                              )
+                     ),
+                     tabPanel("Explore individual annotations",
                               fluidRow(
                                 column(12,
                                        helpText("Note that this visualization will only work if a properly-formatted metadata table is provided.")
@@ -274,30 +245,7 @@ ui <- function(request) {
                    )
                )
       ),
-      # box(title = "Browse Selection",
-      #     solidHeader = TRUE, status = "primary", width = 12,
-      #     collapsible = TRUE, collapsed = TRUE,
-      #     fluidRow(
-      #       column(2,
-      #              uiOutput("browse_show_ids_checkbox")
-      #       ),
-      #       column(2,
-      #              uiOutput("browse_show_colors_checkbox")
-      #       ),
-      #       column(2,
-      #              uiOutput("browse_truncate_long_checkbox")
-      #       )
-      #     ),
-      #     fluidRow(
-      #       column(12,
-      #              div(style = 'overflow-x: scroll',
-      #                  dataTableOutput("browse_table")
-      #              )
-      #       )
-      #     ),
-      #     downloadButton("browse_csv","Download Selection as CSV")
-      # ),
-      
+
       fluidRow(width = 12, br(), br())
       
     )

@@ -26,11 +26,11 @@ levels = c("Public cell types taxonomies", "Disease studies", "In process analys
 table_locations <- c(
   "//allen/programs/celltypes/workgroups/humancelltypes/JeremyM/github/annotation_comparison/example",
   "https://raw.githubusercontent.com/AllenInstitute/annotation_comparison/dev/data/DLPFC_SEAAD_cell_annotations_for_app.csv.gz",
-  "//allen/programs/celltypes/workgroups/hct/cellTaxonomy/whole_mouse_brain/WMB_MERFISH_subset.csv.gz",
-  #"https://raw.githubusercontent.com/AllenInstitute/annotation_comparison/dev/data/WMB_MERFISH_subset.csv.gz",  # GITHUB FILE CRASHES
+  #"//allen/programs/celltypes/workgroups/hct/cellTaxonomy/whole_mouse_brain/WMB_MERFISH_subset.csv.gz",
+  "https://raw.githubusercontent.com/AllenInstitute/annotation_comparison/dev/data/WMB_MERFISH_subset.csv.gz",  # GITHUB FILE CRASHES
   "https://raw.githubusercontent.com/AllenInstitute/annotation_comparison/dev/data/MTG_cell_metadata.csv.gz",  
-  "//allen/programs/celltypes/workgroups/humancelltypes/JeremyM/github/annotation_comparison/data/CtxHip_WMB_translation.csv.gz"
-  #"https://raw.githubusercontent.com/AllenInstitute/annotation_comparison/dev/data/CtxHip_WMB_translation.csv.gz"), # GITHUB FILE CRASHES (not a sample_id issue)
+  #"//allen/programs/celltypes/workgroups/humancelltypes/JeremyM/github/annotation_comparison/data/CtxHip_WMB_translation.csv.gz"
+  "https://raw.githubusercontent.com/AllenInstitute/annotation_comparison/dev/data/CtxHip_WMB_translation.csv.gz" # GITHUB FILE CRASHES (not a sample_id issue)
 )
 
 #... where is the annotation information table (e.g., information about each specific cell type.)?  

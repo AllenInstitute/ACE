@@ -214,7 +214,7 @@ server <- function(input, output, session) {
     if (input$select_textbox == 'Enter your own location') {
       text_desc = "User-provided data and (optionally) metadata files."
     } else if (input$select_textbox == 'Select comparison table...') {
-      text_desc = "Select a category and a comparison table from the boxes above.  Then please wait for the annotation table to load.  Once loaded, the controls above and below will become responsive."
+      text_desc = "README: Select a category and a comparison table from the boxes above -OR- to compare your own annotation data, choose 'Enter your own location' from the 'Select annotation category' and enter the locations of relevant files in the two boxes above. After files are selected, please WAIT for the annotation table to load. This could take up to a minute, but will likely be much faster. Once loaded, the controls above and below will become responsive.Once a data set is chosen, this pane can be minimized with the '-' in the upper right. The '+' can then be pressed to re-open in order to select a new data set or bookmark the current state of the app."
     } else {
       text_desc = table_info[table_info$table_name==input$select_textbox,"description"]
     }
@@ -272,14 +272,25 @@ server <- function(input, output, session) {
         setProgress(value = 0.2,
                     message = "Reading csv file, if it exists.")
         
-        anno <- try(vroom(rv_path()))
+        fn <- rv_path()
+        if(substr(fn,1,4)=="http") {
+          if(grepl(".gz$",rv_path())){
+            download.file(fn,"tmp.csv.gz",method="auto")
+            fn = "tmp.csv.gz"
+          } else {
+            download.file(fn,"tmp.csv",method="auto")
+            fn = "tmp.csv"
+          }
+        }
+        
+        anno <- try(vroom(fn))
       })
       
       if(class(anno)[1]!="try-error") {
         withProgress({
           setProgress(value = 0.2,
                       message = "Loading Annotations")
-          
+
           anno <- as.data.frame(anno)
           
           # Check if first column is unique IDs, and if not, create a new column
