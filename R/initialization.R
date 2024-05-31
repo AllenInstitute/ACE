@@ -5,7 +5,8 @@ table_names <- c(
   "Basal Ganglia example data",
   "SEA-AD: Alzheimer's cell type mapping",
   "Whole mouse brain (AIT21) MERFISH",
-  "Human MTG 10x studies (SEA-AD, GA, CA)",
+  "Human MTG 10x (SEA-AD, GA, CA)",
+  "Human MTG SSv4 (Hodge, SEA-AD)",
   "Mouse Cortex + Hippocampus to Whole mouse brain (AIT21)"
 )
 
@@ -13,6 +14,7 @@ table_names <- c(
 categories <- factor(c(
   "In process analyses",
   "Disease studies",
+  "Public cell types taxonomies",
   "Public cell types taxonomies",
   "Public cell types taxonomies",
   "Public cell types taxonomies"
@@ -26,20 +28,20 @@ levels = c("Public cell types taxonomies", "Disease studies", "In process analys
 table_locations <- c(
   "//allen/programs/celltypes/workgroups/humancelltypes/JeremyM/github/annotation_comparison/example",
   "https://raw.githubusercontent.com/AllenInstitute/annotation_comparison/dev/data/DLPFC_SEAAD_cell_annotations_for_app.csv.gz",
-  #"//allen/programs/celltypes/workgroups/hct/cellTaxonomy/whole_mouse_brain/WMB_MERFISH_subset.csv.gz",
-  "https://raw.githubusercontent.com/AllenInstitute/annotation_comparison/dev/data/WMB_MERFISH_subset.csv.gz",  # GITHUB FILE CRASHES
+  "https://raw.githubusercontent.com/AllenInstitute/annotation_comparison/dev/data/WMB_MERFISH_subset.csv.gz", 
   "https://raw.githubusercontent.com/AllenInstitute/annotation_comparison/dev/data/MTG_cell_metadata.csv.gz",  
-  #"//allen/programs/celltypes/workgroups/humancelltypes/JeremyM/github/annotation_comparison/data/CtxHip_WMB_translation.csv.gz"
-  "https://raw.githubusercontent.com/AllenInstitute/annotation_comparison/dev/data/CtxHip_WMB_translation.csv.gz" # GITHUB FILE CRASHES (not a sample_id issue)
+  "https://raw.githubusercontent.com/AllenInstitute/annotation_comparison/dev/data/hodge_to_seaad.csv.gz",
+  "https://raw.githubusercontent.com/AllenInstitute/annotation_comparison/dev/data/CtxHip_WMB_translation.csv.gz"
 )
 
 #... where is the annotation information table (e.g., information about each specific cell type.)?  
 # The goal is that this part will eventually be able to point to a cell type annotation table in TDT format.
 metadata_locations <- c(
-  "", # No metadata yet
+  " ", # No metadata yet
   "https://raw.githubusercontent.com/AllenInstitute/annotation_comparison/dev/data/AD_study_cell_types_for_app.csv",
   "https://raw.githubusercontent.com/AllenInstitute/annotation_comparison/dev/data/WMB_cluster_annotations.csv.gz",
-  "", # No metadata yet
+  " ", # No metadata yet
+  " ", # No metadata yet
   "https://raw.githubusercontent.com/AllenInstitute/annotation_comparison/dev/data/WMB_cluster_annotations.csv.gz"
 )
 
@@ -52,8 +54,10 @@ descriptions   <- c(
                     
   "Data about brain cell types AND brain regions from mouse whole brain (Yao et al 2023).  This includes cell type assignments and spatial positions for MERFISH data, subsampled to 50 cells per cluster + 5000 cells per section. Cells have been assigned to CCF parcillations to allow direct matching between cell types and anatomic structures. I'm particularly interested if this table works properly.  Right now this file is loading from on prem, but an identical file is on GitHub (which crashes for some reason...).",
                     
-  "Cluster assignments from the human great ape (GA) and cross-areal (CA) study alongside SEA-AD calls for each level of the taxonomy in MTG.  This table will be extended to Hodge et al in the future.",
-                    
+  "MTG data set comparisons! Cluster assignments from the human great ape (GA) and cross-areal (CA) study alongside SEA-AD calls for each level of the taxonomy in MTG.",
+
+  "MTG data set comparisons! Cluster assignments from the original SSv4 study ('Hodge' et al, 2019) alongside SEA-AD calls for each level of the taxonomy in MTG. Cortical layers are also also included per cell for cell type by layer comparisons, along with an example set of UMAP coordinates.",
+                      
   "Data about brain cell types from mouse whole brain (Yao et al 2023; AIT21) and their mapping to mouse cortex + hippocampus (Yao et al 2021).  This includes data from AIT21 downsampled to only include 100 cells per cluster from cortex+hippocampus.  Any clusters from whole brain that are NOT listed are either rare or absent in mouse cortex + hippocampus.  We recommend using this table to translate forward (e.g., from the older to the newer taxonomy)."
   
 )

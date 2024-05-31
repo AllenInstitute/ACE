@@ -446,11 +446,12 @@ server <- function(input, output, session) {
         return(anno)
       } else {
         write(paste(rv_path_metadata(),"does not exist."), stderr())
-        return(NULL)
+        return(data.frame(cell_type=c("none","none2"),direction=c("none","none"))) # Provide a generic data frame
       }
     }
+    return(data.frame(cell_type=c("none","none2"),direction=c("none","none"))) # Provide a generic data frame
     
-  }) # end rv_anno_metadat()
+  }) # end rv_anno_metadata()
   
   # Check for valid input
   output$metadata_checkInput <- renderUI({
@@ -1507,10 +1508,14 @@ server <- function(input, output, session) {
   })
   
   output$explorer_plot_type_selection <- renderUI({
-    id <- "explorer_plot_type"
-    label <- "Show plots?"
-    initial <- FALSE
-    selectInput(id, label, c("No"= FALSE,"Yes" = TRUE))
+    id      <- "explorer_plot_type"
+    label   <- "Show plots?"
+    initial <- TRUE
+    
+    selectInput(inputId=id, 
+                label=label, 
+                choices=c("No"= FALSE,"Yes" = TRUE),
+                selected=initial)
   })
   
   output$explorer_height_textbox <- renderUI({
@@ -1607,6 +1612,10 @@ server <- function(input, output, session) {
           df[i,paste0(cat,"_direction")] = direction
         }
       }
+    # Finally, set all values to "none" if no data exists
+    for (cat in cats) if(!is.element(paste0(cat,"_direction"),colnames(anno))){
+      df[,paste0(cat,"_direction")] = rep("none",dim(df)[1])
+    }
     
     # set conditions and return the beautiful table
     return(format_datatable(df,cats))
@@ -1668,7 +1677,10 @@ server <- function(input, output, session) {
             df[i,paste0(cat,"_direction")] = direction
           }
         }
-      
+      # Finally, set all values to "none" if no data exists
+      for (cat in cats) if(!is.element(paste0(cat,"_direction"),colnames(anno))){
+        df[,paste0(cat,"_direction")] = rep("none",dim(df)[1])
+      }
       
       labeled_barplot_summary(df,cats,maxTypes = as.numeric(input$explorer_maxtypes))
     } else {     # If no plot requested, return void
@@ -1702,103 +1714,5 @@ server <- function(input, output, session) {
   })
   
 
-  ##########################
-  ## Browse Selection Box ##   NOT CURRENTLY USED!
-  ##########################
-  
-  # Show IDs checkbox
-  output$browse_show_ids_checkbox <- renderUI({
-    req(init$vals)
-    
-    id <- "browse_show_ids"
-    label <- "Show ID Columns"
-    
-    initial <- ifelse(length(init$vals[[id]]) > 0,
-                      init$vals[[id]],
-                      FALSE)
-    
-    checkboxInput(inputId = id,
-                  label = label,
-                  initial)
-    
-  })
-  # Show Colors checkbox
-  output$browse_show_colors_checkbox <- renderUI({
-    req(init$vals)
-    
-    id <- "browse_show_colors"
-    label <- "Show Color Columns"
-    
-    initial <- ifelse(length(init$vals[[id]]) > 0,
-                      init$vals[[id]],
-                      FALSE)
-    
-    checkboxInput(inputId = id,
-                  label = label,
-                  initial)
-    
-  })
-  # Truncate Long Values checkbox
-  output$browse_truncate_long_checkbox <- renderUI({
-    req(init$vals)
-    
-    id <- "browse_truncate_long"
-    label <- "Truncate long values"
-    
-    initial <- ifelse(length(init$vals[[id]]) > 0,
-                      init$vals[[id]],
-                      TRUE)
-    
-    checkboxInput(inputId = id,
-                  label = label,
-                  initial)
-    
-  })
-  
-  # datatable showing all of the rv_filtered values
-  output$browse_table <- renderDataTable({
-    
-    show_table <- rv_filtered() %>% group_annotations()
-    
-    if(!input$browse_show_ids) {
-      keep_cols <- names(show_table)[!grepl("_id",names(show_table))]
-      keep_cols <- c("sample_id",keep_cols)
-      show_table <- show_table %>%
-        select(one_of(keep_cols))
-    }
-    
-    if(!input$browse_show_colors) {
-      keep_cols <- names(show_table)[!grepl("_color",names(show_table))]
-      show_table <- show_table %>%
-        select(one_of(keep_cols))
-    }
-    
-    if(input$browse_truncate_long) {
-      show_table <- as.data.frame(lapply(show_table, function(x) {
-        if(is.character(x)) {
-          lens <- nchar(x, allowNA = TRUE)
-          too_long <- lens > 50
-          missing <- is.na(x)
-          x[too_long & !missing] <- paste(substr(x[too_long & !missing],1,50),"...")
-          x
-        } else {
-          x
-        }
-      }))
-    }
-    
-    datatable(show_table)
-    
-  })
-  
-  # Download handler for Browse Selection tab.
-  output$browse_csv <- downloadHandler(
-    filename = function() {"distillery_selection.csv"},
-    content = function(file) {
-      out_table <- rv_filtered()
-      write.csv(out_table, file, quote = T, row.names = F)
-    }
-  )
-  
    
 }

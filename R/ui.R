@@ -200,7 +200,7 @@ ui <- function(request) {
                      tabPanel("Explore individual annotations",
                               fluidRow(
                                 column(12,
-                                       helpText("Note that this visualization will only work if a properly-formatted metadata table is provided.")
+                                       helpText("If you see this message, enter a space in the 'Location of metadata (e.g., cluster) information (optional; csv file)' box above, or provide a metadata table.")
                                 )
                               ),
                               fluidRow(
