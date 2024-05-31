@@ -125,7 +125,7 @@ build_annocomp_plot <- function(anno,
   
   if(c_group=="Jaccard"){
     # These functions are located in "pairwise_functions.R" currently
-    p <- build_compare_jaccard_plot(anno = anno, 
+    p <- build_compare_jaccard_plot(anno = filtered, 
                                     x_group = x_group, 
                                     y_group = y_group,
                                     reorderY = reorderY,
@@ -134,6 +134,27 @@ build_annocomp_plot <- function(anno,
   } else {
   
   point_color <- paste0(c_group,"_color")
+  
+  # Reorder the y-axis ids IF reorderY=TRUE
+  if (reorderY){
+    x <- filtered[,paste0(x_group,"_id")]
+    x <- factor(filtered[,paste0(x_group,"_label")], levels = filtered[,paste0(x_group,"_label")][match(sort(unique(x)),x)])
+    y <- filtered[,paste0(y_group,"_id")]
+    y <- factor(anno[,paste0(y_group,"_label")], levels = filtered[,paste0(y_group,"_label")][match(sort(unique(y), decreasing = TRUE),y)])
+    names(x) <- names(y) <- filtered$sample_id
+    
+    common.cells <- intersect(names(x), names(y))
+    y     <- y[common.cells]
+    x     <- x[common.cells]
+    tb    <- table(x, y)
+    tmp   <- t(tb)
+    tmp   <- tmp/rowSums(tmp)
+    ord   <- order(apply(tmp,1,which.max)*10,rowMeans(t(apply(tmp,1,cumsum))))
+    y     <- factor(filtered[,paste0(y_group,"_label")], levels = colnames(tb)[ord])
+    filtered[,paste0(y_group,"_id")] = as.numeric(y)
+  }
+  
+  # Do the rest of the stuff
   
   if(filter_mode == "filter") {
     plot_anno <- filtered
