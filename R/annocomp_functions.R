@@ -140,7 +140,7 @@ build_annocomp_plot <- function(anno,
     x <- filtered[,paste0(x_group,"_id")]
     x <- factor(filtered[,paste0(x_group,"_label")], levels = filtered[,paste0(x_group,"_label")][match(sort(unique(x)),x)])
     y <- filtered[,paste0(y_group,"_id")]
-    y <- factor(anno[,paste0(y_group,"_label")], levels = filtered[,paste0(y_group,"_label")][match(sort(unique(y), decreasing = TRUE),y)])
+    y <- factor(filtered[,paste0(y_group,"_label")], levels = filtered[,paste0(y_group,"_label")][match(sort(unique(y), decreasing = TRUE),y)])
     names(x) <- names(y) <- filtered$sample_id
     
     common.cells <- intersect(names(x), names(y))
