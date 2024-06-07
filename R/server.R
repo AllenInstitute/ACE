@@ -20,7 +20,7 @@ source("pairwise_functions.R")
 source("multistudy_functions.R")
 source("bookmark_functions.R")    # this shouldn't be required at all, as it is a workaround for regular bookmarking (both are currently broken)
 
-enableBookmarking("url")  # It was "server", but it doesn't seem to work either way
+enableBookmarking("server")  # It was "server", but it doesn't seem to work either way
 
 guess_type <- function(x) {
   if(try(sum(is.na(as.numeric(x))) > 0,silent = T)) {
@@ -46,6 +46,17 @@ server <- function(input, output, session) {
   ## Bookmarking and State Initialization ##
   ##########################################
   
+  write("Reading bookmarks and setting state.", stderr())
+  
+  # When the bookmark button is clicked, store the input values as a string
+  onBookmark(function(state) {
+    
+    # build_storage_string() is in bookmark_functions.R
+    state$values$vals <- build_storage_string(input, keep_empty = FALSE)
+    
+  })
+  
+
   # When the page is restored from a bookmark, read the stored values as a reactive list
   restored_vals <- reactiveValues(vals = list())
   
@@ -124,7 +135,15 @@ server <- function(input, output, session) {
     req(input)
     url <- build_url(session, input)
     a("Direct Link", href = url)
-    
+  })
+  
+  
+  output$show_url <- renderText("")
+  observeEvent(input$bookmark_url, {
+    req(input)
+    url <- build_url(session, input)
+    write(url,stderr())
+    output$show_url <- renderText(url)
   })
   
 

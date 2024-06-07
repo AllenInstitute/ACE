@@ -65,9 +65,17 @@ ui <- function(request) {
                      column(4,
                             uiOutput("select_textbox")
                      ),
-                     column(1,
-                            bookmarkButton(label="Bookmark (BROKEN)")  # This button does nothing when clicked but SHOULD pop open the URL to copy
-                     )
+                     #column(1,
+                     #        bookmarkButton(label="Bookmark (BROKEN)")  # This button does nothing when clicked but SHOULD pop open the URL to copy
+                     # )
+                     # NEW - start
+                     column(2,
+                            actionButton(inputId = "bookmark_url", label="Bookmark (BROKEN)",
+                                         icon = icon("link", lib = "glyphicon")
+                            ),
+                            verbatimTextOutput("show_url")
+                     ),
+                     # NEW - END
                    ),
                    fluidRow(
                      column(9,
