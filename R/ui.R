@@ -100,10 +100,16 @@ ui <- function(request) {
                      ),
                      conditionalPanel(
                        condition = "output.sf_active == true",
-                       column(9,
+                       column(7,
                               strong("Filter for:"),
                               br(),
                               uiOutput("filter_panel")
+                       )
+                     ),
+                     conditionalPanel(
+                       condition = "output.sf_active == true",
+                       column(2,
+                              uiOutput("filter_invert")
                        )
                      )
                    ),
@@ -152,6 +158,14 @@ ui <- function(request) {
                                 ),
                                 column(1,
                                        uiOutput("annocomp_height_textbox")
+                                ),
+                                conditionalPanel(
+                                  condition = "button_press_needed() == false",
+                                  column(1,
+                                       br(),
+                                       actionButton("anno_go","GO!",
+                                                    style="color: #fff; background-color: #EC008C; border-color: #BE1E2D; font-weight: bold;")
+                                  )
                                 )
                               ),
                               fluidRow(

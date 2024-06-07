@@ -695,6 +695,34 @@ server <- function(input, output, session) {
     
   })
   
+  # build the filter invert checkbox
+  # 
+  # output$invert <- which filter values should be inverted
+  # invert_annos  <- THIS IS THE VARIABLE TO USE for which filter values shoudl be inverted
+  #
+  invert_annos <- reactiveVal(character())
+  observeEvent(input$invert,{
+    invert_annos(input$invert)
+  })
+  
+  output$filter_invert <- renderUI({
+    req(rv_desc())
+    req(input$sf)
+    req(invert_annos)
+    
+    desc      <- rv_desc()
+    usefilter <- intersect(input$sf,desc$base[desc$type=="cat"])
+    
+    if(length(usefilter)>0){
+      id      <- "invert"
+      label   <- "Invert?"
+      initial <- intersect(usefilter,invert_annos())
+      if(length(initial)==0) initial = NULL
+    
+      checkboxGroupInput(id, label, usefilter, selected = initial)
+    }
+  })
+  
   # Update filters in filters$current based on input, 
   # initialize if there's no input,
   # and remove if not present after initialization
@@ -763,6 +791,7 @@ server <- function(input, output, session) {
     req(rv_desc())
     req(rv_anno())
     req(filters$current)
+    req(invert_annos)
     write("Filtering annotations", stderr())
     
     withProgress({
@@ -788,6 +817,10 @@ server <- function(input, output, session) {
           if(filter_values[1] != "" & filter_base %in% input$sf) {
             if(filter_type == "cat") {
               filter_text <- paste0(filter_id," %in% c(",paste(filter_values,collapse=","),")")
+              # Take the opposite if invert filter set
+              if (filter_base %in% invert_annos()){ 
+                filter_text <- paste0("!(",filter_text,")")
+              } 
               
               filtered <- filtered %>%
                 filter_(filter_text)
@@ -818,6 +851,7 @@ server <- function(input, output, session) {
     req(rv_anno())
     req(rv_desc())
     req(rv_filtered())
+    req(invert_annos)
     write("Building filter text.", stderr())
     
     anno <- rv_anno()
@@ -851,7 +885,8 @@ server <- function(input, output, session) {
             filter_groups <- anno_groups[[filter_label]]
             
             if(length(filter_values) > 0) {
-              filter_text <- paste0(filter_name,": ",paste(filter_groups,collapse=", "))
+              filter_text <- paste0(filter_name,": ",paste(filter_groups,collapse=", "),
+                                    ifelse(filter_base %in% invert_annos()," EXCLUDED"," INCLUDED"))
             } else {
               filter_text <- ""
             }
@@ -948,7 +983,7 @@ server <- function(input, output, session) {
   })
   
   
-  # Call dendrogram plot rendering funciton
+  # Call dendrogram plot rendering function
   output$river_plot <- renderRbokeh({
     req(river_anno())
     req(river_groups())
@@ -1211,7 +1246,9 @@ server <- function(input, output, session) {
   
   # Calculate stats for medians and whiskers if one dimension is numeric
   # Then build the plot.
-  annocomp_plot <- reactive({
+  
+  annocomp_plot <- eventReactive(input$anno_go, {   #NOTE: to make plots automatic again, replace with " <- reactive { " and delete button on UI page.
+    
     req(rv_anno())
     req(rv_filtered())
     req(rv_desc())
