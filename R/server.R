@@ -20,7 +20,7 @@ source("pairwise_functions.R")
 source("multistudy_functions.R")
 source("bookmark_functions.R")    # this shouldn't be required at all, as it is a workaround for regular bookmarking (both are currently broken)
 
-enableBookmarking("server")  # It was "server", but it doesn't seem to work either way
+enableBookmarking("url")  # It was "server", but it doesn't seem to work either way
 
 guess_type <- function(x) {
   if(try(sum(is.na(as.numeric(x))) > 0,silent = T)) {
@@ -31,7 +31,8 @@ guess_type <- function(x) {
 }
 
 default_vals <- list(db = "Enter a file path or URL here, or choose from dropdown above.",
-                     sf = "Enter a file path or URL here, or choose from dropdown above."
+                     sf = "Enter a file path or URL here, or choose from dropdown above.",
+                     metadata = "Enter a file path or URL here, or choose from dropdown above."
 )
 
 
@@ -82,16 +83,7 @@ server <- function(input, output, session) {
   # First from default_vals,
   # then dropdown_vals,
   # then from URL parsing
-  updateSelectInput(session, inputId = "select_category", label = "Select annotation category:", choices = names(table_name)) # "Enter your own location"
-  
-  observeEvent(input$select_category, {
-    # Choose a value from the default table, if selected
-    # This is updated to be a list of lists
-    if(length(input$select_category)>0) category = input$select_category
-    updateSelectInput(session, inputId = "select_textbox", label = "Select comparison table:", choices = table_name[[category]])
-    
-  })
-  
+
   observe({
     
     # default values
@@ -103,10 +95,13 @@ server <- function(input, output, session) {
     # These supercede the defaults
     restored <- restored_vals$vals
     
+    write(paste0("RESTORED LENGTH: ",length(restored)),stderr())
+    
     # Substitute default values for initialized values
     if(length(restored) > 0) {
       for(val in names(restored)) {
         vals[[val]] <- restored[[val]]
+        write(paste(val, restored[[val]], collapse=": "),stderr())
         
       }
       
@@ -116,6 +111,9 @@ server <- function(input, output, session) {
     # defined in the URL
     # These supercede both defaults and restored values
     if(length(session$clientData$url_search) > 0) {
+      
+      write("RESTORED URL OBSERVED",stderr())
+      write(paste0("URL VALUE: ",session$clientData$url_search),stderr())
       
       query <- as.list(parseQueryString(session$clientData$url_search))
       
@@ -142,11 +140,47 @@ server <- function(input, output, session) {
   observeEvent(input$bookmark_url, {
     req(input)
     url <- build_url(session, input)
-    write(url,stderr())
     output$show_url <- renderText(url)
   })
   
+  ### THIS DOESN'T WORK
+  # ### Manual state restoration
+  # output$state_textbox <- renderUI({
+  #   id <- "restore_state"
+  #   label <- "Set state"
+  #   
+  #   textInput(inputId = id, 
+  #             label = strong(label), 
+  #             value = "", 
+  #             width = "100%")
+  #   
+  # })
+  # rv_path <- observeEvent(input$restore_state,{
+  #   write("Checking and setting $restore_state.", stderr())
+  #   write(input$restore_state,stderr())
+  #   vals <- parse_storage_string(input$restore_state)
+  #   
+  #   for (nm in names(vals)){
+  #     write(nm,stderr())
+  #     write(vals[[nm]],stderr())
+  #     init[[nm]] <- vals[[nm]]
+  #   }
+  # })
 
+  
+  #updateSelectInput(session, inputId = "select_category", label = "Select annotation category:", choices = names(table_name)) # "Enter your own location"
+  
+  #observeEvent(input$select_category, {
+    # Choose a value from the default table, if selected
+    # This is updated to be a list of lists
+  #  if(length(input$select_category)>0) category = input$select_category
+  #  updateSelectInput(session, inputId = "select_textbox", label = "Select comparison table:", choices = table_name[[category]])
+    
+  #})
+  
+  
+  #updateSelectInput(session, inputId = "select_textbox", label = "Select comparison table:", choices = table_names)
+  
   #########################
   ## General UI Elements ##
   #########################
@@ -161,14 +195,33 @@ server <- function(input, output, session) {
   #
   # input$db - character object
   # 
+  
   output$select_category <- renderUI({
+    req(init$vals)
     
-    selectInput("select_category", "choose a category", choices = names(table_name))
+    id <- "select_category"
+    write("SELECT CATEGORY",stderr())
+
+    initial <- NULL
+    if(!is.null(init$vals[[id]]))
+      initial <- init$vals[[id]]
+    write(initial,stderr())
+
+    selectInput("select_category", "choose a category", choices = names(table_name), selected=initial)
     
   })
   output$select_textbox <- renderUI({
+    req(init$vals)
     
-    selectInput("select_textbox", "select a table", choices = "")
+    id <- "select_textbox"
+    write("SELECT TABLE",stderr())
+    
+    initial <- NULL
+    if(!is.null(init$vals[[id]]))
+      initial <- init$vals[[id]]
+    
+    write(initial,stderr())
+    selectizeInput("select_textbox", "select a table", choices = table_names, selected=initial)
     
   })
   
@@ -181,17 +234,18 @@ server <- function(input, output, session) {
     
     # For Bookmarking... does not work
     # If a stored db exists, pull the value from init$vals
-    initial <- ifelse(length(init$vals[[id]]) > 0,
-                      init$vals[[id]],
-                      "")
+    #if(length(init$vals[[id]]) > 0){
+    #  initial <- init$vals[[id]]
+      #init$vals <- init$vals[colnames(init$vals)!=id]
+    #} else { # Either pull from select_textbox or leave blank
+      if (!is.element(input$select_textbox,c("Select comparison table...",'Enter your own location'))) {
+        initial = table_info[table_info$table_name==input$select_textbox,"table_loc"]
+      }
+      else {
+        initial = input$Not_on_list
+      }
+   # }
     
-    if (!is.element(input$select_textbox,c("Select comparison table...",'Enter your own location'))) {
-      initial = table_info[table_info$table_name==input$select_textbox,"table_loc"]
-    }
-    else {
-      initial = input$Not_on_list
-    }
-
     textInput(inputId = id, 
               label = strong(label), 
               value = initial, 
@@ -206,18 +260,23 @@ server <- function(input, output, session) {
     id <- "metadata"
     label <- "Location of metadata (e.g., cluster) information (optional; csv file)"
     
+    write('METADATA TEXTBOX',stderr())
+    
     # For Bookmarking... does not work
     # If a stored db exists, pull the value from init$vals
-    initial <- ifelse(length(init$vals[[id]]) > 0,
-                      init$vals[[id]],
-                      "")
-    
-    if (!is.element(input$select_textbox,c("Select comparison table...",'Enter your own location'))) {
-      initial = table_info[table_info$table_name==input$select_textbox,"metadata_loc"]
-    }
-    else {
-      initial = input$Not_on_list
-    }
+    #if(length(init$vals[[id]]) > 0){
+    #  write("DB EXISTS",stderr())
+    #  initial <- init$vals[[id]]
+    #  write(initial,stderr())
+    #  init$vals <- init$vals[colnames(init$vals)!=id]
+    #} else { # Either pull from select_textbox or leave blank
+      if (!is.element(input$select_textbox,c("Select comparison table...",'Enter your own location'))) {
+        initial = table_info[table_info$table_name==input$select_textbox,"metadata_loc"]
+      }
+      else {
+        initial = input$Not_on_list
+      }
+    #}
     
     textInput(inputId = id, 
               label = strong(label), 
@@ -230,14 +289,20 @@ server <- function(input, output, session) {
   output$dataset_description <- renderUI({
     req(init$vals)
     
-    if (input$select_textbox == 'Enter your own location') {
-      text_desc = "User-provided data and (optionally) metadata files."
-    } else if (input$select_textbox == 'Select comparison table...') {
-      text_desc = "README: Select a category and a comparison table from the boxes above -OR- to compare your own annotation data, choose 'Enter your own location' from the 'Select annotation category' and enter the locations of relevant files in the two boxes above. After files are selected, please WAIT for the annotation table to load. This could take up to a minute, but will likely be much faster. Once loaded, the controls above and below will become responsive.Once a data set is chosen, this pane can be minimized with the '-' in the upper right. The '+' can then be pressed to re-open in order to select a new data set or bookmark the current state of the app."
+    # If a stored db exists, pull the value from init$vals
+    if(length(init$vals[["select_textbox"]]) > 0){
+      text_desc <- init$vals[["select_textbox"]]
     } else {
-      text_desc = table_info[table_info$table_name==input$select_textbox,"description"]
-    }
     
+      if (input$select_textbox == 'Enter your own location') {
+        text_desc = "User-provided data and (optionally) metadata files."
+      } else if (input$select_textbox == 'Select comparison table...') {
+        text_desc = "README: Select a category and a comparison table from the boxes above -OR- to compare your own annotation data, choose 'Enter your own location' from the 'Select annotation category' and enter the locations of relevant files in the two boxes above. After files are selected, please WAIT for the annotation table to load. This could take up to a minute, but will likely be much faster. Once loaded, the controls above and below will become responsive.Once a data set is chosen, this pane can be minimized with the '-' in the upper right. The '+' can then be pressed to re-open in order to select a new data set or bookmark the current state of the app."
+      } else {
+        text_desc = table_info[table_info$table_name==input$select_textbox,"description"]
+      }
+    
+    }
     div(style = "font-size:14px;", strong("Dataset description"),br(),text_desc)
     
   })
@@ -800,6 +865,8 @@ server <- function(input, output, session) {
     }
     
   })
+  
+  
   
   # Filter the annotations table
   # This is the core observer for all anno filtering

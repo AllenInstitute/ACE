@@ -42,14 +42,16 @@ build_storage_string <- function(input, keep_empty = T) {
 # parse the stored values string back into a list that can
 # be used onRestore.
 parse_storage_string <- function(store) {
+  write("parse_storage_string",stderr())
   split_string <- strsplit(strsplit(store, "&")[[1]], "=")
   
-  vals <- lapply(split_string, function(x) x[2])
+  vals <- lapply(split_string, function(x) URLdecode(x[2]))
   
   names(vals) <- lapply(split_string, function(x) x[1])
   
   vals
 }
+
 
 build_url <- function(session, input) {
   
@@ -63,11 +65,13 @@ build_url <- function(session, input) {
   vals <- vals[order(names(vals))]
   
   for(i in 1:length(vals)) {
-    url <- paste0(url, names(vals)[i], "=", gsub("[\t ,]+", ",", vals[[i]]))
+    url <- paste0(url, names(vals)[i], "=", paste(unique(URLencode(as.character(vals[[i]]),reserved = TRUE)),collapse=","))
     if(i < length(vals)) {
       url <- paste0(url, "&")
     }
   }
-  
+
   url
 }
+
+

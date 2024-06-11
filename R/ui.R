@@ -20,6 +20,14 @@ ui <- function(request) {
       h3("What is ACE?"),
       p("Annotation Comparison Explorer (ACE) is a versitile application for comparison of two or more annotations such as (i) cell type assignments (e.g., from different mapping/clustering algorithms), (ii) donor metadata (e.g., donor, sex, age), and (iii) cell metadata (e.g., anatomic location, QC metrics). Several example annotation tables are included, or you can point it at your own files.  Read the user guide linked below for more details and send a message if you have any comments."),
       br(),
+      # h4("Bookmarking"),
+      # p("To get the current state of the app, push 'Get state' and copy text. To set the state, paste text into the 'Set state' box."),
+      # actionButton(inputId = "bookmark_url", label="Bookmark (BROKEN)",
+      #              icon = icon("link", lib = "glyphicon")
+      # ),
+      # verbatimTextOutput("show_url"),
+      # uiOutput("state_textbox"),
+      # h4("More help"),
 
       actionButton(inputId = "guide", 
                    icon = icon("hand-spock", lib = "font-awesome"), 
@@ -59,17 +67,17 @@ ui <- function(request) {
                    solidHeader = TRUE, status = "primary", width = 12,
                    collapsible = TRUE, collapsed = FALSE,
                    fluidRow(
-                     column(4,
-                            uiOutput("select_category")
-                     ),
-                     column(4,
+                     #column(4,  # Not currently used, since I can't get bookmarking to work with categories
+                    #        uiOutput("select_category")
+                    # ),
+                     column(6,#4
                             uiOutput("select_textbox")
                      ),
                      #column(1,
                      #        bookmarkButton(label="Bookmark (BROKEN)")  # This button does nothing when clicked but SHOULD pop open the URL to copy
                      # )
                      # NEW - start
-                     column(2,
+                     column(4,#2
                             actionButton(inputId = "bookmark_url", label="Bookmark (BROKEN)",
                                          icon = icon("link", lib = "glyphicon")
                             ),
