@@ -32,7 +32,8 @@ guess_type <- function(x) {
 
 default_vals <- list(db = "Enter a file path or URL here, or choose from dropdown above.",
                      sf = "Enter a file path or URL here, or choose from dropdown above.",
-                     metadata = "Enter a file path or URL here, or choose from dropdown above."
+                     metadata = "Enter a file path or URL here, or choose from dropdown above.",
+                     select_textbox = 'Select comparison table...'
 )
 
 
@@ -196,20 +197,21 @@ server <- function(input, output, session) {
   # input$db - character object
   # 
   
-  output$select_category <- renderUI({
-    req(init$vals)
-    
-    id <- "select_category"
-    write("SELECT CATEGORY",stderr())
-
-    initial <- NULL
-    if(!is.null(init$vals[[id]]))
-      initial <- init$vals[[id]]
-    write(initial,stderr())
-
-    selectInput("select_category", "choose a category", choices = names(table_name), selected=initial)
-    
-  })
+  # Doesn't work with bookmarking
+  # output$select_category <- renderUI({
+  #   req(init$vals)
+  #   
+  #   id <- "select_category"
+  #   write("SELECT CATEGORY",stderr())
+  # 
+  #   initial <- NULL
+  #   if(!is.null(init$vals[[id]]))
+  #     initial <- init$vals[[id]]
+  #   write(initial,stderr())
+  # 
+  #   selectInput("select_category", "choose a category", choices = names(table_name), selected=initial)
+  #   
+  # })
   output$select_textbox <- renderUI({
     req(init$vals)
     
@@ -221,7 +223,7 @@ server <- function(input, output, session) {
       initial <- init$vals[[id]]
     
     write(initial,stderr())
-    selectizeInput("select_textbox", "select a table", choices = table_names, selected=initial)
+    selectizeInput("select_textbox", "select a table", choices = table_name, selected=initial)
     
   })
   
@@ -261,6 +263,7 @@ server <- function(input, output, session) {
     label <- "Location of metadata (e.g., cluster) information (optional; csv file)"
     
     write('METADATA TEXTBOX',stderr())
+    write(paste("input$select_textbox =",input$select_textbox),stderr())
     
     # For Bookmarking... does not work
     # If a stored db exists, pull the value from init$vals
@@ -278,6 +281,9 @@ server <- function(input, output, session) {
       }
     #}
     
+    write(paste("input$Not_on_list =",input$Not_on_list),stderr())
+    write(paste("initial =",initial),stderr())
+    
     textInput(inputId = id, 
               label = strong(label), 
               value = initial, 
@@ -289,20 +295,19 @@ server <- function(input, output, session) {
   output$dataset_description <- renderUI({
     req(init$vals)
     
-    # If a stored db exists, pull the value from init$vals
-    if(length(init$vals[["select_textbox"]]) > 0){
-      text_desc <- init$vals[["select_textbox"]]
-    } else {
-    
-      if (input$select_textbox == 'Enter your own location') {
-        text_desc = "User-provided data and (optionally) metadata files."
-      } else if (input$select_textbox == 'Select comparison table...') {
-        text_desc = "README: Select a category and a comparison table from the boxes above -OR- to compare your own annotation data, choose 'Enter your own location' from the 'Select annotation category' and enter the locations of relevant files in the two boxes above. After files are selected, please WAIT for the annotation table to load. This could take up to a minute, but will likely be much faster. Once loaded, the controls above and below will become responsive.Once a data set is chosen, this pane can be minimized with the '-' in the upper right. The '+' can then be pressed to re-open in order to select a new data set or bookmark the current state of the app."
+      # If a stored db exists, pull the value from init$vals
+      if(length(init$vals[["select_textbox"]]) > 0){
+        text_desc <- init$vals[["select_textbox"]]
       } else {
-        text_desc = table_info[table_info$table_name==input$select_textbox,"description"]
+        
+        if (input$select_textbox == 'Enter your own location') {
+          text_desc = "User-provided data and (optionally) metadata files."
+        } else if (input$select_textbox == 'Select comparison table...') {
+          text_desc = "README: Select a category and a comparison table from the boxes above -OR- to compare your own annotation data, choose 'Enter your own location' from the 'Select annotation category' and enter the locations of relevant files in the two boxes above. After files are selected, please WAIT for the annotation table to load. This could take up to a minute, but will likely be much faster. Once loaded, the controls above and below will become responsive.Once a data set is chosen, this pane can be minimized with the '-' in the upper right. The '+' can then be pressed to re-open in order to select a new data set or bookmark the current state of the app."
+        } else {
+          text_desc = table_info[table_info$table_name==input$select_textbox,"description"]
+        }
       }
-    
-    }
     div(style = "font-size:14px;", strong("Dataset description"),br(),text_desc)
     
   })

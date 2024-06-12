@@ -12,15 +12,15 @@ table_names <- c(
 
 #... what category each table is included in on the main page?
 categories <- factor(c(
-  "In process analyses",
+  "Other",
   "Disease studies",
-  "Public cell types taxonomies",
-  "Public cell types taxonomies",
-  "Public cell types taxonomies",
-  "Public cell types taxonomies"
+  "Mouse cell types taxonomies",
+  "Human cell types taxonomies",
+  "Human cell types taxonomies",
+  "Mouse cell types taxonomies"
   ),
 # This is the order they will show up on in the list. **MAKE SURE THERE ARE NO TYPOS!**
-levels = c("Public cell types taxonomies", "Disease studies", "In process analyses")) 
+levels = c("Mouse cell types taxonomies", "Human cell types taxonomies", "Disease studies", "Other")) # Keep "Other" as last
 
 
 #... where is the cell x annotation table?
@@ -67,6 +67,8 @@ descriptions   <- c(
 ## DO NOT EDIT ANYTHING BELOW THIS POINT! ##
 ############################################
 
+categories = factor(c(as.character(categories),"Other"),levels = unique(c(levels(categories),"Other")))
+
 # Convert above into a data frame
 table_info <- data.frame(table_name   = table_names,
                          table_loc    = table_locations,
@@ -75,11 +77,14 @@ table_info <- data.frame(table_name   = table_names,
 )
 
 # Convert table names into a nested list
+table_names <- c(table_names,"Enter your own location")
 table_name <- list()
 for (cat in levels(categories)){
-  table_name[[cat]] <- c("Select comparison table...", table_names[categories==cat])
+  table_name[[cat]] <- table_names[categories==cat]
+    if(cat!="Other") 
+      table_name[[cat]] <- c("Select comparison table...", table_names[categories==cat])
 }
-table_name[["Enter your own location"]] = c("Enter your own location")
+#table_name[["Enter your own location"]] = c("Enter your own location")
 category = "Enter your own location"
 
 
