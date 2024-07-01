@@ -32,8 +32,7 @@ guess_type <- function(x) {
 
 default_vals <- list(db = "Enter a file path or URL here, or choose from dropdown above.",
                      sf = "Enter a file path or URL here, or choose from dropdown above.",
-                     metadata = "Enter a file path or URL here, or choose from dropdown above.",
-                     select_textbox = 'Select comparison table...'
+                     metadata = "Enter a file path or URL here, or choose from dropdown above."
 )
 
 

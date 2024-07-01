@@ -13,7 +13,7 @@ ui <- function(request) {
     
     dashboardHeader(title = "Annotation Comparison Explorer (ACE)", titleWidth = 400),
     
-    dashboardSidebar(title = tags$img(src='ACE_logo.png', width = '120', style= 'display: block; margin-left: auto; margin-right: auto;'), #), #disable = TRUE
+    dashboardSidebar(title = tags$img(src='ACE_logo.png', width = '225', style= 'display: block; margin-left: auto; margin-right: auto;'), #), #disable = TRUE
     
       width = 250,
                   
@@ -33,19 +33,38 @@ ui <- function(request) {
                    icon = icon("hand-spock", lib = "font-awesome"), 
                    a("USER GUIDE",
                      style="color: #000000; border-color: #2e6da4",
-                     href="https://github.com/AllenInstitute/annotation_comparison/blob/dev/ACE_User_Guide.pdf")
+                     href="https://github.com/AllenInstitute/ACE/blob/dev/ACE_User_Guide.pdf")
       ),
-      
+      actionButton(inputId = "tutorial", 
+                   icon = icon("file-video", lib = "font-awesome"), 
+                   a("TUTORIAL (coming soon)",
+                     style="color: #000000; border-color: #2e6da4",
+                     href="https://www.youtube.com/user/AllenInstitute")
+      ),
       actionButton(inputId = "email1", 
                    icon = icon("envelope", lib = "font-awesome"), 
-                   a("FEEDBACK", 
+                   a("PROVIDE FEEDBACK", 
                      style="color: #000000; border-color: #2e6da4",
                      href="mailto:jeremym@alleninstitute.org?
                                   body=''
                                   &subject='Annotation Comparison' app comments")
       ),
+      actionButton(inputId = "GitHub", 
+                   icon = icon("code", lib = "font-awesome"), 
+                   a("ACCESS SOURCE CODE",
+                     style="color: #000000; border-color: #2e6da4",
+                     href="https://github.com/AllenInstitute/ACE/")
+      ),
       br(),
-      p("Click the three lines next to the title above to minimize this sidebar.")
+      h4("Click the three lines next to the title above to minimize this sidebar."),
+      br(),
+      p("----------------"),
+      br(),
+      h4("Acknowledgements"),
+      p("App developed by Jeremy Miller with support from Aaron Oster and Bosiljka Tasic, using some original code developed by Lucas Graybuck. Included annotation tables created by Jeremy Miller, Kyle Travaglini, Tain Luquez, Rachel Hostetler, and Vilas Menon. Logo credit: Lauren Alfiler."),
+      br(),
+      p("If you would like to contribute to this app, please reach out via email or GitHub using the links above."),
+      br()
     ),
     
     dashboardBody(
