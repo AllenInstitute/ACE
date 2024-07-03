@@ -107,6 +107,7 @@ build_annocomp_plot <- function(anno,
                                 y_group, 
                                 c_group, 
                                 denom, 
+                                reorderY,
                                 filter_mode = "filter") {
   
   cat_annotations <- desc$base[desc$type == "cat"]
@@ -122,7 +123,38 @@ build_annocomp_plot <- function(anno,
   y_type <- ifelse(y_group %in% cat_annotations,"cat","num")
   y_name <- desc$name[desc$base == y_group]
   
+  if(c_group=="Jaccard"){
+    # These functions are located in "pairwise_functions.R" currently
+    p <- build_compare_jaccard_plot(anno = filtered, 
+                                    x_group = x_group, 
+                                    y_group = y_group,
+                                    reorderY = reorderY,
+                                    maxInputs = 10000000)  # Can fix later to avoid hard-coding
+    
+  } else {
+  
   point_color <- paste0(c_group,"_color")
+  
+  # Reorder the y-axis ids IF reorderY=TRUE
+  if (reorderY){
+    x <- filtered[,paste0(x_group,"_id")]
+    x <- factor(filtered[,paste0(x_group,"_label")], levels = filtered[,paste0(x_group,"_label")][match(sort(unique(x)),x)])
+    y <- filtered[,paste0(y_group,"_id")]
+    y <- factor(filtered[,paste0(y_group,"_label")], levels = filtered[,paste0(y_group,"_label")][match(sort(unique(y), decreasing = TRUE),y)])
+    names(x) <- names(y) <- filtered$sample_id
+    
+    common.cells <- intersect(names(x), names(y))
+    y     <- y[common.cells]
+    x     <- x[common.cells]
+    tb    <- table(x, y)
+    tmp   <- t(tb)
+    tmp   <- tmp/rowSums(tmp)
+    ord   <- order(apply(tmp,1,which.max)*10,rowMeans(t(apply(tmp,1,cumsum))))
+    y     <- factor(filtered[,paste0(y_group,"_label")], levels = colnames(tb)[ord])
+    filtered[,paste0(y_group,"_id")] = as.numeric(y)
+  }
+  
+  # Do the rest of the stuff
   
   if(filter_mode == "filter") {
     plot_anno <- filtered
@@ -360,7 +392,7 @@ build_annocomp_plot <- function(anno,
       scale_x_continuous(x_name, breaks = x_labels$xpos, labels = x_labels$x_label) +
       scale_y_continuous(y_name, breaks = y_labels$ypos, labels = y_labels$y_label) +
       theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.3))
-    
+    }
   }
   
   return(p)

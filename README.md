@@ -6,6 +6,10 @@ R Shiny app for comparison of annotations such as (i) cell type assignments (e.g
 
 ![image](https://github.com/AllenInstitute/annotation_comparison/assets/25486679/086cc28a-9529-489f-b291-c21d7da4f1e4)
 
+Additionally, this tool can compare results across more than two taxonomies as once. The two primary use cases are (1) annotating a novel taxonomy with information from multiple existing taxonomies and (2) comparison of data from multiple studies of Alzheimer's disease (like in the example below).
+
+![multi_comparison](https://github.com/AllenInstitute/annotation_comparison/assets/25486679/c55dac6e-99f6-4fd6-9203-70e136cef9a7)
+
 ## How to use
 ### Setup RStudio
 (You only need do this step once).

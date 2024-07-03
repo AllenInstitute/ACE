@@ -1,6 +1,5 @@
 suppressPackageStartupMessages({
   library(dplyr)
-  library(data.table)
   library(DT)
   library(feather)
   library(ggplot2)
@@ -10,12 +9,18 @@ suppressPackageStartupMessages({
   library(shiny)
   library(UpSetR)
   library(anndata)
+  library(vroom)
 })
 options(stringsAsFactors = F)
 
+source("initialization.R")
 source("annocomp_functions.R")
 source("river_functions.R")
 source("pairwise_functions.R")
+source("multistudy_functions.R")
+source("bookmark_functions.R")    # this shouldn't be required at all, as it is a workaround for regular bookmarking (both are currently broken)
+
+enableBookmarking("url")  # It was "server", but it doesn't seem to work either way
 
 guess_type <- function(x) {
   if(try(sum(is.na(as.numeric(x))) > 0,silent = T)) {
@@ -25,20 +30,51 @@ guess_type <- function(x) {
   }
 }
 
-default_vals <- list(db = "Enter a file path or URL here, or choose from downdown above.",
-                     sf = ""
-                     )
+default_vals <- list(db = "Enter a file path or URL here, or choose from dropdown above.",
+                     sf = "Enter a file path or URL here, or choose from dropdown above.",
+                     metadata = "Enter a file path or URL here, or choose from dropdown above."
+)
 
-table_info <- data.frame(table_name = c("Basal Ganglia example data","Alzheimer's cell mapping"),
-                         table_loc  = c("//allen/programs/celltypes/workgroups/humancelltypes/JeremyM/github/annotation_comparison/example",
-                                        "https://raw.githubusercontent.com/AllenInstitute/annotation_comparison/multi_taxonomy_comparison/data/DLPFC_SEAAD_cell_annotations_for_app.csv"))
+
+######################################################
+## Default table information is in initialization.R ##
+######################################################
+
 
 server <- function(input, output, session) {
 
-  ##########################
-  ## State Initialization ##
-  ##########################
+  ##########################################
+  ## Bookmarking and State Initialization ##
+  ##########################################
   
+  write("Reading bookmarks and setting state.", stderr())
+  
+  # When the bookmark button is clicked, store the input values as a string
+  onBookmark(function(state) {
+    
+    # build_storage_string() is in bookmark_functions.R
+    state$values$vals <- build_storage_string(input, keep_empty = FALSE)
+    
+  })
+  
+
+  # When the page is restored from a bookmark, read the stored values as a reactive list
+  restored_vals <- reactiveValues(vals = list())
+  
+  onRestore(function(state) {
+    
+    store <- state$values$vals
+    
+    if(!is.null(store)) {
+      
+      # parse_storage_string() is in bookmark_functions.R
+      restored_vals$vals <- parse_storage_string(store)
+      
+    }
+    
+  })
+  
+
   init <- reactiveValues(vals = list())
   
   # Build initial values list
@@ -47,20 +83,37 @@ server <- function(input, output, session) {
   # First from default_vals,
   # then dropdown_vals,
   # then from URL parsing
-  
+
   observe({
     
     # default values
     # defined in the default_vals list before the server() call, above.
     vals <- default_vals
     
-    # Choose a value from the default table, if selected
-    updateSelectInput(session, inputId = "select_textbox", label = "Select an annotation table:", choices = c(table_info$table_name, "Enter your own location"))
+    # restored values
+    # defined by the stored input value string, parsed in onRestore(), above.
+    # These supercede the defaults
+    restored <- restored_vals$vals
+    
+    write(paste0("RESTORED LENGTH: ",length(restored)),stderr())
+    
+    # Substitute default values for initialized values
+    if(length(restored) > 0) {
+      for(val in names(restored)) {
+        vals[[val]] <- restored[[val]]
+        write(paste(val, restored[[val]], collapse=": "),stderr())
+        
+      }
+      
+    }
     
     # URL values
     # defined in the URL
     # These supercede both defaults and restored values
     if(length(session$clientData$url_search) > 0) {
+      
+      write("RESTORED URL OBSERVED",stderr())
+      write(paste0("URL VALUE: ",session$clientData$url_search),stderr())
       
       query <- as.list(parseQueryString(session$clientData$url_search))
       
@@ -73,7 +126,61 @@ server <- function(input, output, session) {
     
   })
   
+  
+  # Direct link based on input parsing
+  # This can be used to provide a direct URL to users that can be bookmarked.
+  output$url <- renderUI({
+    req(input)
+    url <- build_url(session, input)
+    a("Direct Link", href = url)
+  })
+  
+  
+  output$show_url <- renderText("")
+  observeEvent(input$bookmark_url, {
+    req(input)
+    url <- build_url(session, input)
+    output$show_url <- renderText(url)
+  })
+  
+  ### THIS DOESN'T WORK
+  # ### Manual state restoration
+  # output$state_textbox <- renderUI({
+  #   id <- "restore_state"
+  #   label <- "Set state"
+  #   
+  #   textInput(inputId = id, 
+  #             label = strong(label), 
+  #             value = "", 
+  #             width = "100%")
+  #   
+  # })
+  # rv_path <- observeEvent(input$restore_state,{
+  #   write("Checking and setting $restore_state.", stderr())
+  #   write(input$restore_state,stderr())
+  #   vals <- parse_storage_string(input$restore_state)
+  #   
+  #   for (nm in names(vals)){
+  #     write(nm,stderr())
+  #     write(vals[[nm]],stderr())
+  #     init[[nm]] <- vals[[nm]]
+  #   }
+  # })
 
+  
+  #updateSelectInput(session, inputId = "select_category", label = "Select annotation category:", choices = names(table_name)) # "Enter your own location"
+  
+  #observeEvent(input$select_category, {
+    # Choose a value from the default table, if selected
+    # This is updated to be a list of lists
+  #  if(length(input$select_category)>0) category = input$select_category
+  #  updateSelectInput(session, inputId = "select_textbox", label = "Select comparison table:", choices = table_name[[category]])
+    
+  #})
+  
+  
+  #updateSelectInput(session, inputId = "select_textbox", label = "Select comparison table:", choices = table_names)
+  
   #########################
   ## General UI Elements ##
   #########################
@@ -82,15 +189,40 @@ server <- function(input, output, session) {
   # Users provide the network path to the dataset
   # This is in the server.R section so that the default value can be
   #   set using the init$vals reactive values based on defaults, 
-  #   a drop-down menu, and URL parsing
+  #   bookmarks, a drop-down menu, and URL parsing
   #
   # output$database_textbox - Textbox UI Object
   #
   # input$db - character object
   # 
+  
+  # Doesn't work with bookmarking
+  # output$select_category <- renderUI({
+  #   req(init$vals)
+  #   
+  #   id <- "select_category"
+  #   write("SELECT CATEGORY",stderr())
+  # 
+  #   initial <- NULL
+  #   if(!is.null(init$vals[[id]]))
+  #     initial <- init$vals[[id]]
+  #   write(initial,stderr())
+  # 
+  #   selectInput("select_category", "choose a category", choices = names(table_name), selected=initial)
+  #   
+  # })
   output$select_textbox <- renderUI({
+    req(init$vals)
     
-    selectInput("select_textbox", "select name", choices = "")
+    id <- "select_textbox"
+    write("SELECT TABLE",stderr())
+    
+    initial <- NULL
+    if(!is.null(init$vals[[id]]))
+      initial <- init$vals[[id]]
+    
+    write(initial,stderr())
+    selectizeInput("select_textbox", "select a table", choices = table_name, selected=initial)
     
   })
   
@@ -99,19 +231,83 @@ server <- function(input, output, session) {
     req(init$vals)
     
     id <- "db"
-    label <- "Input location of annotation information"
+    label <- "Input location of cell-level annotation information"
     
-    if (!input$select_textbox == 'Enter your own location') {
-      initial = table_info[table_info$table_name==input$select_textbox,"table_loc"]
-    }
-    else {
-      initial = input$Not_on_list
-    }
-
+    # For Bookmarking... does not work
+    # If a stored db exists, pull the value from init$vals
+    #if(length(init$vals[[id]]) > 0){
+    #  initial <- init$vals[[id]]
+      #init$vals <- init$vals[colnames(init$vals)!=id]
+    #} else { # Either pull from select_textbox or leave blank
+      if (!is.element(input$select_textbox,c("Select comparison table...",'Enter your own location'))) {
+        initial = table_info[table_info$table_name==input$select_textbox,"table_loc"]
+      }
+      else {
+        initial = input$Not_on_list
+      }
+   # }
+    
     textInput(inputId = id, 
               label = strong(label), 
               value = initial, 
               width = "100%")
+    
+  })
+  
+  
+  output$metadata_textbox <- renderUI({
+    req(init$vals)
+    
+    id <- "metadata"
+    label <- "Location of metadata (e.g., cluster) information (optional; csv file)"
+    
+    write('METADATA TEXTBOX',stderr())
+    write(paste("input$select_textbox =",input$select_textbox),stderr())
+    
+    # For Bookmarking... does not work
+    # If a stored db exists, pull the value from init$vals
+    #if(length(init$vals[[id]]) > 0){
+    #  write("DB EXISTS",stderr())
+    #  initial <- init$vals[[id]]
+    #  write(initial,stderr())
+    #  init$vals <- init$vals[colnames(init$vals)!=id]
+    #} else { # Either pull from select_textbox or leave blank
+      if (!is.element(input$select_textbox,c("Select comparison table...",'Enter your own location'))) {
+        initial = table_info[table_info$table_name==input$select_textbox,"metadata_loc"]
+      }
+      else {
+        initial = input$Not_on_list
+      }
+    #}
+    
+    write(paste("input$Not_on_list =",input$Not_on_list),stderr())
+    write(paste("initial =",initial),stderr())
+    
+    textInput(inputId = id, 
+              label = strong(label), 
+              value = initial, 
+              width = "100%")
+    
+  })
+  
+  
+  output$dataset_description <- renderUI({
+    req(init$vals)
+    
+      # If a stored db exists, pull the value from init$vals
+      if(length(init$vals[["select_textbox"]]) > 0){
+        text_desc <- init$vals[["select_textbox"]]
+      } else {
+        
+        if (input$select_textbox == 'Enter your own location') {
+          text_desc = "User-provided data and (optionally) metadata files."
+        } else if (input$select_textbox == 'Select comparison table...') {
+          text_desc = "README: Select a category and a comparison table from the boxes above -OR- to compare your own annotation data, choose 'Enter your own location' from the 'Select annotation category' and enter the locations of relevant files in the two boxes above. After files are selected, please WAIT for the annotation table to load. This could take up to a minute, but will likely be much faster. Once loaded, the controls above and below will become responsive.Once a data set is chosen, this pane can be minimized with the '-' in the upper right. The '+' can then be pressed to re-open in order to select a new data set or bookmark the current state of the app."
+        } else {
+          text_desc = table_info[table_info$table_name==input$select_textbox,"description"]
+        }
+      }
+    div(style = "font-size:14px;", strong("Dataset description"),br(),text_desc)
     
   })
   
@@ -135,7 +331,21 @@ server <- function(input, output, session) {
     input$db
   })
   
-  # Read the annotations table from the dataset
+  
+  # Check the metadata path provided by input$db
+  # returns a corrected path
+  #
+  # rv_path_metadata() - length 1 character vector
+  #
+  rv_path_metadata <- reactive({
+    req(input$metadata)
+    write("Checking and setting input$metadata.", stderr())
+    
+    input$metadata
+  })
+  
+  
+  # Read the CELL annotations table from the dataset
   #
   # rv_anno() - a data.frame
   #
@@ -143,28 +353,44 @@ server <- function(input, output, session) {
     req(rv_path())
     write("Reading anno.", stderr())
     
-    # If a .csv file, use read.csv
-    if(grepl(".csv$",rv_path())) {
+    # If a .csv file, use vroom.  These can be gzipped
+    if(grepl(".csv$",rv_path())|grepl(".gz$",rv_path())) {
       
-      if(file.exists(rv_path())) {
+      withProgress({
+        setProgress(value = 0.2,
+                    message = "Reading csv file, if it exists.")
+        
+        fn <- rv_path()
+        if(substr(fn,1,4)=="http") {
+          if(grepl(".gz$",rv_path())){
+            download.file(fn,"tmp.csv.gz",method="auto")
+            fn = "tmp.csv.gz"
+          } else {
+            download.file(fn,"tmp.csv",method="auto")
+            fn = "tmp.csv"
+          }
+        }
+        
+        anno <- try(vroom(fn))
+      })
+      
+      if(class(anno)[1]!="try-error") {
         withProgress({
           setProgress(value = 0.2,
                       message = "Loading Annotations")
-          
-          anno <- fread(rv_path())
-          
+
           anno <- as.data.frame(anno)
           
           # Check if first column is unique IDs, and if not, create a new column
           if (length(anno[,1])!=length(unique(anno[,1]))){
             anno <- data.frame(sample_id=paste0("i",1:dim(anno)[1]),anno)
           }
-
+          
+          names(anno)[1] <- "sample_id" # Rename sample ids as sample_id
+          # Add labels and colors, if needed
           anno <- auto_annotate(anno)
-
-          # Rename sample ids as sample_id
-          names(anno)[1] <- "sample_id"
-                    
+          names(anno)[1] <- "sample_id" # Rename sample ids as sample_id again
+          
           setProgress(value = 1,
                       message = "Annotations Loaded")
           
@@ -175,20 +401,31 @@ server <- function(input, output, session) {
         write(paste(rv_path(),"does not exist."), stderr())
         return(NULL)
       }
-    # If not a csv file, check for h5ad file in scrattch-mapping format
+      # If not a csv file, check for h5ad file with annotations in obs (e.g., in scrattch-mapping format)
     } else if(grepl(".h5ad$",rv_path())) {
-
+      
       if(file.exists(rv_path())) {
         withProgress({
           setProgress(value = 0.2,
                       message = "Loading Annotations")
           h5ad <- read_h5ad(rv_path(), backed="r")
-
+          
           anno <- as.data.frame(h5ad$obs)
           
-          # Move sample_id to the first column
+          # Move sample_id to the first column, if it exists
           anno <- anno %>%
             select("sample_id", everything())
+          
+          # Check if first column is unique IDs, and if not, create a new column
+          if (length(anno[,1])!=length(unique(anno[,1]))){
+            colnames(anno)[colnames(anno)=="cluster_id"] = "cluster_id2"
+            anno <- data.frame(sample_id=paste0("i",1:dim(anno)[1]),anno)
+          }
+          
+          names(anno)[1] <- "sample_id" # Rename sample ids as sample_id
+          # Add labels and colors, if needed
+          anno <- auto_annotate(anno)
+          names(anno)[1] <- "sample_id" # Rename sample ids as sample_id again
           
           # Convert factors to characters
           for (cn in colnames(anno)[grepl("_label",colnames(anno))])
@@ -207,7 +444,7 @@ server <- function(input, output, session) {
         write(paste(rv_path(),"does not exist."), stderr())
         return(NULL)
       }
-    # If not a csv or h5ad file, we expect a directory with an anno.feather file
+      # If not a csv or h5ad file, we expect a directory with an anno.feather file
     } else {
       # use read_feather() from feather
       anno_file <- paste0(rv_path(),"/anno.feather")
@@ -223,7 +460,7 @@ server <- function(input, output, session) {
           # Rename sample_name to sample_id for compatibility
           # with code written for .feather files
           colnames(anno)[colnames(anno)=="sample_name"] <- "sample_id"
-
+          
           # Move sample_id to the first column
           anno <- anno %>%
             select("sample_id", everything())
@@ -247,9 +484,9 @@ server <- function(input, output, session) {
   output$checkInput <- renderUI({
     req(rv_anno)
     if(is.null(rv_anno())){
-      p("INVALID INPUT")
+      p("ENTER VALID CELL ANNOTATION FILE.")
     } else {
-      p("")
+      p(" ")
     }
   })
   
@@ -275,8 +512,45 @@ server <- function(input, output, session) {
     })
     
     return(desc_table)
- 
+    
   }) # end of rv_desc()
+  
+  
+  
+  # Read the CLUSTER annotations table from the dataset (if present)
+  #
+  # rv_anno_metadata() - a data.frame
+  #
+  rv_anno_metadata <- reactive({
+    req(rv_path_metadata())
+    write("Reading cluster anno.", stderr())
+    
+    # If a .csv file, use vroom; can be gzipped
+    if(grepl(".csv$",rv_path_metadata())|grepl(".gz$",rv_path_metadata())) {
+      
+      anno <- vroom(rv_path_metadata())
+      if(class(anno)[1]!="try-error"){ 
+        anno <- as.data.frame(anno)
+        return(anno)
+      } else {
+        write(paste(rv_path_metadata(),"does not exist."), stderr())
+        return(data.frame(cell_type=c("none","none2"),direction=c("none","none"))) # Provide a generic data frame
+      }
+    }
+    return(data.frame(cell_type=c("none","none2"),direction=c("none","none"))) # Provide a generic data frame
+    
+  }) # end rv_anno_metadata()
+  
+  # Check for valid input
+  output$metadata_checkInput <- renderUI({
+    req(rv_anno_metadata)
+    if(is.null(rv_anno_metadata())){
+      p("Cluster information file not available.")
+    } else {
+      p(" ")
+    }
+  })
+  
   
   #############################
   ## Filtering and Filter UI ##
@@ -324,28 +598,28 @@ server <- function(input, output, session) {
   #   sf stands for selected filter
   #
   output$filter_selection <- renderUI({
-  req(filter_options)
+    req(filter_options)
     
-  filter_opts <- filter_options()
-  
-  id <- "sf"
-  label <- "Choose Filter Set"
+    filter_opts <- filter_options()
     
-  initial <- ifelse(length(init$vals[[id]]) > 0,
-                    init$vals[[id]],
-                    "")
+    id <- "sf"
+    label <- "Choose Filter Set"
     
-  if(grepl(",", initial)) {
-    initial_split <- unlist(strsplit(initial,","))
-    initial <- filter_opts[match(initial_split, filter_opts)]
-  }
+    initial <- ifelse(length(init$vals[[id]]) > 0,
+                      init$vals[[id]],
+                      "")
     
-  selectizeInput(inputId = id,
-                 label = label,
-                 filter_opts,
-                 initial,
-                 multiple = T,
-                 width = "100%")
+    if(grepl(",", initial)) {
+      initial_split <- unlist(strsplit(initial,","))
+      initial <- filter_opts[match(initial_split, filter_opts)]
+    }
+    
+    selectizeInput(inputId = id,
+                   label = label,
+                   filter_opts,
+                   initial,
+                   multiple = T,
+                   width = "100%")
   })
   
   # Reactive value to show/hide the filter panel
@@ -509,6 +783,34 @@ server <- function(input, output, session) {
     
   })
   
+  # build the filter invert checkbox
+  # 
+  # output$invert <- which filter values should be inverted
+  # invert_annos  <- THIS IS THE VARIABLE TO USE for which filter values shoudl be inverted
+  #
+  invert_annos <- reactiveVal(character())
+  observeEvent(input$invert,{
+    invert_annos(input$invert)
+  })
+  
+  output$filter_invert <- renderUI({
+    req(rv_desc())
+    req(input$sf)
+    req(invert_annos)
+    
+    desc      <- rv_desc()
+    usefilter <- intersect(input$sf,desc$base[desc$type=="cat"])
+    
+    if(length(usefilter)>0){
+      id      <- "invert"
+      label   <- "Invert?"
+      initial <- intersect(usefilter,invert_annos())
+      if(length(initial)==0) initial = NULL
+    
+      checkboxGroupInput(id, label, usefilter, selected = initial)
+    }
+  })
+  
   # Update filters in filters$current based on input, 
   # initialize if there's no input,
   # and remove if not present after initialization
@@ -568,6 +870,8 @@ server <- function(input, output, session) {
     
   })
   
+  
+  
   # Filter the annotations table
   # This is the core observer for all anno filtering
   #
@@ -577,6 +881,7 @@ server <- function(input, output, session) {
     req(rv_desc())
     req(rv_anno())
     req(filters$current)
+    req(invert_annos)
     write("Filtering annotations", stderr())
     
     withProgress({
@@ -602,6 +907,10 @@ server <- function(input, output, session) {
           if(filter_values[1] != "" & filter_base %in% input$sf) {
             if(filter_type == "cat") {
               filter_text <- paste0(filter_id," %in% c(",paste(filter_values,collapse=","),")")
+              # Take the opposite if invert filter set
+              if (filter_base %in% invert_annos()){ 
+                filter_text <- paste0("!(",filter_text,")")
+              } 
               
               filtered <- filtered %>%
                 filter_(filter_text)
@@ -632,6 +941,7 @@ server <- function(input, output, session) {
     req(rv_anno())
     req(rv_desc())
     req(rv_filtered())
+    req(invert_annos)
     write("Building filter text.", stderr())
     
     anno <- rv_anno()
@@ -665,7 +975,8 @@ server <- function(input, output, session) {
             filter_groups <- anno_groups[[filter_label]]
             
             if(length(filter_values) > 0) {
-              filter_text <- paste0(filter_name,": ",paste(filter_groups,collapse=", "))
+              filter_text <- paste0(filter_name,": ",paste(filter_groups,collapse=", "),
+                                    ifelse(filter_base %in% invert_annos()," EXCLUDED"," INCLUDED"))
             } else {
               filter_text <- ""
             }
@@ -762,7 +1073,7 @@ server <- function(input, output, session) {
   })
   
   
-  # Call dendrogram plot rendering funciton
+  # Call dendrogram plot rendering function
   output$river_plot <- renderRbokeh({
     req(river_anno())
     req(river_groups())
@@ -878,8 +1189,8 @@ server <- function(input, output, session) {
       options <- c("none",desc$base)
       names(options) <- c("None",desc$name)
     } else {
-      options <- c("none",input$annocomp_x, input$annocomp_y)
-      names(options) <- c("None",
+      options <- c("Jaccard","none",input$annocomp_x, input$annocomp_y)
+      names(options) <- c("Jaccard","None",
                           desc$name[desc$base == input$annocomp_x],
                           desc$name[desc$base == input$annocomp_y])
     }
@@ -890,6 +1201,8 @@ server <- function(input, output, session) {
     initial <- ifelse(length(init$vals[[id]]) > 0,
                       init$vals[[id]],
                       "none")
+    if(length(options)>=1) if(is.element("Jaccard",options))
+      initial = "Jaccard"
     
     selectizeInput(inputId = id, 
                    label = strong(label), 
@@ -900,17 +1213,18 @@ server <- function(input, output, session) {
     
   })
   
+  
   output$annocomp_denom_selection <- renderUI({
+    
     req(rv_desc())
     req(input$annocomp_x)
     req(input$annocomp_y)
-    
-    
+    req(input$annocomp_color)
     
     desc <- rv_desc()
     cat_anno <- desc$base[desc$type == "cat"]
     
-    if(input$annocomp_x %in% cat_anno & input$annocomp_y %in% cat_anno) {
+    if((input$annocomp_x %in% cat_anno & input$annocomp_y %in% cat_anno) & (input$annocomp_color!="Jaccard")) {
       
       denom_options <- c("none",input$annocomp_x, input$annocomp_y)
       names(denom_options) <- c("None",desc$name[desc$base == input$annocomp_x],
@@ -942,6 +1256,27 @@ server <- function(input, output, session) {
       
     }
   })
+  
+  
+  output$annocomp_reorderY_selection <- renderUI({
+    
+    req(rv_desc())
+    req(input$annocomp_x)
+    req(input$annocomp_y)
+    
+    desc <- rv_desc()
+    cat_anno <- desc$base[desc$type == "cat"]
+    
+    if(input$annocomp_x %in% cat_anno & input$annocomp_y %in% cat_anno) {
+      
+      id <- "anno_reorderY"
+      label <- "Reorder query?"
+      initial <- TRUE
+      selectInput(id, label, c("Yes" = TRUE,"No"= FALSE), multiple = FALSE)
+    }
+    
+  })
+  
   
   output$annocomp_select_mode_selection <- renderUI({
     req(init$vals)
@@ -1001,14 +1336,16 @@ server <- function(input, output, session) {
   
   # Calculate stats for medians and whiskers if one dimension is numeric
   # Then build the plot.
-  annocomp_plot <- reactive({
+  
+  annocomp_plot <- eventReactive(input$anno_go, {   #NOTE: to make plots automatic again, replace with " <- reactive { " and delete button on UI page.
+    
     req(rv_anno())
     req(rv_filtered())
     req(rv_desc())
     req(input$annocomp_x)
     req(input$annocomp_y)
     req(input$annocomp_color)
-    req(input$annocomp_select_mode)
+    #req(input$annocomp_select_mode)
     
     stats <- build_annocomp_stats(anno = rv_filtered(),
                                   desc = rv_desc(),
@@ -1023,7 +1360,8 @@ server <- function(input, output, session) {
                         y_group = input$annocomp_y, 
                         c_group = input$annocomp_color, 
                         denom = input$annocomp_denom,
-                        filter_mode = input$annocomp_select_mode)
+                        reorderY = input$anno_reorderY,
+                        filter_mode = "filter")#input$annocomp_select_mode)
   })
   
   output$annocomp_plot <- renderPlot({
@@ -1062,198 +1400,162 @@ server <- function(input, output, session) {
   
   
   ##############################
-  ## Pairwise Comparisons Box ##
+  ## Pairwise Comparisons Box ##  Also called 'Jaccard distance' or 'confusion matrix'
   ##############################
   
+  # NO LONGER NEEDED. This is now baked into the annotation comparison panel above.
+  
   ## UI Elements
-  output$paircomp_x_selection <- renderUI({
-    req(init$vals)
-    req(rv_desc())
-    
-    desc <- rv_desc()
-    options <- desc$base[desc$type == "cat"]
-    names(options) <- desc$name[desc$type == "cat"]
-    
-    id <- "paircomp_x"
-    label <- "X-axis annotation"
-    
-    initial <- ifelse(length(init$vals[[id]]) > 0,
-                      init$vals[[id]],
-                      options[1])
-    
-    selectizeInput(inputId = id, 
-                   label = strong(label), 
-                   choices = options, 
-                   selected = initial,
-                   multiple = FALSE)
-  })
   
-  output$paircomp_y_selection <- renderUI({
-    req(init$vals)
-    req(rv_desc())
-    
-    desc <- rv_desc()
-    options <- desc$base[desc$type == "cat"]
-    names(options) <- desc$name[desc$type == "cat"]
-    
-    id <- "paircomp_y"
-    label <- "Y-axis annotation"
-    
-    initial <- ifelse(length(init$vals[[id]]) > 0,
-                      init$vals[[id]],
-                      options[2])
-    
-    selectizeInput(inputId = id, 
-                   label = strong(label), 
-                   choices = options, 
-                   selected = initial,
-                   multiple = FALSE)
-  })
-  
-  
-  output$paircomp_threshold_selection <- renderUI({
-    req(init$vals)
-    
-    id <- "paircomp_threshold"
-    label <- "Heatmap Threshold"
-    
-    initial <- ifelse(length(init$vals[[id]]) > 0,
-                      init$vals[[id]],
-                      "0.2")
-    
-    textInput(inputId = id, 
-              label = strong(label), 
-              value = initial, 
-              width = "100%")
-    
-  })
-  
-  output$paircomp_height_textbox <- renderUI({
-    req(init$vals)
-    
-    id <- "paircomp_height"
-    label <- "Plot Height"
-    
-    initial <- ifelse(length(init$vals[[id]]) > 0,
-                      init$vals[[id]],
-                      "500px")
-    
-    textInput(inputId = id, 
-              label = strong(label), 
-              value = initial, 
-              width = "100%")
-    
-  })
-  
-  output$paircomp_width_textbox <- renderUI({
-    req(init$vals)
-    
-    id <- "paircomp_width"
-    label <- "Plot Width"
-    
-    initial <- ifelse(length(init$vals[[id]]) > 0,
-                      init$vals[[id]],
-                      "100%")
-    
-    textInput(inputId = id, 
-              label = strong(label), 
-              value = initial, 
-              width = "100%")
-    
-  })
-  
-  # Calculate and then builds Jaccard comparison plot
-  paircomp_jaccard_plot <- reactive({
-    req(rv_filtered())
-    req(input$paircomp_x)
-    req(input$paircomp_y)
-    
-    # Get input values
-    build_compare_jaccard_plot(anno = rv_filtered(), 
-                               x_group = input$paircomp_x, 
-                               y_group = input$paircomp_y)
-  })
-  
-  output$paircomp_jaccard_plot <- renderPlot({
-    paircomp_jaccard_plot()
-  })
-  
-  output$paircomp_jaccard_ui <- renderUI({
-    plotOutput("paircomp_jaccard_plot", height = input$paircomp_height, width = input$paircomp_width)
-  })
-  
-  
-  # download objects
-  output$paircomp_jaccard_downloadButton <- renderUI({
-    req(paircomp_jaccard_plot())
-    downloadButton('paircomp_jaccard_downloadPlot')
-  })
-  
-  
-  output$paircomp_jaccard_downloadPlot <- downloadHandler(
-    
-    filename = "paircomp_jaccard_plot.pdf",
-    content = function(file) {
-      
-      plot <- paircomp_jaccard_plot() + theme(text = element_text(size = as.numeric(input$paircomp_dlf)))
-      
-      out_h <- as.numeric(input$paircomp_dlh)
-      out_w <- as.numeric(input$paircomp_dlw)
-      
-      ggsave(file, 
-             plot = plot,
-             width = out_w, 
-             height = out_h)
-    }
-  )
-  
-  
-  # Calculate and then builds heatmap comparison plot
-  paircomp_heatmap_plot <- reactive({
-    req(rv_filtered())
-    req(input$paircomp_x)
-    req(input$paircomp_y)
-    req(input$paircomp_threshold)
-    
-    # Get input values
-    build_compare_heatmap_plot(anno = rv_filtered(), 
-                               x_group = input$paircomp_x, 
-                               y_group = input$paircomp_y,
-                               threshold = as.numeric(input$paircomp_threshold))
-  })
-  
-  output$paircomp_heatmap_plot <- renderPlot({
-    paircomp_heatmap_plot()
-  })
-  
-  output$paircomp_heatmap_ui <- renderUI({
-    plotOutput("paircomp_heatmap_plot", height = input$paircomp_height, width = input$paircomp_width)
-  })
-  
-  
-  # download objects
-  output$paircomp_heatmap_downloadButton <- renderUI({
-    req(paircomp_heatmap_plot())
-    downloadButton('paircomp_heatmap_downloadPlot')
-  })
-  
-  
-  output$paircomp_heatmap_downloadPlot <- downloadHandler(
-    
-    filename = "paircomp_heatmap_plot.pdf",
-    content = function(file) {
-      
-      plot <- paircomp_heatmap_plot() + theme(text = element_text(size = as.numeric(input$paircomp_dlf)))
-      
-      out_h <- as.numeric(input$paircomp_dlh)
-      out_w <- as.numeric(input$paircomp_dlw)
-      
-      ggsave(file, 
-             plot = plot,
-             width = out_w, 
-             height = out_h)
-    }
-  ) 
+  # output$paircomp_x_selection <- renderUI({
+  #   req(init$vals)
+  #   req(rv_desc())
+  #   
+  #   desc <- rv_desc()
+  #   options <- desc$base[desc$type == "cat"]
+  #   names(options) <- desc$name[desc$type == "cat"]
+  #   
+  #   id <- "paircomp_x"
+  #   label <- "X-axis annotation"
+  #   
+  #   initial <- ifelse(length(init$vals[[id]]) > 0,
+  #                     init$vals[[id]],
+  #                     options[1])
+  #   
+  #   selectizeInput(inputId = id, 
+  #                  label = strong(label), 
+  #                  choices = options, 
+  #                  selected = initial,
+  #                  multiple = FALSE)
+  # })
+  # 
+  # output$paircomp_y_selection <- renderUI({
+  #   req(init$vals)
+  #   req(rv_desc())
+  #   
+  #   desc <- rv_desc()
+  #   options <- desc$base[desc$type == "cat"]
+  #   names(options) <- desc$name[desc$type == "cat"]
+  #   
+  #   id <- "paircomp_y"
+  #   label <- "Y-axis annotation"
+  #   
+  #   initial <- ifelse(length(init$vals[[id]]) > 0,
+  #                     init$vals[[id]],
+  #                     options[2])
+  #   
+  #   selectizeInput(inputId = id, 
+  #                  label = strong(label), 
+  #                  choices = options, 
+  #                  selected = initial,
+  #                  multiple = FALSE)
+  # })
+  # 
+  # output$reorderY_selection <- renderUI({
+  #   id <- "reorderY"
+  #   label <- "Reorder query?"
+  #   initial <- TRUE
+  #   selectInput(id, label, c("Yes" = TRUE,"No"= FALSE))
+  # })
+  # 
+  # output$paircomp_height_textbox <- renderUI({
+  #   req(init$vals)
+  #   
+  #   id <- "paircomp_height"
+  #   label <- "Plot Height"
+  #   
+  #   initial <- ifelse(length(init$vals[[id]]) > 0,
+  #                     init$vals[[id]],
+  #                     "600px")
+  #   
+  #   textInput(inputId = id, 
+  #             label = strong(label), 
+  #             value = initial, 
+  #             width = "100%")
+  #   
+  # })
+  # 
+  # output$paircomp_width_textbox <- renderUI({
+  #   req(init$vals)
+  #   
+  #   id <- "paircomp_width"
+  #   label <- "Plot Width"
+  #   
+  #   initial <- ifelse(length(init$vals[[id]]) > 0,
+  #                     init$vals[[id]],
+  #                     "100%")
+  #   
+  #   textInput(inputId = id, 
+  #             label = strong(label), 
+  #             value = initial, 
+  #             width = "100%")
+  #   
+  # })
+  # 
+  # # Calculate and then builds Jaccard comparison plot
+  # paircomp_jaccard_plot <- reactive({
+  #   # Inputs for the plot
+  #   req(rv_filtered())   
+  #   req(input$paircomp_x)
+  #   req(input$paircomp_y)
+  #   req(input$reorderY)
+  #   # Inputs for the frame size
+  #   req(input$dimension)
+  #   req(input$paircomp_height)
+  #   req(input$paircomp_width)
+  #   
+  #   # Get the frame size to avoid printing gigantic plots on screen
+  #   height <- input$paircomp_height
+  #   height <- as.numeric(gsub("([0-9]+).*$", "\\1", height))
+  #   width  <- input$paircomp_width
+  #   if(substr(width,nchar(width),nchar(width))=="%"){
+  #     width <- as.numeric(substr(width,1,nchar(width)-1))
+  #     width <- width*input$dimension[1]/100
+  #   } else {
+  #     width <- as.numeric(gsub("([0-9]+).*$", "\\1", width))
+  #   }
+  #   maxInputs <- (width*height)/3000  # This value of 3000 could be adjusted later or made interactive, if needed
+  #   
+  #   # Get input values
+  #   build_compare_jaccard_plot(anno = rv_filtered(), 
+  #                              x_group = input$paircomp_x, 
+  #                              y_group = input$paircomp_y,
+  #                              reorderY = input$reorderY,
+  #                              maxInputs = maxInputs)
+  # })
+  # 
+  # output$paircomp_jaccard_plot <- renderPlot({
+  #   paircomp_jaccard_plot()
+  # })
+  # 
+  # output$paircomp_jaccard_ui <- renderUI({
+  #   plotOutput("paircomp_jaccard_plot", height = input$paircomp_height, width = input$paircomp_width)
+  # })
+  # 
+  # 
+  # # download objects
+  # output$paircomp_jaccard_downloadButton <- renderUI({
+  #   req(paircomp_jaccard_plot())
+  #   downloadButton('paircomp_jaccard_downloadPlot')
+  # })
+  # 
+  # 
+  # output$paircomp_jaccard_downloadPlot <- downloadHandler(
+  #   
+  #   filename = "paircomp_jaccard_plot.pdf",
+  #   content = function(file) {
+  #     
+  #     plot <- paircomp_jaccard_plot() + theme(text = element_text(size = as.numeric(input$paircomp_dlf)))
+  #     
+  #     out_h <- as.numeric(input$paircomp_dlh)
+  #     out_w <- as.numeric(input$paircomp_dlw)
+  #     
+  #     ggsave(file, 
+  #            plot = plot,
+  #            width = out_w, 
+  #            height = out_h)
+  #   }
+  # )
   
   
   ##############################
@@ -1332,20 +1634,54 @@ server <- function(input, output, session) {
                    multiple = TRUE)
   })
   
-  
-  # Placeholder for plots
-  output$explorer_box_ui <- renderUI({
-    req(input$explorer_annotation)
-    req(input$explorer_group)
-    req(input$explorer_comparison)
+  output$explorer_plot_type_selection <- renderUI({
+    id      <- "explorer_plot_type"
+    label   <- "Show plots?"
+    initial <- TRUE
     
-    p(paste0("Placeholder for: ",input$explorer_annotation," in group ",input$explorer_group,". ",
-            "Comparison groups: ",paste(input$explorer_comparison,collapse=", ")))
+    selectInput(inputId=id, 
+                label=label, 
+                choices=c("No"= FALSE,"Yes" = TRUE),
+                selected=initial)
+  })
+  
+  output$explorer_height_textbox <- renderUI({
+    req(init$vals)
+    
+    id <- "explorer_height"
+    label <- "Plot Height"
+    
+    initial <- ifelse(length(init$vals[[id]]) > 0,
+                      init$vals[[id]],
+                      "300px")
+    
+    textInput(inputId = id, 
+              label = strong(label), 
+              value = initial, 
+              width = "100%")
+    
+  })
+  
+  output$explorer_maxtypes_textbox <- renderUI({
+    req(init$vals)
+    
+    id <- "explorer_maxtypes"
+    label <- "Max to plot"
+    
+    initial <- ifelse(length(init$vals[[id]]) > 0,
+                      init$vals[[id]],
+                      "10")
+    
+    textInput(inputId = id, 
+              label = strong(label), 
+              value = initial, 
+              width = "100%")
     
   })
   
   
-  ## Table with 
+  
+  ## Table with top annotation comparisons
   
   output$explorer_table <- DT::renderDataTable({
     
@@ -1353,9 +1689,10 @@ server <- function(input, output, session) {
     req(input$explorer_group)
     req(input$explorer_comparison)
     req(rv_filtered())
+    req(rv_anno_metadata())
     
     # display top 5 rows at a time
-    options(DT.options = list(pageLength = 5))
+    options(DT.options = list(pageLength = 5, selection=list(mode="single", target="cell")))
     
     # Collect relevant inputs
     anno = as.data.frame(rv_filtered())
@@ -1383,205 +1720,126 @@ server <- function(input, output, session) {
       }
     }
     
-    # set conditions and return the beautiful table
-    datatab <- datatable(df)
-    
-    # We can use conditional coloring, but I haven't figured this part out yet.
-    #datatab <- datatab %>% formatStyle(paste0(cats,"_percent"), backgroundColor = styleEqual((0:1000)/10, grey((0:1000)/1000)))
-    return(datatab)
-  })
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  ##########################
-  ## Browse Selection Box ##
-  ##########################
-  
-  # Show IDs checkbox
-  output$browse_show_ids_checkbox <- renderUI({
-    req(init$vals)
-    
-    id <- "browse_show_ids"
-    label <- "Show ID Columns"
-    
-    initial <- ifelse(length(init$vals[[id]]) > 0,
-                      init$vals[[id]],
-                      FALSE)
-    
-    checkboxInput(inputId = id,
-                  label = label,
-                  initial)
-    
-  })
-  # Show Colors checkbox
-  output$browse_show_colors_checkbox <- renderUI({
-    req(init$vals)
-    
-    id <- "browse_show_colors"
-    label <- "Show Color Columns"
-    
-    initial <- ifelse(length(init$vals[[id]]) > 0,
-                      init$vals[[id]],
-                      FALSE)
-    
-    checkboxInput(inputId = id,
-                  label = label,
-                  initial)
-    
-  })
-  # Truncate Long Values checkbox
-  output$browse_truncate_long_checkbox <- renderUI({
-    req(init$vals)
-    
-    id <- "browse_truncate_long"
-    label <- "Truncate long values"
-    
-    initial <- ifelse(length(init$vals[[id]]) > 0,
-                      init$vals[[id]],
-                      TRUE)
-    
-    checkboxInput(inputId = id,
-                  label = label,
-                  initial)
-    
-  })
-  
-  # datatable showing all of the rv_filtered values
-  output$browse_table <- renderDataTable({
-    
-    show_table <- rv_filtered() %>% group_annotations()
-    
-    if(!input$browse_show_ids) {
-      keep_cols <- names(show_table)[!grepl("_id",names(show_table))]
-      keep_cols <- c("sample_id",keep_cols)
-      show_table <- show_table %>%
-        select(one_of(keep_cols))
+    # Add a direction column, if available
+    # --- This is typically only used in disease studies
+    # First check in the anno
+    for (cat in cats) if(is.element(paste0(cat,"_direction"),colnames(anno))){
+      df[,paste0(cat,"_direction")] <- anno[,paste0(cat,"_direction")][match(df[,cat],anno[,paste0(cat,"_label")])]
+      df[,paste0(cat,"_direction")][is.na(df[,paste0(cat,"_direction")])] = "none"
     }
-    
-    if(!input$browse_show_colors) {
-      keep_cols <- names(show_table)[!grepl("_color",names(show_table))]
-      show_table <- show_table %>%
-        select(one_of(keep_cols))
-    }
-    
-    if(input$browse_truncate_long) {
-      show_table <- as.data.frame(lapply(show_table, function(x) {
-        if(is.character(x)) {
-          lens <- nchar(x, allowNA = TRUE)
-          too_long <- lens > 50
-          missing <- is.na(x)
-          x[too_long & !missing] <- paste(substr(x[too_long & !missing],1,50),"...")
-          x
-        } else {
-          x
+    # Next check in the metadata table, if available
+    metadata <- rv_anno_metadata()
+    if(!is.null(metadata)) if(is.element("direction",colnames(metadata)))
+      for (cat in cats) for (i in 1:dim(df)[1]){
+        cluster  <- as.character(df[i,cat])
+        whichRow <- which(metadata==cluster, arr.ind = TRUE)
+        if(dim(whichRow)[1]>0){
+          direction <- as.character(metadata[as.character(whichRow[1,1]),"direction"])
+          if(!is.element(direction,c("none", "up","down"))) direction = "none"  # REMOVE THIS HARDCODED LINE
+          df[i,paste0(cat,"_direction")] = direction
         }
-      }))
+      }
+    # Finally, set all values to "none" if no data exists
+    for (cat in cats) if(!is.element(paste0(cat,"_direction"),colnames(anno))){
+      df[,paste0(cat,"_direction")] = rep("none",dim(df)[1])
     }
     
-    datatable(show_table)
-    
+    # set conditions and return the beautiful table
+    return(format_datatable(df,cats))
   })
   
-  # Download handler for Browse Selection tab.
-  output$browse_csv <- downloadHandler(
-    filename = function() {"distillery_selection.csv"},
-    content = function(file) {
-      out_table <- rv_filtered()
-      write.csv(out_table, file, quote = T, row.names = F)
-    }
-  )
   
-  ##############################
-  ## Annotation Summaries Box ##
-  ##############################
-
-  # UI for group selection in the Annotation Summaries tab
-  output$summary_group_selection <- renderUI({
-    req(cat_options)
-    anno_opts <- cat_options()
-    
-    id <- "summary_groups"
-    label <- "Summary Grouping"
-    
-    initial <- ifelse(length(init$vals[[id]]) > 0,
-                      init$vals[[id]],
-                      "")
-    
-    if(grepl(",", initial)) {
-      initial_split <- unlist(strsplit(initial,","))
-      initial <- anno_opts[match(initial_split, anno_opts)]
-    }
-    
-    selectizeInput(inputId = id,
-                   label = label,
-                   anno_opts,
-                   initial,
-                   multiple = T,
-                   width = "100%")
-  })
-  
-  # Summary functions based on selected grouping
-  summarize_filtered <- reactive({
-    req(input$summary_groups)
+  # Plots with top annotation comparisons, if desired
+  explorer_box_plot <- reactive({
+    req(input$explorer_annotation)
+    req(input$explorer_group)
+    req(input$explorer_comparison)
+    req(input$explorer_plot_type)
+    req(input$explorer_maxtypes)
     req(rv_filtered())
-    req(rv_desc())
     
-    desc <- rv_desc()
+    if (input$explorer_plot_type){
+      # Collect relevant inputs
+      anno = as.data.frame(rv_filtered())
+      anno = anno[anno[,paste0(input$explorer_group,"_label")]==input$explorer_annotation,]
+      anno = as.data.frame(anno)
+      cats = input$explorer_comparison # explorer comparison categories, short name
+      
+      # set up the data frame for max length
+      rows = 0
+      for (cat in cats) rows = max(rows,length(unique(anno[,paste0(cat,"_label")])))
+      df   = data.frame(matrix(NA,nrow = rows, ncol = 2*length(cats)))
+      cn   = NULL # Column names for data frame
+      for (cat in cats) cn <- c(cn,cat,paste0(cat,"_percent"))
+      colnames(df) = cn
+      
+      # Build the data frame
+      for (cat in cats){
+        value <- -sort(-table(as.character(anno[,paste0(cat,"_label")])))
+        value <- round(1000*value/sum(value))/10
+        df[1:length(value),cat] = names(value)
+        df[1:length(value),paste0(cat,"_percent")] = value
+        if(length(value)<rows){
+          df[(length(value)+1):rows,cat] = ""
+          df[(length(value)+1):rows,paste0(cat,"_percent")] = 0
+        }
+      }
+      
+      # Add a direction column, if available
+      # --- This is typically only used in disease studies
+      # First check in the anno
+      for (cat in cats) if(is.element(paste0(cat,"_direction"),colnames(anno))){
+        df[,paste0(cat,"_direction")] <- anno[,paste0(cat,"_direction")][match(df[,cat],anno[,paste0(cat,"_label")])]
+        df[,paste0(cat,"_direction")][is.na(df[,paste0(cat,"_direction")])] = "none"
+      }
+      # Next check in the metadata table, if available
+      metadata <- rv_anno_metadata()
+      if(!is.null(metadata)) if(is.element("direction",colnames(metadata)))
+        for (cat in cats) for (i in 1:dim(df)[1]){
+          cluster  <- as.character(df[i,cat])
+          whichRow <- which(metadata==cluster, arr.ind = TRUE)
+          if(dim(whichRow)[1]>0){
+            direction <- as.character(metadata[as.character(whichRow[1,1]),"direction"])
+            if(!is.element(direction,c("none", "up","down"))) direction = "none"  # REMOVE THIS HARDCODED LINE
+            df[i,paste0(cat,"_direction")] = direction
+          }
+        }
+      # Finally, set all values to "none" if no data exists
+      for (cat in cats) if(!is.element(paste0(cat,"_direction"),colnames(anno))){
+        df[,paste0(cat,"_direction")] = rep("none",dim(df)[1])
+      }
+      
+      labeled_barplot_summary(df,cats,maxTypes = as.numeric(input$explorer_maxtypes))
+    } else {     # If no plot requested, return void
+      ggplot() + theme_void()
+    } 
     
-    if(!identical(input$summary_groups,"")) {
-      summary_labels <- paste0(input$summary_groups, "_label")
-      summary_names <- desc$name[match(input$summary_groups, desc$base)]
-      
-      data <- rv_filtered()
-      
-      data <- data %>%
-        group_by(.dots = summary_labels) %>%
-        summarise(n = n())
-      
-      names(data) <- c(summary_names,"n")
-      
-      data
+  })
+  
+  output$explorer_box_plot <- renderPlot({
+    explorer_box_plot()
+  })
+  
+  output$explorer_box_ui <- renderUI({
+    if (input$explorer_plot_type){
+      height = input$explorer_height
     } else {
-      
-      data <- data.frame(selected_cells = nrow(rv_filtered))
-      
-      data
+      height = "10px"
     }
-    
+    plotOutput("explorer_box_plot", height = height, width = "100%")
   })
   
-  # datatable for displaying the summarize_filtered() table
-  output$summary_table <- renderDataTable({
-    req(summarize_filtered())
-    show_table <- summarize_filtered()
-    datatable(show_table)
+  
+  output$selected_cluster_table <- DT::renderDataTable({
+    req(input$explorer_table_cell_clicked)
+    req(rv_anno_metadata())
     
+    metadata <- rv_anno_metadata()
+    cluster  <- input$explorer_table_cell_clicked$value
+    
+    return(cluster_datatable(cluster,metadata))
   })
   
-  # Download handler for the summarize_filtered() table
-  output$summary_csv <- downloadHandler(
-    filename = function() {"distillery_summary.csv"},
-    content = function(file) {
-      out_table <- summarize_filtered()
-      write.csv(out_table, file, quote = T, row.names = F)
-    }
-  )
 
-  # Batch dendrograms
-  # Legends for annotation comparisons
-  
+   
 }
