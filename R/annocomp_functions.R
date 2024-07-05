@@ -123,6 +123,12 @@ build_annocomp_plot <- function(anno,
   y_type <- ifelse(y_group %in% cat_annotations,"cat","num")
   y_name <- desc$name[desc$base == y_group]
   
+  # Redirect to 2d scatterplot panel if data is numeric
+  if(x_type == "num" & y_type == "num"){
+    p = ggplot() + theme_void() + ggtitle("     Pairs of numeric values must be visualized in the 'Compare numeric annotations' tab.")
+    return(p)
+  }
+  
   if(c_group=="Jaccard"){
     # These functions are located in "pairwise_functions.R" currently
     p <- build_compare_jaccard_plot(anno = filtered, 

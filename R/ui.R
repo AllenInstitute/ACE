@@ -86,17 +86,17 @@ ui <- function(request) {
                    solidHeader = TRUE, status = "primary", width = 12,
                    collapsible = TRUE, collapsed = FALSE,
                    fluidRow(
-                     #column(4,  # Not currently used, since I can't get bookmarking to work with categories
-                    #        uiOutput("select_category")
-                    # ),
-                     column(6,#4
+                     column(4,  # I can't get bookmarking to work with categories, but I can get it CLOSE with the nested list approach. If I eventually do get it working, then revisit the nested list approach, but for now, I like the categories better.
+                            uiOutput("select_category")
+                     ),
+                     column(4,
                             uiOutput("select_textbox")
                      ),
                      #column(1,
                      #        bookmarkButton(label="Bookmark (BROKEN)")  # This button does nothing when clicked but SHOULD pop open the URL to copy
                      # )
                      # NEW - start
-                     column(4,#2
+                     column(2,#4  # Maybe remove this since it's broken
                             actionButton(inputId = "bookmark_url", label="Bookmark (BROKEN)",
                                          icon = icon("link", lib = "glyphicon")
                             ),
@@ -194,14 +194,14 @@ ui <- function(request) {
                                 column(1,
                                        uiOutput("annocomp_height_textbox")
                                 ),
-                                conditionalPanel(
-                                  condition = "button_press_needed() == false",
-                                  column(1,
-                                       br(),
-                                       actionButton("anno_go","GO!",
-                                                    style="color: #fff; background-color: #EC008C; border-color: #BE1E2D; font-weight: bold;")
-                                  )
-                                )
+                                #conditionalPanel(  # Add this back for a "Go" button
+                                #  condition = "button_press_needed() == false",
+                                #  column(1,
+                                #       br(),
+                                #       actionButton("anno_go","GO!",
+                                #                    style="color: #fff; background-color: #EC008C; border-color: #BE1E2D; font-weight: bold;")
+                                #  )
+                                #)
                               ),
                               fluidRow(
                                 column(12,
@@ -247,11 +247,11 @@ ui <- function(request) {
                               )
                      ),
                      tabPanel("Explore individual annotations",
-                              fluidRow(
-                                column(12,
-                                       helpText("If you see this message, enter a space in the 'Location of metadata (e.g., cluster) information (optional; csv file)' box above, or provide a metadata table.")
-                                )
-                              ),
+                              #fluidRow(  # This message isn't working properly, so I've removed it.  It also shouldn't be needed anymore
+                              #  column(12,
+                              #         helpText("If you see this message, enter a space in the 'Location of metadata (e.g., cluster) information (optional; csv file)' box above, or provide a metadata table.")
+                              #  )
+                              #),
                               fluidRow(
                                 column(2,
                                        uiOutput("explorer_group_selection")
@@ -289,6 +289,47 @@ ui <- function(request) {
                                 column(12,
                                        dataTableOutput("selected_cluster_table")
                                 )
+                              )
+                     ),
+                     tabPanel("Compare numeric annotations",  # NOTE: This should be a conditional panel that only appears when at least 2 numeric variables are present.  I have a workaround in server.r for now.
+                              fluidRow(
+                                column(4,
+                                       uiOutput("scatter_x_selection"),
+                                       uiOutput("scatter_y_selection"),
+                                       textInput("scatter_pt_size","Point Size",6),
+                                       uiOutput("radio_scatter_color_type"),
+                                       conditionalPanel(condition = "input.scatter_color_type == 'Categoric Annotation'",
+                                                        uiOutput("selectize_scatter_plot_color")
+                                       ),
+                                       conditionalPanel(condition = "input.scatter_color_type == 'Numeric Annotations'",
+                                                        fluidRow(column(12,
+                                                                        HTML("<strong>Numeric annotation 1 <span style='color: red;'>(Red)</span></strong>"),
+                                                                        uiOutput("scatter_color_gene_red_textbox"),
+                                                                        HTML("<strong>Numeric annotation 2 <span style='color: green;'>(Green)</span></strong>"),
+                                                                        uiOutput("scatter_color_gene_green_textbox"),
+                                                                        HTML("<strong>Numeric annotation 3 <span style='color: blue;'>(Blue)</span></strong>"),
+                                                                        uiOutput("scatter_color_gene_blue_textbox")
+                                                                )
+                                                        ),
+                                                        fluidRow(
+                                                          column(12, uiOutput("selectize_scatter_plot_scaling") )
+                                                        )
+                                       ),
+                                       uiOutput("scatter_plot_hover_selectize"),
+                                       textOutput("scatter_plot_hover_warning"),
+                                       actionButton("scatter_plot_go","GO!",
+                                                    style="color: #fff; background-color: #EC008C; border-color: #BE1E2D; font-weight: bold;"),
+                                       p("  ^ Click 'Go!' after making updates to refresh display.")
+                                ),
+                                
+                                column(8,
+                                       uiOutput("scatter_plot_ui"),
+                                       plotOutput("scatter_widthfinder",width = "100%",height = "10px")
+                                )
+                              ),
+                              # Save scatterplot as an SVG 
+                              fluidRow(
+                                column(4, downloadButton('scatter_save_svg', "Download SVG"))
                               )
                      )
                    )

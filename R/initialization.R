@@ -2,7 +2,6 @@
 
 #... what is is called in the main page?
 table_names <- c(
-  "Basal Ganglia example data",
   "SEA-AD: Alzheimer's cell type mapping",
   "Whole mouse brain (AIT21) MERFISH",
   "Human MTG 10x (SEA-AD, GA, CA)",
@@ -12,7 +11,6 @@ table_names <- c(
 
 #... what category each table is included in on the main page?
 categories <- factor(c(
-  "Other",
   "Disease studies",
   "Mouse cell types taxonomies",
   "Human cell types taxonomies",
@@ -20,13 +18,12 @@ categories <- factor(c(
   "Mouse cell types taxonomies"
   ),
 # This is the order they will show up on in the list. **MAKE SURE THERE ARE NO TYPOS!**
-levels = c("Mouse cell types taxonomies", "Human cell types taxonomies", "Disease studies", "Other")) # Keep "Other" as last
+levels = c("Disease studies", "Mouse cell types taxonomies", "Human cell types taxonomies")) 
 
 
 #... where is the cell x annotation table?
 # Note that this can be a csv file, a feather directory, or a scrattch.taxonomy h5ad file.  It can also be local or on the web.
 table_locations <- c(
-  "//allen/programs/celltypes/workgroups/humancelltypes/JeremyM/github/annotation_comparison/example",
   "https://raw.githubusercontent.com/AllenInstitute/annotation_comparison/dev/data/DLPFC_SEAAD_cell_annotations_for_app.csv.gz",
   "https://raw.githubusercontent.com/AllenInstitute/annotation_comparison/dev/data/WMB_MERFISH_subset.csv.gz", 
   "https://raw.githubusercontent.com/AllenInstitute/annotation_comparison/dev/data/MTG_cell_metadata.csv.gz",  
@@ -37,7 +34,6 @@ table_locations <- c(
 #... where is the annotation information table (e.g., information about each specific cell type.)?  
 # The goal is that this part will eventually be able to point to a cell type annotation table in TDT format.
 metadata_locations <- c(
-  " ", # No metadata yet
   "https://raw.githubusercontent.com/AllenInstitute/annotation_comparison/dev/data/AD_study_cell_types_for_app.csv",
   "https://raw.githubusercontent.com/AllenInstitute/annotation_comparison/dev/data/WMB_cluster_annotations.csv.gz",
   " ", # No metadata yet
@@ -48,11 +44,9 @@ metadata_locations <- c(
 #... this is the description that will show up on ACE below the name. Should be relatively short, but also extremely informative as to what this is for.
 descriptions   <- c(
   
-  "Small example file pointing at subsampled data from NHP basal ganglia. Note that if you are runnign this from a non-Allen Institute computer, this example will not work.",
+  "Data and associated cell type assignments from ten studies of Alzheimer's disease.  All data sets were mapped to SEA-AD data and their mappings as well as original cluster assignments are included in the tables.  In addition, each cell type's change in abundance in AD from the original study, as well as some basic information about the cell types are included.  Data is subsampled to 100 cells per SEA-AD supertype.  The way data is encoded, comparisons between each data set an SEA-AD are valid, but comparsisons CANNOT be accurately made between external data sets.  If you have additional data sets you'd like to see included in this study, please reach out!",
                     
-  "Data and associated cell type assignments from multiple studies of Alzheimer's disease.  All data sets were mapped to SEA-AD data and their mappings as well as original cluster assignments are included in the tables.  In addition, each cell type's change in abundance in AD from the original study, as well as some basic information about the cell types are included.  Data is subsampled to 100 cells per SEA-AD supertype.  The way data is encoded, comparisons between each data set an SEA-AD are valid, but comparsisons CANNOT be accurately made between external data sets.",
-                    
-  "Data about brain cell types AND brain regions from mouse whole brain (Yao et al 2023).  This includes cell type assignments and spatial positions for MERFISH data, subsampled to 50 cells per cluster + 5000 cells per section. Cells have been assigned to CCF parcillations to allow direct matching between cell types and anatomic structures. I'm particularly interested if this table works properly.  Right now this file is loading from on prem, but an identical file is on GitHub (which crashes for some reason...).",
+  "[This data set may be slow to load--please be patient!]  Data about brain cell types AND brain regions from mouse whole brain (Yao et al 2023).  This includes cell type assignments and spatial positions for MERFISH data, subsampled to 50 cells per cluster + 5000 cells per section. Cells have been assigned to CCF parcillations to allow direct matching between cell types and anatomic structures. I'm particularly interested if this table works properly.  Right now this file is loading from on prem, but an identical file is on GitHub (which crashes for some reason...).",
                     
   "MTG data set comparisons! Cluster assignments from the human great ape (GA) and cross-areal (CA) study alongside SEA-AD calls for each level of the taxonomy in MTG.",
 
@@ -67,7 +61,7 @@ descriptions   <- c(
 ## DO NOT EDIT ANYTHING BELOW THIS POINT! ##
 ############################################
 
-categories = factor(c(as.character(categories),"Other"),levels = unique(c(levels(categories),"Other")))
+categories = factor(c(as.character(categories)),levels = unique(c(levels(categories))))
 
 # Convert above into a data frame
 table_info <- data.frame(table_name   = table_names,
@@ -77,14 +71,11 @@ table_info <- data.frame(table_name   = table_names,
 )
 
 # Convert table names into a nested list
-table_names <- c(table_names,"Enter your own location")
 table_name <- list()
 for (cat in levels(categories)){
-  table_name[[cat]] <- table_names[categories==cat]
-    if(cat!="Other") 
-      table_name[[cat]] <- c("Select comparison table...", table_names[categories==cat])
+  table_name[[cat]] <- c("Select comparison table...", table_names[categories==cat])
 }
-#table_name[["Enter your own location"]] = c("Enter your own location")
+table_name[["Enter your own location"]] = c("Enter your own location")
 category = "Enter your own location"
 
 
