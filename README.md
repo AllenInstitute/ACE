@@ -1,16 +1,19 @@
 # annotation_comparison
 
-*(NOTE: This branch is currently out of date. Use [the dev branch](https://github.com/AllenInstitute/ACE/tree/dev) for now.  I'll merge them soon).*
+R Shiny app for comparison of annotations such as (i) cell type assignments (e.g., from different mapping/clustering algorithms), (ii) donor metadata (e.g., donor, sex, age), and (iii) cell metadata (e.g., anatomic location, QC metrics).  This tool is now **[hosted on shinyapps.io](https://sea-ad.shinyapps.io/ACEapp/)**.
 
-R Shiny app for comparison of annotations such as (i) cell type assignments (e.g., from different mapping/clustering algorithms), (ii) donor metadata (e.g., donor, sex, age), and (iii) cell metadata (e.g., anatomic location, QC metrics).
+![image](https://github.com/AllenInstitute/ACE/assets/25486679/9bc32bb6-8245-4c5e-8ea0-b26be27fcab0)
+![image](https://github.com/AllenInstitute/ACE/assets/25486679/aef25d6d-f842-42d9-8b72-a65604b875b0)
 
-![image](https://github.com/AllenInstitute/annotation_comparison/assets/25486679/086cc28a-9529-489f-b291-c21d7da4f1e4)
 
 Additionally, this tool can compare results across more than two taxonomies as once. The two primary use cases are (1) annotating a novel taxonomy with information from multiple existing taxonomies and (2) comparison of data from multiple studies of Alzheimer's disease (like in the example below).
 
 ![multi_comparison](https://github.com/AllenInstitute/annotation_comparison/assets/25486679/c55dac6e-99f6-4fd6-9203-70e136cef9a7)
 
-## How to use
+## How to use 
+
+Either visit the tool **[hosted on shinyapps.io](https://sea-ad.shinyapps.io/ACEapp/)** or follow the instructions below to run locally in R Studio.  Currently, you need to run it locally to point to external files stored locally, but for most use cases, the hosted version is recommended.
+
 ### Setup RStudio
 (You only need do this step once).
 1. Install R
@@ -30,5 +33,6 @@ remotes::install_github("AllenInstitute/scrattch.io")
 
 ## Reporting issues or suggestions
 
-Please share any comments, suggestions, bugs, or any other thoughts using the button in the app.
-![image](https://github.com/AllenInstitute/annotation_comparison/assets/25486679/3d0fd022-98c9-470e-bcff-1397de96c35f)
+Please share any comments, suggestions, bugs, or any other thoughts using the button in the app, or by [submitting an issue](https://github.com/AllenInstitute/ACE/issues).
+![image](https://github.com/AllenInstitute/ACE/assets/25486679/a0e2ee8d-5315-400d-a723-b9bb9719c4bd)
+
