@@ -33,12 +33,14 @@ ui <- function(request) {
                    icon = icon("hand-spock", lib = "font-awesome"), 
                    a("USER GUIDE",
                      style="color: #000000; border-color: #2e6da4",
+                     target = "_blank", 
                      href="https://github.com/AllenInstitute/ACE/blob/dev/ACE_User_Guide.pdf")
       ),
       actionButton(inputId = "tutorial", 
                    icon = icon("file-video", lib = "font-awesome"), 
                    a("TUTORIAL (coming soon)",
                      style="color: #000000; border-color: #2e6da4",
+                     target = "_blank", 
                      href="https://www.youtube.com/user/AllenInstitute")
       ),
       actionButton(inputId = "email1", 
@@ -53,6 +55,7 @@ ui <- function(request) {
                    icon = icon("code", lib = "font-awesome"), 
                    a("ACCESS SOURCE CODE",
                      style="color: #000000; border-color: #2e6da4",
+                     target = "_blank", 
                      href="https://github.com/AllenInstitute/ACE/")
       ),
       br(),

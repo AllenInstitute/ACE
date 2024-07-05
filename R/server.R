@@ -262,9 +262,6 @@ server <- function(input, output, session) {
     id <- "metadata"
     label <- "Location of metadata (e.g., cluster) information (optional; csv file)"
     
-    write('METADATA TEXTBOX',stderr())
-    write(paste("input$select_textbox =",input$select_textbox),stderr())
-    
     # For Bookmarking... does not work
     # If a stored db exists, pull the value from init$vals
     #if(length(init$vals[[id]]) > 0){
@@ -280,9 +277,6 @@ server <- function(input, output, session) {
         initial = input$Not_on_list
       }
     #}
-    
-    write(paste("input$Not_on_list =",input$Not_on_list),stderr())
-    write(paste("initial =",initial),stderr())
     
     textInput(inputId = id, 
               label = strong(label), 
