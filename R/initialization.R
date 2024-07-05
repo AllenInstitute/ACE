@@ -6,7 +6,9 @@ table_names <- c(
   "Whole mouse brain (AIT21) MERFISH",
   "Human MTG 10x (SEA-AD, GA, CA)",
   "Human MTG SSv4 (Hodge, SEA-AD)",
-  "Mouse Cortex + Hippocampus to Whole mouse brain (AIT21)"
+  "Mouse Cortex + Hippocampus to Whole mouse brain (AIT21)",
+  "Mouse M1 and VISp to Cortex + Hippocampus (via SSv4)",
+  "Mouse T vs. MET types in visual cortex (Patch-seq)"
 )
 
 #... what category each table is included in on the main page?
@@ -15,6 +17,8 @@ categories <- factor(c(
   "Mouse cell types taxonomies",
   "Human cell types taxonomies",
   "Human cell types taxonomies",
+  "Mouse cell types taxonomies",
+  "Mouse cell types taxonomies",
   "Mouse cell types taxonomies"
   ),
 # This is the order they will show up on in the list. **MAKE SURE THERE ARE NO TYPOS!**
@@ -28,7 +32,9 @@ table_locations <- c(
   "https://raw.githubusercontent.com/AllenInstitute/annotation_comparison/dev/data/WMB_MERFISH_subset.csv.gz", 
   "https://raw.githubusercontent.com/AllenInstitute/annotation_comparison/dev/data/MTG_cell_metadata.csv.gz",  
   "https://raw.githubusercontent.com/AllenInstitute/annotation_comparison/dev/data/hodge_to_seaad.csv.gz",
-  "https://raw.githubusercontent.com/AllenInstitute/annotation_comparison/dev/data/CtxHip_WMB_translation.csv.gz"
+  "https://raw.githubusercontent.com/AllenInstitute/annotation_comparison/dev/data/CtxHip_WMB_translation.csv.gz",
+  "https://raw.githubusercontent.com/AllenInstitute/annotation_comparison/dev/data/CTX_Hip_cellInfoM1VISp.csv.gz",
+  "https://raw.githubusercontent.com/AllenInstitute/annotation_comparison/dev/data/gouwens_tasic_byCell.csv"
 )
 
 #... where is the annotation information table (e.g., information about each specific cell type.)?  
@@ -38,7 +44,9 @@ metadata_locations <- c(
   "https://raw.githubusercontent.com/AllenInstitute/annotation_comparison/dev/data/WMB_cluster_annotations.csv.gz",
   " ", # No metadata yet
   " ", # No metadata yet
-  "https://raw.githubusercontent.com/AllenInstitute/annotation_comparison/dev/data/WMB_cluster_annotations.csv.gz"
+  "https://raw.githubusercontent.com/AllenInstitute/annotation_comparison/dev/data/WMB_cluster_annotations.csv.gz",
+  "https://raw.githubusercontent.com/AllenInstitute/annotation_comparison/dev/data/CTX_Hip_cellTypeInfo.csv",
+  "https://raw.githubusercontent.com/AllenInstitute/annotation_comparison/dev/data/gouwens_tasic_byCellType.csv"
 )
 
 #... this is the description that will show up on ACE below the name. Should be relatively short, but also extremely informative as to what this is for.
@@ -52,7 +60,11 @@ descriptions   <- c(
 
   "MTG data set comparisons! Cluster assignments from the original SSv4 study ('Hodge' et al, 2019) alongside SEA-AD calls for each level of the taxonomy in MTG. Cortical layers are also also included per cell for cell type by layer comparisons, along with an example set of UMAP coordinates.",
                       
-  "Data about brain cell types from mouse whole brain (Yao et al 2023; AIT21) and their mapping to mouse cortex + hippocampus (Yao et al 2021).  This includes data from AIT21 downsampled to only include 100 cells per cluster from cortex+hippocampus.  Any clusters from whole brain that are NOT listed are either rare or absent in mouse cortex + hippocampus.  We recommend using this table to translate forward (e.g., from the older to the newer taxonomy)."
+  "Data about brain cell types from mouse whole brain (Yao et al 2023; AIT21) and their mapping to mouse cortex + hippocampus (Yao et al 2021).  This includes data from AIT21 downsampled to only include 100 cells per cluster from cortex+hippocampus.  Any clusters from whole brain that are NOT listed are either rare or absent in mouse cortex + hippocampus.  We recommend using this table to translate forward (e.g., from the older to the newer taxonomy).",
+  
+  "Convert M1 (from BICCN/CTKE) or VISp (from Tasic 2018) to mouse cortex + hippocampus (Yao et al 2021).  This is done using SmartSetV4 cells that were included in multiple studies, but with no subsampling. Any clusters from mouse Ctx + hipp that are NOT listed are either rare or absent in mouse VISp and mouse M1.  We recommend using this table to translate forward (e.g., from the older to the newer taxonomy).",
+  
+  "Mouse patch-seq data from primary visual cortex (VISp). These tables compare matched T-type and MET-type cell type assignments for the same cells from Gouwens, Sorensen, et al 2020. The cell type annotations for MET types was taken directly from supplemental materials in the manuscript."
   
 )
 
