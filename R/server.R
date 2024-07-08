@@ -19,6 +19,7 @@ source("river_functions.R")
 source("pairwise_functions.R")
 source("multistudy_functions.R")
 source("bookmark_functions.R")    # this shouldn't be required at all, as it is a workaround for regular bookmarking (both are currently broken)
+source("scatterplot_functions.R")      
 
 enableBookmarking("url")  # It was "server", but it doesn't seem to work either way
 
@@ -95,13 +96,13 @@ server <- function(input, output, session) {
     # These supercede the defaults
     restored <- restored_vals$vals
     
-    write(paste0("RESTORED LENGTH: ",length(restored)),stderr())
+    #write(paste0("RESTORED LENGTH: ",length(restored)),stderr())
     
     # Substitute default values for initialized values
     if(length(restored) > 0) {
       for(val in names(restored)) {
         vals[[val]] <- restored[[val]]
-        write(paste(val, restored[[val]], collapse=": "),stderr())
+        #write(paste(val, restored[[val]], collapse=": "),stderr())
         
       }
       
@@ -112,8 +113,8 @@ server <- function(input, output, session) {
     # These supercede both defaults and restored values
     if(length(session$clientData$url_search) > 0) {
       
-      write("RESTORED URL OBSERVED",stderr())
-      write(paste0("URL VALUE: ",session$clientData$url_search),stderr())
+      #write("RESTORED URL OBSERVED",stderr())
+      #write(paste0("URL VALUE: ",session$clientData$url_search),stderr())
       
       query <- as.list(parseQueryString(session$clientData$url_search))
       
@@ -168,15 +169,15 @@ server <- function(input, output, session) {
   # })
 
   
-  #updateSelectInput(session, inputId = "select_category", label = "Select annotation category:", choices = names(table_name)) # "Enter your own location"
+  updateSelectInput(session, inputId = "select_category", label = "Select annotation category:", choices = names(table_name)) # "Enter your own location"
   
-  #observeEvent(input$select_category, {
+  observeEvent(input$select_category, {
     # Choose a value from the default table, if selected
     # This is updated to be a list of lists
-  #  if(length(input$select_category)>0) category = input$select_category
-  #  updateSelectInput(session, inputId = "select_textbox", label = "Select comparison table:", choices = table_name[[category]])
+    if(length(input$select_category)>0) category = input$select_category
+    updateSelectInput(session, inputId = "select_textbox", label = "Select comparison table:", choices = table_name[[category]])
     
-  #})
+  })
   
   
   #updateSelectInput(session, inputId = "select_textbox", label = "Select comparison table:", choices = table_names)
@@ -197,31 +198,31 @@ server <- function(input, output, session) {
   # 
   
   # Doesn't work with bookmarking
-  # output$select_category <- renderUI({
-  #   req(init$vals)
-  #   
-  #   id <- "select_category"
-  #   write("SELECT CATEGORY",stderr())
-  # 
-  #   initial <- NULL
-  #   if(!is.null(init$vals[[id]]))
-  #     initial <- init$vals[[id]]
-  #   write(initial,stderr())
-  # 
-  #   selectInput("select_category", "choose a category", choices = names(table_name), selected=initial)
-  #   
-  # })
+   output$select_category <- renderUI({
+     req(init$vals)
+     
+     id <- "select_category"
+     #write("SELECT CATEGORY",stderr())
+   
+     initial <- NULL
+     if(!is.null(init$vals[[id]]))
+       initial <- init$vals[[id]]
+     #write(initial,stderr())
+   
+     selectInput("select_category", "choose a category", choices = names(table_name), selected=initial)
+     
+   })
   output$select_textbox <- renderUI({
     req(init$vals)
     
     id <- "select_textbox"
-    write("SELECT TABLE",stderr())
+    #write("SELECT TABLE",stderr())
     
     initial <- NULL
     if(!is.null(init$vals[[id]]))
       initial <- init$vals[[id]]
     
-    write(initial,stderr())
+    #write(initial,stderr())
     selectizeInput("select_textbox", "select a table", choices = table_name, selected=initial)
     
   })
@@ -230,8 +231,9 @@ server <- function(input, output, session) {
   output$database_textbox <- renderUI({
     req(init$vals)
     
-    id <- "db"
-    label <- "Input location of cell-level annotation information"
+    id      <- "db"
+    label   <- "Input location of cell-level annotation information"
+    initial <- input$Not_on_list
     
     # For Bookmarking... does not work
     # If a stored db exists, pull the value from init$vals
@@ -239,11 +241,9 @@ server <- function(input, output, session) {
     #  initial <- init$vals[[id]]
       #init$vals <- init$vals[colnames(init$vals)!=id]
     #} else { # Either pull from select_textbox or leave blank
+    if (length(input$select_textbox)>0)
       if (!is.element(input$select_textbox,c("Select comparison table...",'Enter your own location'))) {
         initial = table_info[table_info$table_name==input$select_textbox,"table_loc"]
-      }
-      else {
-        initial = input$Not_on_list
       }
    # }
     
@@ -258,11 +258,9 @@ server <- function(input, output, session) {
   output$metadata_textbox <- renderUI({
     req(init$vals)
     
-    id <- "metadata"
-    label <- "Location of metadata (e.g., cluster) information (optional; csv file)"
-    
-    write('METADATA TEXTBOX',stderr())
-    write(paste("input$select_textbox =",input$select_textbox),stderr())
+    id      <- "metadata"
+    label   <- "Location of metadata (e.g., cluster) information (optional; csv file)"
+    initial <- input$Not_on_list
     
     # For Bookmarking... does not work
     # If a stored db exists, pull the value from init$vals
@@ -272,16 +270,11 @@ server <- function(input, output, session) {
     #  write(initial,stderr())
     #  init$vals <- init$vals[colnames(init$vals)!=id]
     #} else { # Either pull from select_textbox or leave blank
+    if (length(input$select_textbox)>0)
       if (!is.element(input$select_textbox,c("Select comparison table...",'Enter your own location'))) {
         initial = table_info[table_info$table_name==input$select_textbox,"metadata_loc"]
       }
-      else {
-        initial = input$Not_on_list
-      }
     #}
-    
-    write(paste("input$Not_on_list =",input$Not_on_list),stderr())
-    write(paste("initial =",initial),stderr())
     
     textInput(inputId = id, 
               label = strong(label), 
@@ -294,6 +287,10 @@ server <- function(input, output, session) {
   output$dataset_description <- renderUI({
     req(init$vals)
     
+    text_desc = "README: Select a category and a comparison table from the boxes above -OR- to compare your own annotation data, choose 'Enter your own location' from the 'Select annotation category' and enter the locations of relevant files in the two boxes above. After files are selected, please WAIT for the annotation table to load. This could take up to a minute, but will likely be much faster. Once loaded, the controls above and below will become responsive.Once a data set is chosen, this pane can be minimized with the '-' in the upper right. The '+' can then be pressed to re-open in order to select a new data set or bookmark the current state of the app."
+    
+    if (length(input$select_textbox)>0){
+    
       # If a stored db exists, pull the value from init$vals
       if(length(init$vals[["select_textbox"]]) > 0){
         text_desc <- init$vals[["select_textbox"]]
@@ -302,11 +299,12 @@ server <- function(input, output, session) {
         if (input$select_textbox == 'Enter your own location') {
           text_desc = "User-provided data and (optionally) metadata files."
         } else if (input$select_textbox == 'Select comparison table...') {
-          text_desc = "README: Select a category and a comparison table from the boxes above -OR- to compare your own annotation data, choose 'Enter your own location' from the 'Select annotation category' and enter the locations of relevant files in the two boxes above. After files are selected, please WAIT for the annotation table to load. This could take up to a minute, but will likely be much faster. Once loaded, the controls above and below will become responsive.Once a data set is chosen, this pane can be minimized with the '-' in the upper right. The '+' can then be pressed to re-open in order to select a new data set or bookmark the current state of the app."
+          # Do nothing... text_desc should remain as initialized above
         } else {
           text_desc = table_info[table_info$table_name==input$select_textbox,"description"]
         }
       }
+    }
     div(style = "font-size:14px;", strong("Dataset description"),br(),text_desc)
     
   })
@@ -1337,7 +1335,8 @@ server <- function(input, output, session) {
   # Calculate stats for medians and whiskers if one dimension is numeric
   # Then build the plot.
   
-  annocomp_plot <- eventReactive(input$anno_go, {   #NOTE: to make plots automatic again, replace with " <- reactive { " and delete button on UI page.
+#  annocomp_plot <- eventReactive(input$anno_go, {   #NOTE: to make plots automatic again, replace with " <- reactive { " and delete button on UI page.
+   annocomp_plot <- reactive ({   #NOTE: to make plots require a button again, replace with " <- eventReactive(input$anno_go,  { " and uncomment button on UI page.
     
     req(rv_anno())
     req(rv_filtered())
@@ -1397,165 +1396,6 @@ server <- function(input, output, session) {
     }
   )
   
-  
-  
-  ##############################
-  ## Pairwise Comparisons Box ##  Also called 'Jaccard distance' or 'confusion matrix'
-  ##############################
-  
-  # NO LONGER NEEDED. This is now baked into the annotation comparison panel above.
-  
-  ## UI Elements
-  
-  # output$paircomp_x_selection <- renderUI({
-  #   req(init$vals)
-  #   req(rv_desc())
-  #   
-  #   desc <- rv_desc()
-  #   options <- desc$base[desc$type == "cat"]
-  #   names(options) <- desc$name[desc$type == "cat"]
-  #   
-  #   id <- "paircomp_x"
-  #   label <- "X-axis annotation"
-  #   
-  #   initial <- ifelse(length(init$vals[[id]]) > 0,
-  #                     init$vals[[id]],
-  #                     options[1])
-  #   
-  #   selectizeInput(inputId = id, 
-  #                  label = strong(label), 
-  #                  choices = options, 
-  #                  selected = initial,
-  #                  multiple = FALSE)
-  # })
-  # 
-  # output$paircomp_y_selection <- renderUI({
-  #   req(init$vals)
-  #   req(rv_desc())
-  #   
-  #   desc <- rv_desc()
-  #   options <- desc$base[desc$type == "cat"]
-  #   names(options) <- desc$name[desc$type == "cat"]
-  #   
-  #   id <- "paircomp_y"
-  #   label <- "Y-axis annotation"
-  #   
-  #   initial <- ifelse(length(init$vals[[id]]) > 0,
-  #                     init$vals[[id]],
-  #                     options[2])
-  #   
-  #   selectizeInput(inputId = id, 
-  #                  label = strong(label), 
-  #                  choices = options, 
-  #                  selected = initial,
-  #                  multiple = FALSE)
-  # })
-  # 
-  # output$reorderY_selection <- renderUI({
-  #   id <- "reorderY"
-  #   label <- "Reorder query?"
-  #   initial <- TRUE
-  #   selectInput(id, label, c("Yes" = TRUE,"No"= FALSE))
-  # })
-  # 
-  # output$paircomp_height_textbox <- renderUI({
-  #   req(init$vals)
-  #   
-  #   id <- "paircomp_height"
-  #   label <- "Plot Height"
-  #   
-  #   initial <- ifelse(length(init$vals[[id]]) > 0,
-  #                     init$vals[[id]],
-  #                     "600px")
-  #   
-  #   textInput(inputId = id, 
-  #             label = strong(label), 
-  #             value = initial, 
-  #             width = "100%")
-  #   
-  # })
-  # 
-  # output$paircomp_width_textbox <- renderUI({
-  #   req(init$vals)
-  #   
-  #   id <- "paircomp_width"
-  #   label <- "Plot Width"
-  #   
-  #   initial <- ifelse(length(init$vals[[id]]) > 0,
-  #                     init$vals[[id]],
-  #                     "100%")
-  #   
-  #   textInput(inputId = id, 
-  #             label = strong(label), 
-  #             value = initial, 
-  #             width = "100%")
-  #   
-  # })
-  # 
-  # # Calculate and then builds Jaccard comparison plot
-  # paircomp_jaccard_plot <- reactive({
-  #   # Inputs for the plot
-  #   req(rv_filtered())   
-  #   req(input$paircomp_x)
-  #   req(input$paircomp_y)
-  #   req(input$reorderY)
-  #   # Inputs for the frame size
-  #   req(input$dimension)
-  #   req(input$paircomp_height)
-  #   req(input$paircomp_width)
-  #   
-  #   # Get the frame size to avoid printing gigantic plots on screen
-  #   height <- input$paircomp_height
-  #   height <- as.numeric(gsub("([0-9]+).*$", "\\1", height))
-  #   width  <- input$paircomp_width
-  #   if(substr(width,nchar(width),nchar(width))=="%"){
-  #     width <- as.numeric(substr(width,1,nchar(width)-1))
-  #     width <- width*input$dimension[1]/100
-  #   } else {
-  #     width <- as.numeric(gsub("([0-9]+).*$", "\\1", width))
-  #   }
-  #   maxInputs <- (width*height)/3000  # This value of 3000 could be adjusted later or made interactive, if needed
-  #   
-  #   # Get input values
-  #   build_compare_jaccard_plot(anno = rv_filtered(), 
-  #                              x_group = input$paircomp_x, 
-  #                              y_group = input$paircomp_y,
-  #                              reorderY = input$reorderY,
-  #                              maxInputs = maxInputs)
-  # })
-  # 
-  # output$paircomp_jaccard_plot <- renderPlot({
-  #   paircomp_jaccard_plot()
-  # })
-  # 
-  # output$paircomp_jaccard_ui <- renderUI({
-  #   plotOutput("paircomp_jaccard_plot", height = input$paircomp_height, width = input$paircomp_width)
-  # })
-  # 
-  # 
-  # # download objects
-  # output$paircomp_jaccard_downloadButton <- renderUI({
-  #   req(paircomp_jaccard_plot())
-  #   downloadButton('paircomp_jaccard_downloadPlot')
-  # })
-  # 
-  # 
-  # output$paircomp_jaccard_downloadPlot <- downloadHandler(
-  #   
-  #   filename = "paircomp_jaccard_plot.pdf",
-  #   content = function(file) {
-  #     
-  #     plot <- paircomp_jaccard_plot() + theme(text = element_text(size = as.numeric(input$paircomp_dlf)))
-  #     
-  #     out_h <- as.numeric(input$paircomp_dlh)
-  #     out_w <- as.numeric(input$paircomp_dlw)
-  #     
-  #     ggsave(file, 
-  #            plot = plot,
-  #            width = out_w, 
-  #            height = out_h)
-  #   }
-  # )
   
   
   ##############################
@@ -1841,5 +1681,440 @@ server <- function(input, output, session) {
   })
   
 
+  
+  
+  
+  
+  ###################################################
+  ###################################################  
+  ###################################################
+  ###################################################  
+  ###################################################
+  ###################################################  
+  ###################################################
+  ###################################################
+  ###################################################
+  ###################################################  
+  ###################################################
+  ###################################################  
+  ###################################################
+  ###################################################  
+  ###################################################
+  ###################################################
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  ################################
+  ## 2D numeric scatterplot box ##
+  ################################
+  
+  rv_plot_scatter <- reactiveValues()
+  
+  # Build a set of categorical filter options from
+  # the rv_desc() data.frame
+  #
+  # cat_options() - a named character vector
+  #
+  cat_options <- reactive({
+    req(rv_desc())
+    
+    desc <- rv_desc()
+    desc <- desc[desc$type == "cat",]
+    anno_opts <- desc$base
+    names(anno_opts) <- desc$name
+    
+    anno_opts
+    
+  })
+  
+  # Build a set of categorical filter options from
+  # the rv_desc() data.frame
+  #
+  # num_options() - a named character vector
+  #
+  num_options <- reactive({
+    req(rv_desc())
+    
+    desc <- rv_desc()
+    desc <- desc[desc$type == "num",]
+    anno_opts <- desc$base
+    names(anno_opts) <- desc$name
+    
+    anno_opts
+    
+  })
+  
+  observe({
+    req(rv_anno())
+    
+    rv_plot_scatter$num_dims <- length(num_options())
+    
+  })
+  
+  ## UI Elements
+  output$scatter_x_selection <- renderUI({
+    req(init$vals)
+
+    options <- num_options()
+    
+    id <- "scatter_x"
+    label <- "X-axis annotation"
+    
+    initial <- ifelse(length(init$vals[[id]]) > 0,
+                      init$vals[[id]],
+                      options[1])
+    
+    selectizeInput(inputId = id, 
+                   label = strong(label), 
+                   choices = options, 
+                   selected = initial,
+                   multiple = FALSE)
+  })
+  
+  output$scatter_y_selection <- renderUI({
+    req(init$vals)
+    
+    options <- num_options()
+    
+    id <- "scatter_y"
+    label <- "Y-axis annotation"
+    
+    initial <- ifelse(length(init$vals[[id]]) > 0,
+                      init$vals[[id]],
+                      options[2])
+    
+    selectizeInput(inputId = id, 
+                   label = strong(label), 
+                   choices = options, 
+                   selected = initial,
+                   multiple = FALSE)
+  })
+  
+  
+  # UI for choosing to use annotations or expression for colors
+  output$radio_scatter_color_type <- renderUI({
+    req(init$vals)
+    
+    id <- "scatter_color_type"
+    label <- "Color points using"
+    
+    initial <- ifelse(length(init$vals[[id]]) > 0,
+                      init$vals[[id]],
+                      "Categoric Annotation")
+    
+    radioButtons(
+      inputId = id,
+      label = strong(label),
+      choices = c("Categoric Annotation","Numeric Annotations"),
+      selected = "Categoric Annotation",
+      inline = TRUE
+    )
+  })
+  
+  #Selection UI for scatter colors based on Categoric Annotations
+  output$selectize_scatter_plot_color <- renderUI({
+    req(init$vals)
+    
+    cat_options <- cat_options()
+    
+    id <- "scatter_plot_color"
+    
+    initial <- ifelse(length(init$vals[[id]]) > 0,
+                      init$vals[[id]],
+                      cat_options[1])
+    
+    selectizeInput(inputId = id, 
+                   label = NULL, 
+                   choices = cat_options, 
+                   selected = initial,
+                   multiple = FALSE)
+  })
+  
+  #Selection UI for scatter colors based on Numeric Annotations
+  output$scatter_color_gene_red_textbox <- renderUI({
+    
+    req(init$vals)
+    req(rv_desc())
+    
+    desc <- rv_desc()
+    options <- c("",desc$base)
+    names(options) <- c("(none)",desc$name)
+    options <- options[c(TRUE,desc$type == "num")]
+    
+    id <- "scatter_color_gene_red"
+    label <- NULL
+    
+    initial <- ifelse(length(init$vals[[id]]) > 0,
+                      init$vals[[id]],
+                      options[1])
+    
+    selectizeInput(inputId = id, 
+                   label = label, 
+                   choices = options, 
+                   selected = initial,
+                   multiple = FALSE)
+  })
+  
+  output$scatter_color_gene_green_textbox <- renderUI({
+    
+    req(init$vals)
+    req(rv_desc())
+    
+    desc <- rv_desc()
+    options <- c("",desc$base)
+    names(options) <- c("(none)",desc$name)
+    options <- options[c(TRUE,desc$type == "num")]
+    
+    id <- "scatter_color_gene_green"
+    label <- NULL
+    
+    initial <- ifelse(length(init$vals[[id]]) > 0,
+                      init$vals[[id]],
+                      options[1])
+    
+    selectizeInput(inputId = id, 
+                   label = label, 
+                   choices = options, 
+                   selected = initial,
+                   multiple = FALSE)
+  })
+  
+  output$scatter_color_gene_blue_textbox <- renderUI({
+    
+    req(init$vals)
+    req(rv_desc())
+    
+    desc <- rv_desc()
+    options <- c("",desc$base)
+    names(options) <- c("(none)",desc$name)
+    options <- options[c(TRUE,desc$type == "num")]
+    
+    id <- "scatter_color_gene_blue"
+    label <- NULL
+    
+    initial <- ifelse(length(init$vals[[id]]) > 0,
+                      init$vals[[id]],
+                      options[1])
+    
+    selectizeInput(inputId = id, 
+                   label = label, 
+                   choices = options, 
+                   selected = initial,
+                   multiple = FALSE)
+  })
+  
+  # UI for scatter plot scaling selection
+  output$selectize_scatter_plot_scaling <- renderUI({
+    opts <- c("Log 10" = "log10",
+              "Linear" = "none")
+    
+    id <- "scatter_plot_scaling"
+    label <- "Scaling"
+    
+    initial <- ifelse(length(init$vals[[id]]) > 0,
+                      init$vals[[id]],
+                      "none")
+    
+    selectizeInput(inputId = id,
+                   label = label,
+                   opts,
+                   initial,
+                   multiple = F,
+                   width = "100%")
+  })
+  
+  
+  # Selection UI for scatter hover
+  output$scatter_plot_hover_selectize <- renderUI({
+    
+    id <- "scatter_plot_hover"
+    label <- "Hover Annotations"
+    
+    cat_options <- cat_options()
+    
+    initial <- ifelse(length(init$vals[[id]]) > 0,
+                      init$vals[[id]],
+                      cat_options[1])
+    
+    if(grepl(",", initial)) {
+      initial_split <- unlist(strsplit(initial,","))
+      initial <- cat_options[match(initial_split, cat_options)]
+    }
+    
+    selectizeInput(inputId = id,
+                   label = label,
+                   cat_options,
+                   initial,
+                   multiple = T,
+                   width = "100%")
+  })
+  
+  
+  output$scatter_plot_hover_warning <- renderText({
+    req(rv_filtered()) 
+    if(nrow(rv_filtered()) > 65530) {
+      "Too many points to render all hovers. Some points may not have tooltips."
+    } else {
+      ""
+    }
+  })
+  
+  
+  # Width finding hack, as bokeh doesn't detect available space.
+  output$scatter_widthfinder <- renderPlot({
+    p()
+  })
+  
+  scatter_fg_bg <- eventReactive(input$scatter_plot_go, {
+    req(rv_filtered())
+    req(rv_desc())
+    req(input$scatter_x)
+    req(input$scatter_y)
+
+    select_anno <- rv_filtered()
+    names(select_anno)[names(select_anno) == "sample_id"] <- "sample_name"
+    
+    if(input$scatter_color_type == "Categoric Annotation") {
+      red_num   <- green_num <- blue_num <- ""
+      color_by  <- input$scatter_plot_color
+    } else {
+      red_num   <- input$scatter_color_gene_red
+      green_num <- input$scatter_color_gene_green
+      blue_num  <- input$scatter_color_gene_blue
+      color_by  <- ".numeric"
+    }
+    
+    build_scatter_fg_bg_points(select_anno = select_anno,
+                            color_by = color_by,
+                            x_group = input$scatter_x, 
+                            y_group = input$scatter_y, 
+                            desc = rv_desc(),
+                            red_num = red_num,
+                            green_num = green_num,
+                            blue_num = blue_num)
+    
+  })
+  
+  
+  # Build scatter plot using rbokeh
+  scatter_bokeh_plot <- reactive({
+    req(scatter_fg_bg())
+    req(rv_anno())
+    req(rv_desc())
+
+    available_width <- as.numeric(session$clientData$output_scatter_widthfinder_width)
+    
+    if(available_width > 800) { available_width <- 800 }
+    
+    anno <- rv_anno()
+    names(anno)[names(anno) == "sample_id"] <- "sample_name"
+    
+    build_scatter_bokeh(foreground_points = scatter_fg_bg()$foreground_points,
+                     anno = anno,
+                     desc = rv_desc(),
+                     hovers = input$scatter_plot_hover,
+                     width = available_width,
+                     webgl = TRUE,
+                     pointSize = input$scatter_pt_size,
+                     xlab = input$scatter_x,
+                     ylab = input$scatter_y)
+  })
+  
+  
+  output$scatter_bokeh_plot <- renderRbokeh({
+    
+    # Call plot rendering function 
+    scatter_bokeh_plot()
+  })
+  
+  
+  # Plot UI for scatter bokeh plot
+  output$scatter_plot_ui <- renderUI({
+    req(rv_desc())
+    desc     <- rv_desc()
+    num_dims <- sum(desc$type == "num")
+    if(num_dims>1) {
+      
+      available_width <- as.numeric(session$clientData$output_scatter_widthfinder_width)
+      
+      if(available_width > 800) { available_width <- 800 }
+      
+      rbokehOutput("scatter_bokeh_plot", width = available_width, height = available_width)
+      
+    } else {
+      
+      # Ideally this should be printed with a figure, as in the commented text below, but it doesn't work for some reason
+
+      print("     2+ numeric values must be in annotation table to compare.",stderr())
+      
+    }
+  })
+  
+  
+  
+  # scatter save button 
+  output$scatter_save_svg <- downloadHandler(
+    
+    available_width <- as.numeric(session$clientData$output_scatter_widthfinder_width),
+    
+    
+    filename = function() {
+      paste("scatter_plot-", Sys.Date(), ".svg", sep="")
+    },
+    content = function(file) {
+      withProgress(message = "Writing SVG file. Conversion from HTML widget may take 30-40 seconds...", {
+        
+        # Save widget as HTML file 
+        htmlwidgets::saveWidget(widget=scatter_bokeh_plot(), file="./png_to_svg_conversion/simplePlot.html")
+        
+        # This converts HTML to PDF 
+        # jsGraphic2Pdf("simplePlot.html", c(500, 500, 10, 10), highRes = TRUE)
+        
+        # This only converts HTML to PNG
+        jsGraphic2Png("./png_to_svg_conversion/simplePlot.html", outFile = "./png_to_svg_conversion/JSgraphic.png", c(900, 900, 10, 10), slow = TRUE, highRes = TRUE)
+        # jsGraphic2Png("simplePlot.html", outFile = "JSgraphic.png", c(900, 900, 10, 10), highRes = TRUE)
+        
+        # Move said file to a chmod 777 directory 
+        # system("mv JSgraphic.png /local1/connect_tmp/")
+        
+        # Roundabout way of generating SVG from a pre-saved image, in this case a PNG 
+        # This conversion is done through the "magick" package
+        my_image <- image_read("./png_to_svg_conversion/JSgraphic.png")
+        
+        # Might not need to convert at all? 
+        # my_svg <- image_convert(my_image, format="svg")
+        
+        # Save the pre-made SVG 
+        image_write(my_image, path = file, format = "svg")
+        
+      })
+      
+    }
+  )
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
    
 }
