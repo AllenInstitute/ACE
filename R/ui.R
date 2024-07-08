@@ -164,7 +164,9 @@ ui <- function(request) {
                      tabPanel("Intro",
                               fluidRow(
                                 column(12,
-                                       includeHTML("www/vis_info_panel.html")
+                                       suppressWarnings({ # Gives a warning about tags$iframe, which is the WRONG way to do it.
+                                         includeHTML("www/vis_info_panel.html") 
+                                       })
                                 )
                               )
                      ),
