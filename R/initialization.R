@@ -4,10 +4,10 @@
 table_names <- c(
   "SEA-AD: Alzheimer's cell type mapping",
   "Whole mouse brain (AIT21) MERFISH",
-  "Human MTG 10x (SEA-AD, GA, CA)",
-  "Human MTG SSv4 (Hodge, SEA-AD)",
-  "Mouse Cortex + Hippocampus to Whole mouse brain (AIT21)",
-  "Mouse M1 and VISp to Cortex + Hippocampus (via SSv4)",
+  "Human MTG 10x (SEA-AD vs. GA vs. CA)",
+  "Human MTG SSv4 (Hodge vs. SEA-AD)",
+  "Mouse Cortex + Hippocampus vs. Whole mouse brain (AIT21)",
+  "Mouse M1 and VISp vs. Cortex + Hippocampus (via SSv4)",
   "Mouse T vs. MET types in visual cortex (Patch-seq)"
 )
 
@@ -17,6 +17,7 @@ categories <- factor(c(
   "Mouse cell types taxonomies",
   "Human cell types taxonomies",
   "Human cell types taxonomies",
+  "Mouse cell types taxonomies",
   "Mouse cell types taxonomies",
   "Mouse cell types taxonomies",
   "Mouse cell types taxonomies"
@@ -34,6 +35,7 @@ table_locations <- c(
   "https://raw.githubusercontent.com/AllenInstitute/annotation_comparison/dev/data/hodge_to_seaad.csv.gz",
   "https://raw.githubusercontent.com/AllenInstitute/annotation_comparison/dev/data/CtxHip_WMB_translation.csv.gz",
   "https://raw.githubusercontent.com/AllenInstitute/annotation_comparison/dev/data/CTX_Hip_cellInfoM1VISp.csv.gz",
+  "https://raw.githubusercontent.com/AllenInstitute/annotation_comparison/dev/data/M1_to_WMB_cell_info.csv.gz"
   "https://raw.githubusercontent.com/AllenInstitute/annotation_comparison/dev/data/gouwens_tasic_byCell.csv"
 )
 
@@ -46,6 +48,7 @@ metadata_locations <- c(
   " ", # No metadata yet
   "https://raw.githubusercontent.com/AllenInstitute/annotation_comparison/dev/data/WMB_cluster_annotations.csv.gz",
   "https://raw.githubusercontent.com/AllenInstitute/annotation_comparison/dev/data/CTX_Hip_cellTypeInfo.csv",
+  "https://raw.githubusercontent.com/AllenInstitute/annotation_comparison/dev/data/WMB_cluster_annotations.csv.gz",
   "https://raw.githubusercontent.com/AllenInstitute/annotation_comparison/dev/data/gouwens_tasic_byCellType.csv"
 )
 
@@ -62,9 +65,11 @@ descriptions   <- c(
                       
   "Data about brain cell types from mouse whole brain (Yao et al 2023; AIT21) and their mapping to mouse cortex + hippocampus (Yao et al 2021).  This includes data from AIT21 downsampled to only include 100 cells per cluster from cortex+hippocampus.  Any clusters from whole brain that are NOT listed are either rare or absent in mouse cortex + hippocampus.  We recommend using this table to translate forward (e.g., from the older to the newer taxonomy).",
   
-  "Convert M1 (from BICCN/CTKE) or VISp (from Tasic 2018) to mouse cortex + hippocampus (Yao et al 2021).  This is done using SmartSetV4 cells that were included in multiple studies, but with no subsampling. Any clusters from mouse Ctx + hipp that are NOT listed are either rare or absent in mouse VISp and mouse M1.  We recommend using this table to translate forward (e.g., from the older to the newer taxonomy).",
+  "Convert MOp (from BICCN/CTKE) or VISp (from Tasic 2018) to mouse cortex + hippocampus (Yao et al 2021).  This is done using SmartSetV4 cells that were included in multiple studies, but with no subsampling. Any clusters from mouse Ctx + hipp that are NOT listed are either rare or absent in mouse VISp and mouse MOp.  We recommend using this table to translate forward (e.g., from the older to the newer taxonomy).",
   
-  "Mouse patch-seq data from primary visual cortex (VISp). These tables compare matched T-type and MET-type cell type assignments for the same cells from Gouwens, Sorensen, et al 2020. The cell type annotations for MET types was taken directly from supplemental materials in the manuscript."
+  "Convert MOp (from BICCN/CTKE) to whole mouse brain (Yao et al 2023; AIT21).  This is done using 10X v2 and v3 cells that were included in both studies, but with no subsampling. Any clusters from mouse whole brain that are NOT listed are either rare or absent in mouse MOp.  We recommend using this table to translate forward (e.g., from the older to the newer taxonomy).",
+  
+  "Mouse Patch-seq data from primary visual cortex (VISp). These tables compare matched T-type and MET-type cell type assignments for the same cells from Gouwens, Sorensen, et al 2020. The cell type annotations for MET types was taken directly from supplemental materials in the manuscript."
   
 )
 
