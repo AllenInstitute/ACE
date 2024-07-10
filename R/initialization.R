@@ -7,7 +7,8 @@ table_names <- c(
   "Human MTG 10x (SEA-AD vs. GA vs. CA)",
   "Human MTG SSv4 (Hodge vs. SEA-AD)",
   "Mouse Cortex + Hippocampus vs. Whole mouse brain (AIT21)",
-  "Mouse M1 and VISp vs. Cortex + Hippocampus (via SSv4)",
+  "Mouse MOp and VISp vs. Cortex + Hippocampus (via SSv4)",
+  "Mouse MOp (10x) vs. Whole mouse brain (AIT21)",
   "Mouse T vs. MET types in visual cortex (Patch-seq)"
 )
 
@@ -29,27 +30,27 @@ levels = c("Disease studies", "Mouse cell types taxonomies", "Human cell types t
 #... where is the cell x annotation table?
 # Note that this can be a csv file, a feather directory, or a scrattch.taxonomy h5ad file.  It can also be local or on the web.
 table_locations <- c(
-  "https://raw.githubusercontent.com/AllenInstitute/annotation_comparison/dev/data/DLPFC_SEAAD_cell_annotations_for_app.csv.gz",
-  "https://raw.githubusercontent.com/AllenInstitute/annotation_comparison/dev/data/WMB_MERFISH_subset.csv.gz", 
-  "https://raw.githubusercontent.com/AllenInstitute/annotation_comparison/dev/data/MTG_cell_metadata.csv.gz",  
-  "https://raw.githubusercontent.com/AllenInstitute/annotation_comparison/dev/data/hodge_to_seaad.csv.gz",
-  "https://raw.githubusercontent.com/AllenInstitute/annotation_comparison/dev/data/CtxHip_WMB_translation.csv.gz",
-  "https://raw.githubusercontent.com/AllenInstitute/annotation_comparison/dev/data/CTX_Hip_cellInfoM1VISp.csv.gz",
-  "https://raw.githubusercontent.com/AllenInstitute/annotation_comparison/dev/data/M1_to_WMB_cell_info.csv.gz"
-  "https://raw.githubusercontent.com/AllenInstitute/annotation_comparison/dev/data/gouwens_tasic_byCell.csv"
+  "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/DLPFC_SEAAD_cell_annotations_for_app.csv.gz",
+  "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/WMB_MERFISH_subset.csv.gz", 
+  "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/MTG_cell_metadata.csv.gz",  
+  "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/hodge_to_seaad.csv.gz",
+  "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/CtxHip_WMB_translation.csv.gz",
+  "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/CTX_Hip_cellInfoM1VISp.csv.gz",
+  "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/M1_to_WMB_cell_info.csv.gz",
+  "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/gouwens_tasic_byCell.csv"
 )
 
 #... where is the annotation information table (e.g., information about each specific cell type.)?  
 # The goal is that this part will eventually be able to point to a cell type annotation table in TDT format.
 metadata_locations <- c(
-  "https://raw.githubusercontent.com/AllenInstitute/annotation_comparison/dev/data/AD_study_cell_types_for_app.csv",
-  "https://raw.githubusercontent.com/AllenInstitute/annotation_comparison/dev/data/WMB_cluster_annotations.csv.gz",
+  "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/AD_study_cell_types_for_app.csv",
+  "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/WMB_cluster_annotations.csv.gz",
   " ", # No metadata yet
   " ", # No metadata yet
-  "https://raw.githubusercontent.com/AllenInstitute/annotation_comparison/dev/data/WMB_cluster_annotations.csv.gz",
-  "https://raw.githubusercontent.com/AllenInstitute/annotation_comparison/dev/data/CTX_Hip_cellTypeInfo.csv",
-  "https://raw.githubusercontent.com/AllenInstitute/annotation_comparison/dev/data/WMB_cluster_annotations.csv.gz",
-  "https://raw.githubusercontent.com/AllenInstitute/annotation_comparison/dev/data/gouwens_tasic_byCellType.csv"
+  "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/WMB_cluster_annotations.csv.gz",
+  "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/CTX_Hip_cellTypeInfo.csv",
+  "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/WMB_cluster_annotations.csv.gz",
+  "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/gouwens_tasic_byCellType.csv"
 )
 
 #... this is the description that will show up on ACE below the name. Should be relatively short, but also extremely informative as to what this is for.
