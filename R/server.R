@@ -1579,10 +1579,10 @@ server <- function(input, output, session) {
           df[i,paste0(cat,"_direction")] = direction
         }
       }
-    # Finally, set all values to "none" if no data exists
-    for (cat in cats) if(!is.element(paste0(cat,"_direction"),colnames(anno))){
-      df[,paste0(cat,"_direction")] = rep("none",dim(df)[1])
-    }
+    # Finally, set all values to "none" if no data exists NOTE: THIS BREAKS THE COLOR CODE, I need to figure out why!
+    #for (cat in cats) if(!is.element(paste0(cat,"_direction"),colnames(anno))){
+    #  df[,paste0(cat,"_direction")] = rep("none",dim(df)[1])
+    #}
     
     # set conditions and return the beautiful table
     return(format_datatable(df,cats))
@@ -1644,10 +1644,10 @@ server <- function(input, output, session) {
             df[i,paste0(cat,"_direction")] = direction
           }
         }
-      # Finally, set all values to "none" if no data exists
-      for (cat in cats) if(!is.element(paste0(cat,"_direction"),colnames(anno))){
-        df[,paste0(cat,"_direction")] = rep("none",dim(df)[1])
-      }
+      # Finally, set all values to "none" if no data exists  # NOTE: THIS BREAKS THE COLOR CODE, I need to figure out why!
+      #for (cat in cats) if(!is.element(paste0(cat,"_direction"),colnames(anno))){
+      #  df[,paste0(cat,"_direction")] = rep("none",dim(df)[1])
+      #}
       
       labeled_barplot_summary(df,cats,maxTypes = as.numeric(input$explorer_maxtypes))
     } else {     # If no plot requested, return void
