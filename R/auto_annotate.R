@@ -5,11 +5,19 @@ auto_annotate <- function (anno, scale_num = "predicted", na_val_num = 0, colors
                                                                                            "white", "red"), sort_label_cat = TRUE, na_val_cat = "ZZ_Missing", 
                            colorset_cat = "varibow", color_order_cat = "sort") 
 {
-  anno_out <- anno
-  if (!is.element("sample_name", colnames(anno_out))) {
-    colnames(anno_out) <- gsub("sample_id", "sample_name", 
-                               colnames(anno_out))
+  # Define and properly format a sample name
+  anno_out <- as.data.frame(anno)
+  cn <- colnames(anno_out)
+  if (!is.element("sample_name", cn)) {
+    colnames(anno_out) <- gsub("sample_id", "sample_name", cn)
   }
+  if (!is.element("sample_name", colnames(anno_out))) {
+    anno_out <- cbind(anno_out, paste0("sn_",1:dim(anno_out)[1]))
+    colnames(anno_out) <- c(cn,"sample_name")
+  }
+  anno_out <- anno_out[,c("sample_name",setdiff(colnames(anno_out),"sample_name"))]
+  
+  # Annotate any columns missing annotations
   cn <- colnames(anno_out)
   convertColumns <- cn[(!grepl("_label", cn)) & (!grepl("_id", 
                                                         cn)) & (!grepl("_color", cn))]
@@ -59,10 +67,11 @@ auto_annotate <- function (anno, scale_num = "predicted", na_val_num = 0, colors
     anno_list[[cc]] <- out[,colnames(out)!="sample_name"]
   }
   
+  # Format the annotations as an appropriate data frame
   for(cc in convertColumns)
     anno_list[[cc]] <- anno_list[[cc]][,colnames(anno_list[[cc]])!="sample_name"]
   anno_out2 <- bind_cols(anno_list)
-  anno_out  <- cbind(anno_out[,!is.element(colnames(anno_out),convertColumns)],anno_out2)
-  anno_out  <- group_annotations(anno_out)
+  anno_out  <- cbind(anno_out[,c(1,which(!is.element(colnames(anno_out),convertColumns)))],anno_out2)
+  anno_out  <- group_annotations(anno_out[,c(1,3:dim(anno_out)[2])])
   anno_out
 }
