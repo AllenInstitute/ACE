@@ -19,7 +19,8 @@ source("river_functions.R")
 source("pairwise_functions.R")
 source("multistudy_functions.R")
 source("bookmark_functions.R")    # this shouldn't be required at all, as it is a workaround for regular bookmarking (both are currently broken)
-source("scatterplot_functions.R")      
+source("scatterplot_functions.R") 
+source("auto_annotate.R")  # This can be removed when scrattch.io is updated with new version of auto_annotate
 
 enableBookmarking("url")  # It was "server", but it doesn't seem to work either way
 
@@ -2103,18 +2104,11 @@ server <- function(input, output, session) {
   
   
   
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
+
    
 }
+
+
+
+
+
