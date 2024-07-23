@@ -298,7 +298,7 @@ server <- function(input, output, session) {
       } else {
         
         if (input$select_textbox == 'Enter your own location') {
-          text_desc = "User-provided data and (optionally) metadata files."
+          text_desc = "User-provided data and (optionally) metadata files. This option allows you to compare multiple annotations for your own cells. It does NOT compare your data against any pre-created annotation tables."
         } else if (input$select_textbox == 'Select comparison table...') {
           # Do nothing... text_desc should remain as initialized above
         } else {
@@ -306,6 +306,7 @@ server <- function(input, output, session) {
         }
       }
     }
+    
     div(style = "font-size:14px;", strong("Dataset description"),br(),text_desc)
     
   })

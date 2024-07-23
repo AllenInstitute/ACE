@@ -24,6 +24,13 @@ auto_annotate <- function (anno, scale_num = "predicted", na_val_num = 0, colors
   convertColumns <- setdiff(convertColumns, "sample_name")
   convertColumns <- setdiff(convertColumns, gsub("_label", 
                                                  "", cn[grepl("_label", cn)]))
+  
+  # Return input annotation file if there is nothing to convert
+  if(length(convertColumns)==0){
+    anno_out  <- group_annotations(anno_out[,c(1,3:dim(anno_out)[2])])
+    return(anno_out)
+  }
+  
   anno_list <- list()
   for (cc in convertColumns) {
     value <- anno_out[, cc]

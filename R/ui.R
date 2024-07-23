@@ -331,10 +331,6 @@ ui <- function(request) {
                                        uiOutput("scatter_plot_ui"),
                                        plotOutput("scatter_widthfinder",width = "100%",height = "10px")
                                 )
-                              ),
-                              # Save scatterplot as an SVG 
-                              fluidRow(
-                                column(4, downloadButton('scatter_save_svg', "Download SVG"))
                               )
                      )
                    )
