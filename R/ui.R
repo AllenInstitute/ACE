@@ -34,7 +34,7 @@ ui <- function(request) {
                    a("USER GUIDE",
                      style="color: #000000; border-color: #2e6da4",
                      target = "_blank", 
-                     href="https://github.com/AllenInstitute/ACE/blob/dev/ACE_User_Guide.pdf")
+                     href="https://github.com/AllenInstitute/ACE/blob/main/ACE_User_Guide.pdf")
       ),
       actionButton(inputId = "tutorial", 
                    icon = icon("file-video", lib = "font-awesome"), 
