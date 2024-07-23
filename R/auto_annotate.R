@@ -27,7 +27,7 @@ auto_annotate <- function (anno, scale_num = "predicted", na_val_num = 0, colors
   
   # Return input annotation file if there is nothing to convert
   if(length(convertColumns)==0){
-    anno_out  <- group_annotations(anno_out[,c(1,3:dim(anno_out)[2])])
+    anno_out  <- group_annotations(anno_out)
     return(anno_out)
   }
   
