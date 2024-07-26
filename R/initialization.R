@@ -3,12 +3,12 @@
 #... what is is called in the main page?
 table_names <- c(
   "SEA-AD: Alzheimer's cell type mapping",
-  "Whole mouse brain (AIT21) MERFISH",
+  "Spatial localization of whole mouse brain types (AIT21)",
   "Human MTG 10x (SEA-AD vs. GA vs. CA)",
   "Human MTG SSv4 (Hodge vs. SEA-AD)",
   "Mouse Cortex + Hippocampus vs. Whole mouse brain (AIT21)",
-  "Mouse MOp and VISp vs. Cortex + Hippocampus (via SSv4)",
-  "Mouse MOp (10x) vs. Whole mouse brain (AIT21)",
+  "Mouse MOp and VISp/ALM vs. Cortex + Hippocampus (SSv4)",
+  "Mouse MOp vs. Whole mouse brain (AIT21) (10x)",
   "Mouse T vs. MET types in visual cortex (Patch-seq)"
 )
 
@@ -58,7 +58,7 @@ descriptions   <- c(
   
   "Data and associated cell type assignments from ten studies of Alzheimer's disease.  All data sets were mapped to SEA-AD data, and both the 10 data sets and the details of the data integration and mapping are described in Gabitto, Travaglini, et al 2023 (DOI:10.1101/2023.05.08.539485). For each data set, their mappings to SEA-AD as well as original cluster assignments are included in the tables.  In addition, each cell type's change in abundance in AD from the original study, as well as some basic information about the cell types are included.  Data is subsampled to 100 cells per SEA-AD supertype.  The way data is encoded, comparisons between each data set an SEA-AD are valid, but comparsisons CANNOT be accurately made between external data sets.  If you have additional data sets you'd like to see included in this study, please reach out!",
                     
-  "[This data set may be slow to load--please be patient!]  Data about brain cell types AND brain regions from mouse whole brain (Yao et al 2023; DOI: 10.1038/s41586-023-06812-z).  This includes cell type assignments and spatial positions for MERFISH data, subsampled to 50 cells per cluster + 5000 cells per section. Cells have been assigned to CCF parcillations to allow direct matching between cell types and anatomic structures. The current version of this table may have rotated CCF coordinates, making visualization challenging using the scatterplot view--new coordinates are in process, but this will not impact any other analysis.",
+  "[This data set may be slow to load--please be patient!]  Data about brain cell types AND brain regions using MERFISH data collected from mouse whole brain (Yao et al 2023; DOI: 10.1038/s41586-023-06812-z).  This includes cell type assignments and spatial positions for MERFISH data, subsampled to 50 cells per cluster + 5000 cells per section. Cells have been assigned to CCF parcillations to allow direct matching between cell types and anatomic structures. The current version of this table may have rotated CCF coordinates, making visualization challenging using the scatterplot view--new coordinates are in process, but this will not impact any other analysis.",
                     
   "Human MTG data set comparisons! Cluster assignments from two previous studies alongside SEA-AD calls for each level of the taxonomy in MTG. These studies are the human 'great ape' (GA) study (Jorstad, Song, Exposito-Alonso, et al 2023, DOI:10.1126/science.ade9516), which assesses cell types in MTG across species, and the human 'cross-areal' (CA) study (Jorstad et al 2023, DOI:10.1126/science.adf6812), which assesses cell types across multiple neocortical areas in human (including MTG).  The clusters in the CA study represented the starting point for analysis in generation of the SEA-AD supertypes in Gabitto, Travaglini, et al 2023 (DOI:10.1101/2023.05.08.539485).  All three data sets in this table were generated using a nearly identical set of cells collected using 10X genomics single nucleus RNA-seq technologies.",
 
@@ -66,7 +66,7 @@ descriptions   <- c(
                       
   "Data about brain cell types from mouse whole brain (Yao et al 2023, AIT21, DOI:10.1038/s41586-023-06812-z) and their mapping to mouse cortex + hippocampus (Yao et al 2021, DOI:10.1038/s41586-023-06812-z).  This includes data from AIT21 downsampled to only include 100 cells per cluster from cortex + hippocampus.  Any clusters from the whole brain that are NOT listed are either rare or absent in mouse cortex + hippocampus.  We recommend using this table to translate forward (e.g., from the older to the newer taxonomy).",
   
-  "Convert cell types from mouse primary visual (VISp), Anterior Lateral Motor area (ALM), and primary motor (MOp) cortex to mouse cortex + hippocampus.  This is done using SmartSetV4 cells that were included in multiple studies and their associated cell type annotations: (1) VISp and ALM cells from Tasic et al 2018 (DOI:10.1038/s41586-018-0654-5), (2) MOp cells used in the Cell Type Knowledge Explorer (Yao, Liu, Xie, Fischer, et al 2021, DOI:10.1038/s41586-021-03500-8), and overlapping cells from mouse cortex + hippocampus (Yao et al 2021, DOI:10.1038/s41586-023-06812-z). No subsampling was done for this table. Any clusters from mouse Ctx + hipp that are NOT listed are either rare or absent in mouse VISp and mouse MOp.  We recommend using this table to translate forward (e.g., from the older to the newer taxonomy).",
+  "Convert cell types from mouse primary visual (VISp), Anterior Lateral Motor area (ALM), and primary motor (MOp) cortex to mouse cortex + hippocampus.  This is done using SmartSetV4 cells that were included in multiple studies and their associated cell type annotations: (1) VISp and ALM cells from Tasic et al 2018 (DOI:10.1038/s41586-018-0654-5), (2) MOp cells used in the Cell Type Knowledge Explorer (Yao, Liu, Xie, Fischer, et al 2021, DOI:10.1038/s41586-021-03500-8), and overlapping cells from mouse cortex + hippocampus (Yao et al 2021, DOI:10.1038/s41586-023-06812-z). No subsampling was done for this table. Any clusters from mouse Ctx + hipp that are NOT listed are either rare or absent in mouse VISp and mouse MOp.  We recommend using this table to translate forward (e.g., from the older to the newer taxonomy).  Finally, note that MOp and VISp/ALM cannot be directly compared because different cells were included in these two studies.",
   
   "Convert mouse cell type assignments from primary motor cortex (MOp) (Yao, Liu, Xie, Fischer, et al 2021, DOI:10.1038/s41586-021-03500-8) to whole mouse brain (Yao et al 2023; AIT21, DOI:10.1038/s41586-023-06812-z).  This is done using 10X v2 and v3 cells that were included in both studies, but with no subsampling. Any clusters from mouse whole brain that are NOT listed are either rare or absent in mouse MOp.  We recommend using this table to translate forward (e.g., from the older to the newer taxonomy).",
   
