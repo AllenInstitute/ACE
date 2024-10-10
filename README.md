@@ -20,9 +20,10 @@ Either visit the tool **[hosted on shinyapps.io](https://sea-ad.shinyapps.io/ACE
 2. Install RStudio
 3. Install the following packages in R Studio:
 ```
-packages <- setdiff(c("remotes","dplyr","data.table","DT","feather","ggplot2","ggbeeswarm","rbokeh","shiny","UpSetR","anndata"), installed.packages()[,"Package"])
+packages <- setdiff(c("remotes","dplyr","data.table","DT","feather","ggplot2","ggbeeswarm","shiny","UpSetR","anndata"), installed.packages()[,"Package"])
 if(length(packages)>0) install.packages(packages)
 remotes::install_github("AllenInstitute/scrattch.io")
+remotes::install_github("bokeh/rbokeh")
 ```
 4. Download the files from this repo (you may want to repeat this step occasionally to check for updates!) 
 
