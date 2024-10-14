@@ -154,6 +154,8 @@ Endo_2,supertype,SEA-AD,none,unchanged,Endo_2 supertype cell,
 Endo_3,supertype,SEA-AD,none,unchanged,Endo_2 supertype cell,
 VLMC_1,supertype,SEA-AD,none,unchanged,VLMC_1 supertype cell,
 VLMC_2,supertype,SEA-AD,none,unchanged,VLMC_2 supertype cell,
+VLMC_2-SEAAD,supertype,SEA-AD,none,unchanged,VLMC_2-SEAAD supertype cell,
+VLMC_3-SEAAD,supertype,SEA-AD,none,unchanged,VLMC_3-SEAAD supertype cell,
 SMC-SEAAD,supertype,SEA-AD,none,unchanged,SMC-SEAAD supertype cell,
 Pericyte_1,supertype,SEA-AD,none,unchanged,Pericyte_1 supertype cell,
 Pericyte_2-SEAAD,supertype,SEA-AD,none,unchanged,Pericyte_2-SEAAD supertype cell,
@@ -487,19 +489,19 @@ GABA_Z20,broad,Zhou_2020,none,unchanged,All inhibitory neurons,
 Glut_Z20,broad,Zhou_2020,none,not_assessed,All excitatory neurons,
 Micro_Z20,broad,Zhou_2020,none,unchanged,Microglia / Perivascular macrophages,
 Oligo_Z20,broad,Zhou_2020,none,not_assessed,Oligodendrocytes + Oligodendrocyte precursor cells,
-a1_L20,cell_type,Lau_2020,up,up,a1_L20 astrocyte cell type,"fig4; ""Only subpopulations a1, a3,and a6 expressed DEGs; specifically, subpopulations a1 and a6 wereenriched with up-regulated signature genes, whereas subpopulation a3 was enriched in down-regulated signature genes (SI Appendix,Fig. S5B). Therefore, we categorized a1 and a6 as the�AD-up-regulated�subpopulations and a3 as the�AD-down-regulated�subpopulation"""
+a1_L20,cell_type,Lau_2020,up,up,a1_L20 astrocyte cell type,"fig4; ""Only subpopulations a1, a3,and a6 expressed DEGs; specifically, subpopulations a1 and a6 wereenriched with up-regulated signature genes, whereas subpopulation a3 was enriched in down-regulated signature genes (SI Appendix,Fig. S5B). Therefore, we categorized a1 and a6 as theAD-up-regulatedsubpopulations and a3 as theAD-down-regulatedsubpopulation"""
 a2_L20,cell_type,Lau_2020,none,unchanged,a2_L20 astrocyte cell type,
-a3_L20,cell_type,Lau_2020,down,down,a3_L20 astrocyte cell type,"fig4; ""Only subpopulations a1, a3,and a6 expressed DEGs; specifically, subpopulations a1 and a6 wereenriched with up-regulated signature genes, whereas subpopulation a3 was enriched in down-regulated signature genes (SI Appendix,Fig. S5B). Therefore, we categorized a1 and a6 as the�AD-up-regulated�subpopulations and a3 as the�AD-down-regulated�subpopulation"""
+a3_L20,cell_type,Lau_2020,down,down,a3_L20 astrocyte cell type,"fig4; ""Only subpopulations a1, a3,and a6 expressed DEGs; specifically, subpopulations a1 and a6 wereenriched with up-regulated signature genes, whereas subpopulation a3 was enriched in down-regulated signature genes (SI Appendix,Fig. S5B). Therefore, we categorized a1 and a6 as theAD-up-regulatedsubpopulations and a3 as theAD-down-regulatedsubpopulation"""
 a4_L20,cell_type,Lau_2020,none,unchanged,a4_L20 astrocyte cell type,
 a5_L20,cell_type,Lau_2020,none,unchanged,a5_L20 astrocyte cell type,
-a6_L20,cell_type,Lau_2020,up,up,a6_L20 astrocyte cell type,"fig4; ""Only subpopulations a1, a3,and a6 expressed DEGs; specifically, subpopulations a1 and a6 wereenriched with up-regulated signature genes, whereas subpopulation a3 was enriched in down-regulated signature genes (SI Appendix,Fig. S5B). Therefore, we categorized a1 and a6 as the�AD-up-regulated�subpopulations and a3 as the�AD-down-regulated�subpopulation"""
+a6_L20,cell_type,Lau_2020,up,up,a6_L20 astrocyte cell type,"fig4; ""Only subpopulations a1, a3,and a6 expressed DEGs; specifically, subpopulations a1 and a6 wereenriched with up-regulated signature genes, whereas subpopulation a3 was enriched in down-regulated signature genes (SI Appendix,Fig. S5B). Therefore, we categorized a1 and a6 as theAD-up-regulatedsubpopulations and a3 as theAD-down-regulatedsubpopulation"""
 a7_L20,cell_type,Lau_2020,none,unchanged,a7_L20 astrocyte cell type,
 a8_L20,cell_type,Lau_2020,none,unchanged,a8_L20 astrocyte cell type,
 a9_L20,cell_type,Lau_2020,none,unchanged,a9_L20 astrocyte cell type,
-e1_L20,cell_type,Lau_2020,up,up,e1_L20 endothelial cell type,"fig 5; ""Our subcluster analysis further revealed that only three of the seven identified endo-thelial cell subpopulations�e1, e3, and e4�contributed to the transcriptomic changes observed in endothelial cells in AD (Fig. 5AandSI Appendix,Fig.S7AandBand Table S5). Of note, all three subpopulations were classified as AD-up-regulated subpopulations"""
+e1_L20,cell_type,Lau_2020,up,up,e1_L20 endothelial cell type,"fig 5; ""Our subcluster analysis further revealed that only three of the seven identified endo-thelial cell subpopulationse1, e3, and e4contributed to the transcriptomic changes observed in endothelial cells in AD (Fig. 5AandSI Appendix,Fig.S7AandBand Table S5). Of note, all three subpopulations were classified as AD-up-regulated subpopulations"""
 e2_L20,cell_type,Lau_2020,none,unchanged,e2_L20 endothelial cell type,
-e3_L20,cell_type,Lau_2020,up,up,e3_L20 endothelial cell type,"fig 5; ""Our subcluster analysis further revealed that only three of the seven identified endo-thelial cell subpopulations�e1, e3, and e4�contributed to the transcriptomic changes observed in endothelial cells in AD (Fig. 5AandSI Appendix,Fig.S7AandBand Table S5). Of note, all three subpopulations were classified as AD-up-regulated subpopulations"""
-e4_L20,cell_type,Lau_2020,up,up,e4_L20 endothelial cell type,"fig 5; ""Our subcluster analysis further revealed that only three of the seven identified endo-thelial cell subpopulations�e1, e3, and e4�contributed to the transcriptomic changes observed in endothelial cells in AD (Fig. 5AandSI Appendix,Fig.S7AandBand Table S5). Of note, all three subpopulations were classified as AD-up-regulated subpopulations"""
+e3_L20,cell_type,Lau_2020,up,up,e3_L20 endothelial cell type,"fig 5; ""Our subcluster analysis further revealed that only three of the seven identified endo-thelial cell subpopulationse1, e3, and e4contributed to the transcriptomic changes observed in endothelial cells in AD (Fig. 5AandSI Appendix,Fig.S7AandBand Table S5). Of note, all three subpopulations were classified as AD-up-regulated subpopulations"""
+e4_L20,cell_type,Lau_2020,up,up,e4_L20 endothelial cell type,"fig 5; ""Our subcluster analysis further revealed that only three of the seven identified endo-thelial cell subpopulationse1, e3, and e4contributed to the transcriptomic changes observed in endothelial cells in AD (Fig. 5AandSI Appendix,Fig.S7AandBand Table S5). Of note, all three subpopulations were classified as AD-up-regulated subpopulations"""
 e5_L20,cell_type,Lau_2020,none,unchanged,e5_L20 endothelial cell type,
 e6_L20,cell_type,Lau_2020,none,unchanged,e6_L20 endothelial cell type,
 e7_L20,cell_type,Lau_2020,none,unchanged,e7_L20 endothelial cell type,
@@ -518,12 +520,12 @@ m10_L20,cell_type,Lau_2020,none,unchanged,m10_L20 microglial cell type,
 m11_L20,cell_type,Lau_2020,none,unchanged,m11_L20 microglial cell type,
 m12_L20,cell_type,Lau_2020,none,unchanged,m12_L20 microglial cell type,
 m13_L20,cell_type,Lau_2020,none,unchanged,m13_L20 microglial cell type,
-o1_L20,cell_type,Lau_2020,up,up,o1_L20 oligodendrocyte cell type,"fig 4; ""Among these, only four subpopulations�o1, o2, o3, and o5�were enriched with genes that were differentially expressed in oligodendrocytes in AD"""
-o2_L20,cell_type,Lau_2020,up,up,o2_L20 oligodendrocyte cell type,"fig 4; ""Among these, only four subpopulations�o1, o2, o3, and o5�were enriched with genes that were differentially expressed in oligodendrocytes in AD"""
-o3_L20,cell_type,Lau_2020,down,down,o3_L20 oligodendrocyte cell type,"fig 4; ""Among these, only four subpopulations�o1, o2, o3, and o5�were enriched with genes that were differentially expressed in oligodendrocytes in AD"""
+o1_L20,cell_type,Lau_2020,up,up,o1_L20 oligodendrocyte cell type,"fig 4; ""Among these, only four subpopulationso1, o2, o3, and o5were enriched with genes that were differentially expressed in oligodendrocytes in AD"""
+o2_L20,cell_type,Lau_2020,up,up,o2_L20 oligodendrocyte cell type,"fig 4; ""Among these, only four subpopulationso1, o2, o3, and o5were enriched with genes that were differentially expressed in oligodendrocytes in AD"""
+o3_L20,cell_type,Lau_2020,down,down,o3_L20 oligodendrocyte cell type,"fig 4; ""Among these, only four subpopulationso1, o2, o3, and o5were enriched with genes that were differentially expressed in oligodendrocytes in AD"""
 o4_L20,cell_type,Lau_2020,none,unchanged,o4_L20 oligodendrocyte cell type,
 o5_L20,cell_type,Lau_2020,down,down,o5_L20 oligodendrocyte cell type,
-o6_L20,cell_type,Lau_2020,none,unchanged,o6_L20 oligodendrocyte cell type,"fig 4; ""Among these, only four subpopulations�o1, o2, o3, and o5�were enriched with genes that were differentially expressed in oligodendrocytes in AD"""
+o6_L20,cell_type,Lau_2020,none,unchanged,o6_L20 oligodendrocyte cell type,"fig 4; ""Among these, only four subpopulationso1, o2, o3, and o5were enriched with genes that were differentially expressed in oligodendrocytes in AD"""
 o7_L20,cell_type,Lau_2020,none,unchanged,o7_L20 oligodendrocyte cell type,
 o8_L20,cell_type,Lau_2020,none,unchanged,o8_L20 oligodendrocyte cell type,
 o9_L20,cell_type,Lau_2020,none,unchanged,o9_L20 oligodendrocyte cell type,
@@ -534,9 +536,9 @@ Astro3_Z20,cell_type,Zhou_2020,down,down,Astro3_Z20 astrocyte cell type,"fig 5a;
 Astro4_Z20,cell_type,Zhou_2020,none,not_assessed,Astro4_Z20 astrocyte cell type,
 Astro5_Z20,cell_type,Zhou_2020,none,unchanged,Astro5_Z20 astrocyte cell type,
 Oligo0_Z20,cell_type,Zhou_2020,none,unchanged,Oligo0_Z20 oligodendrocyte cell type,
-Oligo1_Z20,cell_type,Zhou_2020,down,down,Oligo1_Z20 oligodendrocyte cell type,"fig 5e; ""t-SNE plots of re-clustered oligodendrocytes showing five sub-clusters in AD and controls. Oligo3 is enriched, whereas Oligo1 and Oligo2 are significantly reduced in AD.�n?=?6,980 AD and 16,499 control oligodendrocytes."""
-Oligo2_Z20,cell_type,Zhou_2020,down,down,Oligo2_Z20 oligodendrocyte cell type,"fig 5e; ""t-SNE plots of re-clustered oligodendrocytes showing five sub-clusters in AD and controls. Oligo3 is enriched, whereas Oligo1 and Oligo2 are significantly reduced in AD.�n?=?6,980 AD and 16,499 control oligodendrocytes."""
-Oligo3_Z20,cell_type,Zhou_2020,up,up,Oligo3_Z20 oligodendrocyte cell type,"fig 5e; ""t-SNE plots of re-clustered oligodendrocytes showing five sub-clusters in AD and controls. Oligo3 is enriched, whereas Oligo1 and Oligo2 are significantly reduced in AD.�n?=?6,980 AD and 16,499 control oligodendrocytes."""
+Oligo1_Z20,cell_type,Zhou_2020,down,down,Oligo1_Z20 oligodendrocyte cell type,"fig 5e; ""t-SNE plots of re-clustered oligodendrocytes showing five sub-clusters in AD and controls. Oligo3 is enriched, whereas Oligo1 and Oligo2 are significantly reduced in AD. n?=?6,980 AD and 16,499 control oligodendrocytes."""
+Oligo2_Z20,cell_type,Zhou_2020,down,down,Oligo2_Z20 oligodendrocyte cell type,"fig 5e; ""t-SNE plots of re-clustered oligodendrocytes showing five sub-clusters in AD and controls. Oligo3 is enriched, whereas Oligo1 and Oligo2 are significantly reduced in AD. n?=?6,980 AD and 16,499 control oligodendrocytes."""
+Oligo3_Z20,cell_type,Zhou_2020,up,up,Oligo3_Z20 oligodendrocyte cell type,"fig 5e; ""t-SNE plots of re-clustered oligodendrocytes showing five sub-clusters in AD and controls. Oligo3 is enriched, whereas Oligo1 and Oligo2 are significantly reduced in AD. n?=?6,980 AD and 16,499 control oligodendrocytes."""
 Oligo4_Z20,cell_type,Zhou_2020,none,unchanged,Oligo4_Z20 oligodendrocyte cell type,
 Ex0_Z20,cell_type,Zhou_2020,none,unchanged,Ex0_Z20 excitatory neuron type,
 Ex1_Z20,cell_type,Zhou_2020,down ,down ,Ex1_Z20 excitatory neuron type,"Fig. 4b, Extended Data Fig. 7d,e; ""However, the neuronal clusters, especially that enriched for neurofilament genes NEFL and NEFM (Ex1), were underrepresented in AD compared to control samples"""
@@ -589,7 +591,7 @@ Astrocyte_Y22,cell_type,Yang_2022,none,unchanged,Astrocyte,
 Capillary_Y22,cell_type,Yang_2022,down,down,Endothelial cells: BEC Capillary,
 Ependymal_Y22,cell_type,Yang_2022,none,unchanged,Ependymal,
 M. Fibro_Y22,cell_type,Yang_2022,down,down,Meningeal fibroblast,
-Microglia/Mφ_Y22,cell_type,Yang_2022,none,unchanged,Microglia,
+Microglia/MÏ_Y22,cell_type,Yang_2022,none,unchanged,Microglia,
 Neuron_Y22,cell_type,Yang_2022,none,unchanged,Neuron,
 Oligo_Y22,cell_type,Yang_2022,none,unchanged,Oligodendrocytes,
 OPC_Y22,cell_type,Yang_2022,none,unchanged,Oligodendrocyte precursor cells,
