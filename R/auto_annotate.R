@@ -1,3 +1,23 @@
+# This function converts each column with existing cell type information in the metadata file into factor 
+#    ordered first by the ordering in the metadata file, and then second alphabetically.
+factorize_annotations <- function(anno, metadata){
+  # Do nothing if cell type names are not provided
+  if(sum(colnames(metadata)=="cell_type")==0)
+    return(anno)
+  
+  # If provided, look for cell type names and order annotations accordingly by default.
+  for (cn in colnames(anno)){
+    intersecting_cell_types <- intersect(metadata$cell_type,as.character(anno[,cn]))
+    if(length(intersecting_cell_types)>0){
+      new_levels <- c(intersecting_cell_types,setdiff(as.character(anno[,cn]),metadata$cell_type))
+      anno[,cn]  <- factor(anno[,cn],levels=new_levels)
+    }
+  }
+  
+  return(anno)
+}
+
+
 ####################################################
 # UPDATED FUNCTION WITH BUG FIX FOR LARGE CSV FILES
 

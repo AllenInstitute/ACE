@@ -1,3 +1,34 @@
+# New code for reordering riverplots to match first in the chain
+reorder_anno_for_river_plot <- function(anno,river_groups){
+  if(length(river_groups)<2)
+    return(anno)
+  
+  for (i in 2:length(river_groups)){
+    
+    x_group <- river_groups[1]
+    y_group <- river_groups[i]
+    x <- anno[,paste0(x_group,"_id")]
+    x <- factor(anno[,paste0(x_group,"_label")], levels = anno[,paste0(x_group,"_label")][match(sort(unique(x)),x)])
+    y <- anno[,paste0(y_group,"_id")]
+    y <- factor(anno[,paste0(y_group,"_label")], levels = anno[,paste0(y_group,"_label")][match(sort(unique(y), decreasing = TRUE),y)])
+    names(x) <- names(y) <- anno$sample_id
+    common.cells <- intersect(names(x), names(y))
+    y   <- y[common.cells]
+    x   <- x[common.cells]
+    tb  <- table(x, y)
+    tmp <- t(tb)
+    tmp <- tmp/rowSums(tmp)
+    ord <- order(apply(tmp,1,which.max)*10,rowMeans(t(apply(tmp,1,cumsum))))
+    y   <- factor(y,levels = colnames(tb)[ord])
+    anno[,paste0(y_group,"_label")] <- y
+    anno[,paste0(y_group,"_id")]    <- as.numeric(y)
+  }
+  return(anno)
+}
+
+
+######################################
+
 # library(ggplot2)
 # library(dplyr)
 # library(feather)

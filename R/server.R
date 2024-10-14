@@ -353,6 +353,10 @@ server <- function(input, output, session) {
     req(rv_path())
     write("Reading anno.", stderr())
     
+    req(rv_anno_metadata())
+    write("... reading cell type information for reordering factors", stderr())
+    metadata <- rv_anno_metadata()
+    
     # If a .csv file, use vroom.  These can be gzipped
     if(grepl(".csv$",rv_path())|grepl(".gz$",rv_path())) {
       
@@ -388,6 +392,7 @@ server <- function(input, output, session) {
           
           names(anno)[1] <- "sample_id" # Rename sample ids as sample_id
           # Add labels and colors, if needed
+          anno <- factorize_annotations(anno,metadata)  # NEW
           anno <- auto_annotate(anno)
           names(anno)[1] <- "sample_id" # Rename sample ids as sample_id again
           
@@ -424,6 +429,7 @@ server <- function(input, output, session) {
           
           names(anno)[1] <- "sample_id" # Rename sample ids as sample_id
           # Add labels and colors, if needed
+          anno <- factorize_annotations(anno,metadata)  # NEW
           anno <- auto_annotate(anno)
           names(anno)[1] <- "sample_id" # Rename sample ids as sample_id again
           
@@ -1079,11 +1085,14 @@ server <- function(input, output, session) {
     req(river_groups())
     
     available_width <- input$dimension[1]#as.numeric(session$clientData$output_dendro_widthfinder_width)
-    print(available_width)
+    #print(available_width)
 
     anno <- river_anno()
     river_groups <- river_groups()
         
+    # New code for reordering riverplots to match first in the chain
+    anno <- reorder_anno_for_river_plot(anno,river_groups)
+    
     suppressWarnings(build_river_plot_bokeh(anno = anno,
                                             group_by = river_groups,
                                             node_labels = "all",
