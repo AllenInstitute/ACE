@@ -147,6 +147,7 @@ OPC_2_2-SEAAD,supertype,SEA-AD,none,unchanged,Oligodendrocyte precursor cell_2_2
 OPC_1,supertype,SEA-AD,none,unchanged,Oligodendrocyte precursor cell_1 supertype cell,
 Oligo_1,supertype,SEA-AD,down,down,Oligo_1 supertype cell,
 Oligo_2,supertype,SEA-AD,down,down,Oligo_2 supertype cell,
+Oligo_2_1-SEAAD,supertype,SEA-AD,down,down,Oligo_2_1-SEAAD supertype cell,
 Oligo_4,supertype,SEA-AD,down,down,Oligo_4 supertype cell,
 Oligo_3,supertype,SEA-AD,none,unchanged,Oligo_3 supertype cell,
 Endo_1,supertype,SEA-AD,none,unchanged,Endo_1 supertype cell,
