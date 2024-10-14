@@ -1,7 +1,7 @@
 cell_type,level,study,direction,direction_new,description,notes
-inh,class,SEA-AD,none,not_assessed,All inhibitory neurons,
-exc,class,SEA-AD,none,not_assessed,All excitatory neurons,
-glia,class,SEA-AD,none,not_assessed,All non-neuronal cells (glial and non-neural types),
+Neuronal: GABAergic,class,SEA-AD,none,not_assessed,All inhibitory neurons,
+Neuronal: Glutamatergic,class,SEA-AD,none,not_assessed,All excitatory neurons,
+Non-neuronal and Non-neural,class,SEA-AD,none,not_assessed,All non-neuronal cells (glial and non-neural types),
 Lamp5 Lhx6,subclass,SEA-AD,none,not_assessed,Lamp5_Lhx6 interneurons,
 Lamp5,subclass,SEA-AD,none,not_assessed,Lamp CGE interneurons,
 Pax6,subclass,SEA-AD,none,not_assessed,Pax6 CGE interneurons,
