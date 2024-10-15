@@ -170,13 +170,13 @@ server <- function(input, output, session) {
   # })
 
   
-  updateSelectInput(session, inputId = "select_category", label = "Select annotation category:", choices = names(table_name)) # "Enter your own location"
+  updateSelectInput(session, inputId = "select_category", label = "Choose your data type:", choices = names(table_name)) # "Enter your own location"
   
   observeEvent(input$select_category, {
     # Choose a value from the default table, if selected
     # This is updated to be a list of lists
     if(length(input$select_category)>0) category = input$select_category
-    updateSelectInput(session, inputId = "select_textbox", label = "Select comparison table:", choices = table_name[[category]])
+    updateSelectInput(session, inputId = "select_textbox", label = "Choose an existing data set comparison:", choices = table_name[[category]])
     
   })
   
@@ -233,7 +233,7 @@ server <- function(input, output, session) {
     req(init$vals)
     
     id      <- "db"
-    label   <- "Input location of cell-level annotation information"
+    label   <- "Location of file with information about each data point (e.g., cell) for comparison"
     initial <- input$Not_on_list
     
     # For Bookmarking... does not work
@@ -260,7 +260,7 @@ server <- function(input, output, session) {
     req(init$vals)
     
     id      <- "metadata"
-    label   <- "Location of metadata (e.g., cluster) information (optional; csv file)"
+    label   <- "(Optional) Location of csv file with information about each annotation (e.g., cell type)"
     initial <- input$Not_on_list
     
     # For Bookmarking... does not work

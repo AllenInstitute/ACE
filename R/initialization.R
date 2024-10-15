@@ -33,7 +33,7 @@ table_locations <- c(
   "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/DLPFC_SEAAD_cell_annotations_for_app.csv.gz",
   "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/WMB_MERFISH_subset.csv.gz", 
   "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/MTG_cell_metadata.csv.gz",  
-  "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/hodge_to_seaad.csv.gz",
+  "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/hodge_to_seaad.csv.gz",   
   "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/CtxHip_WMB_translation.csv.gz",
   "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/CTX_Hip_cellInfoM1VISp.csv.gz",
   "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/M1_to_WMB_cell_info.csv.gz",
@@ -45,8 +45,8 @@ table_locations <- c(
 metadata_locations <- c(
   "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/AD_study_cell_types_for_app.csv",
   "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/WMB_cluster_annotations.csv.gz",
-  " ", # No metadata yet
-  " ", # No metadata yet
+  "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/mtg_whb_annotations.csv.gz", 
+  "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/mtg_whb_annotations.csv.gz",
   "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/WMB_cluster_annotations.csv.gz",
   "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/CTX_Hip_cellTypeInfo.csv",
   "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/WMB_cluster_annotations.csv.gz",
@@ -60,9 +60,9 @@ descriptions   <- c(
                     
   "[This data set may be slow to load--please be patient!]  Data about brain cell types AND brain regions using MERFISH data collected from mouse whole brain (Yao et al 2023; DOI: 10.1038/s41586-023-06812-z).  This includes cell type assignments and spatial positions for MERFISH data, subsampled to 50 cells per cluster + 5000 cells per section. Cells have been assigned to CCF parcillations to allow direct matching between cell types and anatomic structures. The current version of this table may have rotated CCF coordinates, making visualization challenging using the scatterplot view--new coordinates are in process, but this will not impact any other analysis.",
                     
-  "Human MTG data set comparisons! Cluster assignments from two previous studies alongside SEA-AD calls for each level of the taxonomy in MTG. These studies are the human 'great ape' (GA) study (Jorstad, Song, Exposito-Alonso, et al 2023, DOI:10.1126/science.ade9516), which assesses cell types in MTG across species, and the human 'cross-areal' (CA) study (Jorstad et al 2023, DOI:10.1126/science.adf6812), which assesses cell types across multiple neocortical areas in human (including MTG).  The clusters in the GA study represented the starting point for analysis in generation of the SEA-AD supertypes in Gabitto, Travaglini, et al 2023 (DOI:10.1101/2023.05.08.539485).  All three data sets in this table were generated using a nearly identical set of cells collected using 10X genomics single nucleus RNA-seq technologies.",
+  "Human MTG data set comparisons (recent). Cluster and other assignments for the SAME set of cells collected from MTG that were used in four published studies, including in SEA-AD and the whole human brain. These studies are (1) the human 'great ape' (GA) study (Jorstad, Song, Exposito-Alonso, et al 2023, DOI:10.1126/science.ade9516), which assesses cell types in MTG across species; (2) the human 'cross-areal' (CA) study (Jorstad et al 2023, DOI:10.1126/science.adf6812), which assesses cell types across multiple neocortical areas in human (including MTG); (3) 'SEA-AD' calls for each level of the taxonomy in MTG (Gabitto, Travaglini, et al 2023; DOI:10.1101/2023.05.08.539485)' and (4) a draft atlas of all cell types in the human brain (Siletti et al 2023; DOI: 10.1126/science.add7046). The latter two of these studies are currently available on both MapMyCells and the ABC Atlas. Note: the clusters in the GA study represented the starting point for analysis in generation of the SEA-AD supertypes.  All three MTG-focused data sets in this table were generated using a nearly identical set of cells collected using 10X genomics single nucleus RNA-seq technologies, and only the matching subset of cells from the whole human brain study are included.",
 
-  "Human MTG data set comparisons! Cluster assignments from the original study of cell types in human MTG from the Allen Institute ('Hodge', Bakken, et al 2019: DOI:10.1038/s41586-019-1506-7) alongside SEA-AD calls for each level of the taxonomy in MTG from Gabitto, Travaglini, et al 2023 (DOI:10.1101/2023.05.08.539485). Cortical layers of the initial dissections are also included per cell to allow for cell type by layer comparisons. We also include some example UMAP coordinates for visualization of metadata.",
+  "Human MTG data set comparisons (historical). Cluster assignments from the original study of cell types in human MTG from the Allen Institute ('Hodge', Bakken, et al 2019: DOI:10.1038/s41586-019-1506-7) alongside SEA-AD calls for each level of the taxonomy in MTG from Gabitto, Travaglini, et al 2023 (DOI:10.1101/2023.05.08.539485). Cortical layers of the initial dissections are also included per cell to allow for cell type by layer comparisons. We also include some example UMAP coordinates for visualization of metadata. Labels were transfered from the SEA-AD taxonomy to Hodge et al data using MapMyCells with deep generative model.",
                       
   "Data about brain cell types from mouse whole brain (Yao et al 2023, AIT21, DOI:10.1038/s41586-023-06812-z) and their mapping to mouse cortex + hippocampus (Yao et al 2021, DOI:10.1038/s41586-023-06812-z).  This includes data from AIT21 downsampled to only include 100 cells per cluster from cortex + hippocampus.  Any clusters from the whole brain that are NOT listed are either rare or absent in mouse cortex + hippocampus.  We recommend using this table to translate forward (e.g., from the older to the newer taxonomy).",
   
