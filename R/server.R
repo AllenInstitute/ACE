@@ -401,7 +401,7 @@ server <- function(input, output, session) {
           
           names(anno)[1] <- "sample_id" # Rename sample ids as sample_id
           # Add labels and colors, if needed
-          anno <- factorize_annotations(anno,metadata)  # NEW
+          anno <- refactorize_annotations(anno,metadata)  # NEW
           anno <- auto_annotate(anno)
           names(anno)[1] <- "sample_id" # Rename sample ids as sample_id again
           
@@ -438,7 +438,7 @@ server <- function(input, output, session) {
           
           names(anno)[1] <- "sample_id" # Rename sample ids as sample_id
           # Add labels and colors, if needed
-          anno <- factorize_annotations(anno,metadata)  # NEW
+          anno <- refactorize_annotations(anno,metadata)  # NEW
           anno <- auto_annotate(anno)
           names(anno)[1] <- "sample_id" # Rename sample ids as sample_id again
           

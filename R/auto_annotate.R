@@ -1,16 +1,19 @@
 # This function converts each column with existing cell type information in the metadata file into factor 
 #    ordered first by the ordering in the metadata file, and then second alphabetically.
-factorize_annotations <- function(anno, metadata){
+# == NOTE: this function must be run AFTER auto_annotate or it will not work properly
+refactorize_annotations <- function(anno, metadata){
   # Do nothing if cell type names are not provided
   if(sum(colnames(metadata)=="cell_type")==0)
     return(anno)
   
   # If provided, look for cell type names and order annotations accordingly by default.
-  for (cn in colnames(anno)){
-    intersecting_cell_types <- intersect(metadata$cell_type,as.character(anno[,cn]))
+  cns <- colnames(anno)
+  cns <- gsub("_label","",cns[grepl("_label",cns)])
+  for (cn in cns){
+    intersecting_cell_types <- intersect(metadata$cell_type,as.character(anno[,paste0(cn,"_label")]))
     if(length(intersecting_cell_types)>0){
-      new_levels <- c(intersecting_cell_types,setdiff(as.character(anno[,cn]),metadata$cell_type))
-      anno[,cn]  <- factor(anno[,cn],levels=new_levels)
+      new_levels <- c(intersecting_cell_types,setdiff(as.character(anno[,paste0(cn,"_label")]),metadata$cell_type))
+      anno[,paste0(cn,"_id")]  <- factor(anno[,paste0(cn,"_label")],levels=new_levels)
     }
   }
   
@@ -18,8 +21,8 @@ factorize_annotations <- function(anno, metadata){
 }
 
 
-####################################################
-# UPDATED FUNCTION WITH BUG FIX FOR LARGE CSV FILES
+#################################################################################
+# UPDATED FUNCTION WITH BUG FIX FOR LARGE CSV FILES AND TO OMIT DIRECTION COLUMNS
 
 auto_annotate <- function (anno, scale_num = "predicted", na_val_num = 0, colorset_num = c("darkblue", 
                                                                                            "white", "red"), sort_label_cat = TRUE, na_val_cat = "ZZ_Missing", 
@@ -40,7 +43,7 @@ auto_annotate <- function (anno, scale_num = "predicted", na_val_num = 0, colors
   # Annotate any columns missing annotations
   cn <- colnames(anno_out)
   convertColumns <- cn[(!grepl("_label", cn)) & (!grepl("_id", 
-                                                        cn)) & (!grepl("_color", cn))]
+                                                        cn)) & (!grepl("_color", cn)) & (!grepl("_direction", cn))]  # UPDATE TO OMIT DIRECTION COLUMNS
   convertColumns <- setdiff(convertColumns, "sample_name")
   convertColumns <- setdiff(convertColumns, gsub("_label", 
                                                  "", cn[grepl("_label", cn)]))
