@@ -12,6 +12,7 @@ suppressPackageStartupMessages({
   library(vroom)
 })
 options(stringsAsFactors = F)
+options(shiny.maxRequestSize = 50 * 1024^2)  # For uploading files
 
 source("initialization.R")
 source("annocomp_functions.R")
@@ -235,6 +236,7 @@ server <- function(input, output, session) {
     id      <- "db"
     label   <- "Location of file with information about each data point (e.g., cell) for comparison"
     initial <- input$Not_on_list
+    upload2 <- input$database_upload
     
     # For Bookmarking... does not work
     # If a stored db exists, pull the value from init$vals
@@ -242,12 +244,15 @@ server <- function(input, output, session) {
     #  initial <- init$vals[[id]]
       #init$vals <- init$vals[colnames(init$vals)!=id]
     #} else { # Either pull from select_textbox or leave blank
-    if (length(input$select_textbox)>0)
+    if (length(input$select_textbox)>0){
       if (!is.element(input$select_textbox,c("Select comparison table...",'Enter your own location'))) {
         initial = table_info[table_info$table_name==input$select_textbox,"table_loc"]
       }
-   # }
-    
+      if((input$select_textbox=='Enter your own location')&(!is.null(upload2))){
+        initial <- normalizePath(upload2$datapath)
+      }
+    }
+    print(paste("File location:", initial))
     textInput(inputId = id, 
               label = strong(label), 
               value = initial, 
@@ -262,6 +267,7 @@ server <- function(input, output, session) {
     id      <- "metadata"
     label   <- "(Optional) Location of csv file with information about each annotation (e.g., cell type)"
     initial <- input$Not_on_list
+    upload  <- input$metadata_upload
     
     # For Bookmarking... does not work
     # If a stored db exists, pull the value from init$vals
@@ -271,11 +277,14 @@ server <- function(input, output, session) {
     #  write(initial,stderr())
     #  init$vals <- init$vals[colnames(init$vals)!=id]
     #} else { # Either pull from select_textbox or leave blank
-    if (length(input$select_textbox)>0)
+    if (length(input$select_textbox)>0){
       if (!is.element(input$select_textbox,c("Select comparison table...",'Enter your own location'))) {
         initial = table_info[table_info$table_name==input$select_textbox,"metadata_loc"]
       }
-    #}
+      if((input$select_textbox=='Enter your own location')&(!is.null(upload))){
+        initial = normalizePath(upload$datapath)
+      }
+    }
     
     textInput(inputId = id, 
               label = strong(label), 
@@ -285,7 +294,7 @@ server <- function(input, output, session) {
   })
   
   
-  output$dataset_description <- renderUI({
+   output$dataset_description <- renderUI({
     req(init$vals)
     
     text_desc = "README: Select a category and a comparison table from the boxes above -OR- to compare your own annotation data, choose 'Enter your own location' from the 'Select annotation category' and enter the locations of relevant files in the two boxes above. After files are selected, please WAIT for the annotation table to load. This could take up to a minute, but will likely be much faster. Once loaded, the controls above and below will become responsive.Once a data set is chosen, this pane can be minimized with the '-' in the upper right. The '+' can then be pressed to re-open in order to select a new data set or bookmark the current state of the app."

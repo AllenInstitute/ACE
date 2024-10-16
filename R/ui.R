@@ -108,16 +108,22 @@ ui <- function(request) {
                      # NEW - END
                    ),
                    fluidRow(
-                     column(9,
+                     column(8,
                             uiOutput("database_textbox")
+                     ),
+                     column(2,
+                            fileInput("database_upload", "or UPLOAD")
                      ),
                      column(2,
                             uiOutput("checkInput")
                      )
                    ),
                    fluidRow(
-                     column(9,
+                     column(8,
                             uiOutput("metadata_textbox")
+                     ),
+                     column(2,
+                            fileInput("metadata_upload", "or UPLOAD")
                      ),
                      column(2,
                             uiOutput("metadata_checkInput")
