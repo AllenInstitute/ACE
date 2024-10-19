@@ -9,7 +9,8 @@ table_names <- c(
   "Cortex + Hippocampus vs. whole brain",
   "Initial cortex and hippocampus studies",
   "Motor cortex vs. whole brain",
-  "Mouse visual cortex (GABAergic)"
+  "Mouse visual cortex (GABAergic)",
+  "Mouse motor cortex"
 )
 
 #... what category each table is included in on the main page?
@@ -21,6 +22,7 @@ categories <- factor(c(
   "Mouse cell type classification",
   "Mouse cell type classification",
   "Mouse cell type classification",
+  "Patch-seq (shape + function + genes)",
   "Patch-seq (shape + function + genes)"
   ),
 # This is the order they will show up on in the list. **MAKE SURE THERE ARE NO TYPOS!**
@@ -37,7 +39,8 @@ table_locations <- c(
   "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/CtxHip_WMB_translation.csv.gz",
   "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/CTX_Hip_cellInfoM1VISp.csv.gz",
   "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/M1_to_WMB_cell_info.csv.gz",
-  "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/gouwens_tasic_byCell.csv"
+  "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/gouwens_tasic_byCell.csv.gz",
+  "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/ToliasCTKE_byCell.csv"
 )
 
 #... where is the annotation information table (e.g., information about each specific cell type.)?  
@@ -50,7 +53,8 @@ metadata_locations <- c(
   "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/WMB_cluster_annotations.csv.gz",
   "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/CTX_Hip_cellTypeInfo.csv",
   "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/WMB_cluster_annotations.csv.gz",
-  "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/gouwens_tasic_byCellType.csv"
+  "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/gouwens_tasic_byCellType.csv",
+  "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/CTX_Hip_cellTypeInfo.csv" # Only include for cell type ordering.
 )
 
 #... this is the description that will show up on ACE below the name. Should be relatively short, but also extremely informative as to what this is for.
@@ -70,7 +74,9 @@ descriptions   <- c(
   
   "Convert mouse cell type assignments from primary motor cortex (MOp) (Yao, Liu, Xie, Fischer, et al 2021, DOI:10.1038/s41586-021-03500-8) to whole mouse brain (Yao et al 2023; AIT21, DOI:10.1038/s41586-023-06812-z).  This is done using 10X v2 and v3 cells that were included in both studies, but with no subsampling. Any clusters from mouse whole brain that are NOT listed are either rare or absent in mouse MOp.  We recommend using this table to translate forward (e.g., from the older to the newer taxonomy).",
   
-  "Mouse Patch-seq data from primary visual cortex (VISp). These tables compare matched transctiptomic-type (T-Type) and morphoelectric transcriptomic type (MET-type) cell type assignments for the same cells from Gouwens, Sorensen, et al 2020 (DOI:10.1016/j.cell.2020.09.057). The cell type annotations for MET types was taken directly from supplemental materials in the manuscript. T-types were assigned through comparison with Tasic et al 2018 (DOI:10.1038/s41586-018-0654-5)."
+  "Mouse Patch-seq data from primary visual cortex (VISp). This table compares matched transcriptomic-type (T-Type) and morphoelectric transcriptomic type (MET-type) cell type assignments for the same cells from Gouwens, Sorensen, et al 2020 (DOI:10.1016/j.cell.2020.09.057). The cell type annotations for MET types was taken directly from supplemental materials in the manuscript. T-types were assigned through comparison with Tasic et al 2018 (DOI:10.1038/s41586-018-0654-5). In addition to cell type assigments, cell metadata and electrophysiological properties for each patch-seq cell is included for interactive visualization of electrophysiological properties.",
+  
+  "Mouse Patch-seq data from primary motor cortex (MOp). Data from Scala, Kobak, et al 2020 (DOI:10.1038/s41586-020-2907-3). This table include transcriptomic types (T-Types) defined through comparison with MOp cell types linked in the Cell Type Knowledge Explorer (Yao, Liu, Xie, Fischer, et al 2021, DOI:10.1038/s41586-021-03500-8) and through comparison with primary visual cortex (VISp) types from Tasic et al 2018 (DOI:10.1038/s41586-018-0654-5). In addition to cell type assigments, cell metadata and electrophysiological properties for each patch-seq cell is included for interactive visualization of electrophysiological properties."
   
 )
 
