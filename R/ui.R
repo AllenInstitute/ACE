@@ -5,10 +5,11 @@ suppressPackageStartupMessages({
   library(DT)
   library(rbokeh)
   library(shinydashboard)
+  #library(googleAnalyticsR)  # Some errors in dependencies if I include this, but also not needed yet
 })
 
 # Define UI for application that draws a histogram
-ui <- function(request) {
+ui <- #function(request) {   # Note that I needed to remove "function(request)" for Google Analytics to work.  Revisit later if this breaks anything.
   dashboardPage(
     
     dashboardHeader(title = "Annotation Comparison Explorer (ACE)", titleWidth = 400),
@@ -71,7 +72,8 @@ ui <- function(request) {
     ),
     
     dashboardBody(
-      tags$head(tags$script('var dimension = [0, 0];
+      tags$head(includeHTML("google-analytics.html"),  # Tag for general Google Analytics!
+                tags$script('var dimension = [0, 0];
                           $(document).on("shiny:connected", function(e) {
                               dimension[0] = window.innerWidth;
                               dimension[1] = window.innerHeight;
@@ -83,6 +85,7 @@ ui <- function(request) {
                               Shiny.onInputChange("dimension", dimension);
                           });
                           ')),
+      
       fluidRow(width = 12,
                
                box(title = "Select data set",
@@ -348,4 +351,4 @@ ui <- function(request) {
     )
   )
   
-}
+#}
