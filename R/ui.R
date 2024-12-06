@@ -9,7 +9,7 @@ suppressPackageStartupMessages({
 })
 
 # Define UI for application that draws a histogram
-ui <- #function(request) {   # Note that I needed to remove "function(request)" for Google Analytics to work.  Revisit later if this breaks anything.
+ui <- function(request) {   # Note that I might need to remove "function(request)" for Google Analytics to work.  Revisit later if this breaks anything.
   dashboardPage(
     
     dashboardHeader(title = "Annotation Comparison Explorer (ACE)", titleWidth = 400),
@@ -351,4 +351,4 @@ ui <- #function(request) {   # Note that I needed to remove "function(request)" 
     )
   )
   
-#}
+}

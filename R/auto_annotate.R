@@ -13,7 +13,7 @@ refactorize_annotations <- function(anno, metadata){
     intersecting_cell_types <- intersect(metadata$cell_type,as.character(anno[,paste0(cn,"_label")]))
     if(length(intersecting_cell_types)>0){
       new_levels <- c(intersecting_cell_types,setdiff(as.character(anno[,paste0(cn,"_label")]),metadata$cell_type))
-      anno[,paste0(cn,"_id")]  <- factor(anno[,paste0(cn,"_label")],levels=new_levels)
+      anno[,paste0(cn,"_id")]  <- as.numeric(factor(anno[,paste0(cn,"_label")],levels=new_levels))
     }
   }
   

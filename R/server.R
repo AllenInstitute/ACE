@@ -401,10 +401,10 @@ server <- function(input, output, session) {
           
           names(anno)[1] <- "sample_id" # Rename sample ids as sample_id
           # Add labels and colors, if needed
-          anno <- refactorize_annotations(anno,metadata)  # NEW
           anno <- auto_annotate(anno)
           names(anno)[1] <- "sample_id" # Rename sample ids as sample_id again
-          
+          anno <- refactorize_annotations(anno,metadata)  # NEW
+                    
           setProgress(value = 1,
                       message = "Annotations Loaded")
           

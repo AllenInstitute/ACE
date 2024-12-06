@@ -18,10 +18,13 @@ reorder_anno_for_river_plot <- function(anno,river_groups){
     tb  <- table(x, y)
     tmp <- t(tb)
     tmp <- tmp/rowSums(tmp)
-    ord <- order(apply(tmp,1,which.max)*10,rowMeans(t(apply(tmp,1,cumsum))))
-    y   <- factor(y,levels = colnames(tb)[ord])
-    anno[,paste0(y_group,"_label")] <- y
-    anno[,paste0(y_group,"_id")]    <- as.numeric(y)
+    # No reordering is needed if there is only one item in the first column
+    if(dim(tmp)[2]>1) {
+      ord <- order(apply(tmp,1,which.max)*10,rowMeans(t(apply(tmp,1,cumsum))))
+      y   <- factor(y,levels = colnames(tb)[ord])
+      anno[,paste0(y_group,"_label")] <- y
+      anno[,paste0(y_group,"_id")]    <- as.numeric(y)
+    }
   }
   return(anno)
 }
@@ -382,7 +385,7 @@ build_river_plot_bokeh <- function(anno,
   poly_links$group2_label <- paste0(group_links$group2_label, " (", group_links$group2_perc, "%)")
   poly_links$n <- group_links$n
   
-  b <- figure(height = height, width = width) %>%
+  b <- figure(height = height, width = width, legend_location = NULL) %>%
     ly_rect(data = plot_nodes,
             xleft = xmin, xright = xmax,
             ybottom = ymax, ytop = ymin,
