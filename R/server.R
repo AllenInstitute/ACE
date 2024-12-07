@@ -297,7 +297,7 @@ server <- function(input, output, session) {
    output$dataset_description <- renderUI({
     req(init$vals)
     
-    text_desc = "README: Select a category and a comparison table from the boxes above -OR- to compare your own annotation data, choose 'Enter your own location' from the 'Select annotation category' and enter the locations of relevant files in the two boxes above. After files are selected, please WAIT for the annotation table to load. This could take up to a minute, but will likely be much faster. Once loaded, the controls above and below will become responsive.Once a data set is chosen, this pane can be minimized with the '-' in the upper right. The '+' can then be pressed to re-open in order to select a new data set or bookmark the current state of the app."
+    text_desc = "README: Select a category and a comparison table from the boxes above -OR- to compare your own annotation data, choose 'Enter your own location' from the 'Select annotation category' and enter the locations of relevant files in the two boxes above. After files are selected, please WAIT for the annotation table to load. This could take up to a minute, but will likely be much faster. Once loaded, the controls above and below will become responsive. Once a data set is chosen, this pane can be minimized with the '-' in the upper right. The '+' can then be pressed to re-open in order to select a new data set or bookmark the current state of the app."
     
     if (length(input$select_textbox)>0){
     
@@ -1559,6 +1559,7 @@ server <- function(input, output, session) {
     anno = anno[anno[,paste0(input$explorer_group,"_label")]==input$explorer_annotation,]
     anno = as.data.frame(anno)
     cats = input$explorer_comparison # explorer comparison categories, short name
+    cats = c(input$explorer_group,setdiff(cats,input$explorer_group))  # Update to force annotation group first
     
     # set up the data frame for max length
     rows = 0
@@ -1624,6 +1625,7 @@ server <- function(input, output, session) {
       anno = anno[anno[,paste0(input$explorer_group,"_label")]==input$explorer_annotation,]
       anno = as.data.frame(anno)
       cats = input$explorer_comparison # explorer comparison categories, short name
+      cats = c(input$explorer_group,setdiff(cats,input$explorer_group))  # Update to force annotation group first
       
       # set up the data frame for max length
       rows = 0
@@ -1668,8 +1670,9 @@ server <- function(input, output, session) {
       #for (cat in cats) if(!is.element(paste0(cat,"_direction"),colnames(anno))){
       #  df[,paste0(cat,"_direction")] = rep("none",dim(df)[1])
       #}
-      
-      labeled_barplot_summary(df,cats,maxTypes = as.numeric(input$explorer_maxtypes))
+      maxTypes = as.numeric(input$explorer_maxtypes)
+      save(df,cats,maxTypes, file="tmp.RData")
+      labeled_barplot_summary(df,cats,maxTypes = maxTypes)
     } else {     # If no plot requested, return void
       ggplot() + theme_void()
     } 

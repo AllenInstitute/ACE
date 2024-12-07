@@ -1,4 +1,6 @@
 ## Plot a labeled barplot based on the table information in the annotation explorer
+# NOTE: This is currently hard-coded for changes with Alzheimer's disease. In theory this could be made more robust by allowing the direction colors and direction levels to be input as variables into the function.  This would not be too challenging.
+#
 
 labeled_barplot_summary <- function(df, cats, maxTypes = 10, minPercent = 2){
   Data <- NULL
@@ -10,20 +12,27 @@ labeled_barplot_summary <- function(df, cats, maxTypes = 10, minPercent = 2){
     
     if(sum(grepl(paste0(cat,"_direction"),colnames(df)))>0){
       dataTmp$Direction <- df[1:maxTypes,paste0(cat,"_direction")]
-      dataTmp$Direction[dataTmp$Direction=="up"] = "1. Up with AD"
-      dataTmp$Direction[dataTmp$Direction=="none"] = "2. No change"
-      dataTmp$Direction[dataTmp$Direction=="down"] = "3. Down with AD"
+      dataTmp$Direction[dataTmp$Direction=="up"] = "Up with AD"
+      dataTmp$Direction[dataTmp$Direction=="none"] = "No change"
+      dataTmp$Direction[dataTmp$Direction=="down"] = "Down with AD"
     } else {
-      dataTmp$Direction = "4. Not provided"
+      dataTmp$Direction = "Not provided"
     }
     Data <- rbind(Data,dataTmp)
   }
   Data <- Data[Data$PercentOfCellsInReferenceCluster>=minPercent,]
   
+  Data$DataSet = factor(Data$DataSet, levels=cats)
+  Data$Direction= factor(Data$Direction, levels=c("Up with AD","No change","Down with AD","Not provided"))
+  colors = c("pink", "white", "lightblue","grey")
+  colorsUse = colors[is.element(levels(Data$Direction),Data$Direction)]
+  
+  
   g <- ggplot(Data, aes(x=DataSet, y=PercentOfCellsInReferenceCluster, fill = Direction, label = CellType)) +
     geom_bar(stat = "identity") +
     geom_col(color = 'black') +
-    geom_text(size = 4, position = position_stack(vjust = 0.5)) 
+    geom_text(size = 4, position = position_stack(vjust = 0.5)) +
+    scale_fill_manual(values = colorsUse)
   g
 }
 

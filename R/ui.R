@@ -305,6 +305,7 @@ ui <- function(request) {   # Note that I might need to remove "function(request
                                 )
                               )
                      ),
+                     #conditionalPanel(condition = "1==1",  # NEEDS TO BE UPDATED FOR A REAL CONDITION
                      tabPanel("Compare numeric annotations",  # NOTE: This should be a conditional panel that only appears when at least 2 numeric variables are present.  I have a workaround in server.r for now.
                               fluidRow(
                                 column(4,
@@ -341,7 +342,7 @@ ui <- function(request) {   # Note that I might need to remove "function(request
                                        plotOutput("scatter_widthfinder",width = "100%",height = "10px")
                                 )
                               )
-                     )
+                     )#)
                    )
                )
       ),
