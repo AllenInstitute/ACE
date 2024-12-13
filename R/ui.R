@@ -5,6 +5,7 @@ suppressPackageStartupMessages({
   library(DT)
   library(rbokeh)
   library(shinydashboard)
+  #library(shinyjs)           # Not currently used
   #library(googleAnalyticsR)  # Some errors in dependencies if I include this, but also not needed yet
 })
 
@@ -85,6 +86,8 @@ ui <- function(request) {   # Note that I might need to remove "function(request
                               Shiny.onInputChange("dimension", dimension);
                           });
                           ')),
+      
+      #useShinyjs(),  # shinyjs not currently used
       
       fluidRow(width = 12,
                
@@ -169,7 +172,7 @@ ui <- function(request) {   # Note that I might need to remove "function(request
                box(title = "Visualizations and statistics",
                    solidHeader = TRUE, status = "primary", width = 12,
                    collapsible = TRUE, collapsed = FALSE, color = "green",
-                   tabsetPanel(
+                   tabsetPanel(id = "visualizations",
                      tabPanel("Intro",
                               fluidRow(
                                 column(12,
@@ -305,8 +308,7 @@ ui <- function(request) {   # Note that I might need to remove "function(request
                                 )
                               )
                      ),
-                     #conditionalPanel(condition = "1==1",  # NEEDS TO BE UPDATED FOR A REAL CONDITION
-                     tabPanel("Compare numeric annotations",  # NOTE: This should be a conditional panel that only appears when at least 2 numeric variables are present.  I have a workaround in server.r for now.
+                     tabPanel("Compare numeric annotations", #id="scatterplot",  # NOTE: This should be a conditional panel that only appears when at least 2 numeric variables are present.  I have a workaround in server.r for now.
                               fluidRow(
                                 column(4,
                                        uiOutput("scatter_x_selection"),
@@ -342,7 +344,7 @@ ui <- function(request) {   # Note that I might need to remove "function(request
                                        plotOutput("scatter_widthfinder",width = "100%",height = "10px")
                                 )
                               )
-                     )#)
+                     )
                    )
                )
       ),

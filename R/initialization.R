@@ -57,6 +57,31 @@ metadata_locations <- c(
   "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/CTX_Hip_cellTypeInfo.csv" # Only include for cell type ordering.
 )
 
+#... which panels to omit (e.g., because relevant data for that panel is not included)?
+omit_panels <- list(
+  "scatterplot",
+  "none",
+  "scatterplot",
+  "none",
+  "scatterplot",
+  "scatterplot",
+  "scatterplot",
+  "individual",
+  "individual"
+)
+# Options used are: "confusion", "river", "individual", or "scatterplot". "none" is used by default but is just a placeholder for showing everything.
+
+# MAKE SURE THESE NAMES MATCH THE TAB NAMES IN ui.R!
+tab_names <- setNames(c("Compare pairs of annotations", 
+                        "Link 2+ annotations (river plots)", 
+                        "Explore individual annotations", 
+                        "Compare numeric annotations"),
+                      c("confusion", 
+                        "river", 
+                        "individual", 
+                        "scatterplot")
+                      )
+
 #... this is the description that will show up on ACE below the name. Should be relatively short, but also extremely informative as to what this is for.
 descriptions   <- c(
   
@@ -102,4 +127,6 @@ for (cat in levels(categories)){
 table_name[["Enter your own location"]] = c("Enter your own location")
 category = "Enter your own location"
 
+names(omit_panels) <- table_names
+omit_panels[["Enter your own location"]] = "none"
 

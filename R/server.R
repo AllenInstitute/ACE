@@ -294,10 +294,13 @@ server <- function(input, output, session) {
   })
   
   
+  # This function adds the data set description AND hides irrelevant visualization panels for preset data input
    output$dataset_description <- renderUI({
     req(init$vals)
     
     text_desc = "README: Select a category and a comparison table from the boxes above -OR- to compare your own annotation data, choose 'Enter your own location' from the 'Select annotation category' and enter the locations of relevant files in the two boxes above. After files are selected, please WAIT for the annotation table to load. This could take up to a minute, but will likely be much faster. Once loaded, the controls above and below will become responsive. Once a data set is chosen, this pane can be minimized with the '-' in the upper right. The '+' can then be pressed to re-open in order to select a new data set or bookmark the current state of the app."
+    do_omit_panels = "none"
+    
     
     if (length(input$select_textbox)>0){
     
@@ -312,15 +315,27 @@ server <- function(input, output, session) {
           # Do nothing... text_desc should remain as initialized above
         } else {
           text_desc = table_info[table_info$table_name==input$select_textbox,"description"]
+          do_omit_panels <- omit_panels[[input$select_textbox]]
         }
       }
     }
     
+    ## Which panels do we use?
+    for (i in 1:length(tab_names)){
+      condition = names(tab_names)[i] %in% do_omit_panels
+      if(condition){
+        hideTab(inputId="visualizations",target=as.character(tab_names[i]))
+      } else{
+        showTab(inputId="visualizations",target=as.character(tab_names[i]))
+      }
+    }
+    
+    # Return the description text
     div(style = "font-size:14px;", strong("Dataset description"),br(),text_desc)
     
   })
   
-  
+
   
   ##################################
   ## Loading tables from input$db ##
@@ -1671,7 +1686,7 @@ server <- function(input, output, session) {
       #  df[,paste0(cat,"_direction")] = rep("none",dim(df)[1])
       #}
       maxTypes = as.numeric(input$explorer_maxtypes)
-      save(df,cats,maxTypes, file="tmp.RData")
+      #save(df,cats,maxTypes, file="tmp.RData")
       labeled_barplot_summary(df,cats,maxTypes = maxTypes)
     } else {     # If no plot requested, return void
       ggplot() + theme_void()
