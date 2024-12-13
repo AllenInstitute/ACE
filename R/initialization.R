@@ -129,4 +129,3 @@ category = "Enter your own location"
 
 names(omit_panels) <- table_names
 omit_panels[["Enter your own location"]] = "none"
-

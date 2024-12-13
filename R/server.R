@@ -758,12 +758,12 @@ server <- function(input, output, session) {
           filter_init <- isolate(filters$current[[filter_inputid]])
           
           # Generate a histogram to show distribution of the numeric values
-          # hist_plot_name <- paste0(desc$base[i], "_hist_plot")
-          # print(hist_plot_name)
+          # NOTE: THIS DOES NOT WORK.  The problem is that this plot correctly generates, but does not accurately update to reflect the current tab.  I think the issue has something to do with reactive values and and renderPlot not properly regenerating on new tabs, but I also don't know how to fix it.
+          # hist_plot_name <- paste0(filter_name, "_hist_plot")
           # 
           # output[[hist_plot_name]] <- renderPlot({
-          #   
-          #   ggplot(values) + 
+          # 
+          #   ggplot(values) +
           #     geom_histogram(aes(x = val),
           #                    bins = 100) +
           #     scale_x_continuous("",expand = c(0,0)) +
@@ -772,15 +772,15 @@ server <- function(input, output, session) {
           #     theme(axis.title = element_blank(),
           #           axis.ticks.length = unit(0, "pt"),
           #           plot.margin=grid::unit(c(0,0,0,0),"cm"))
-          #   
+          # 
           # })
           
           # Add a tabPanel to the tabList for this annotation
           # using the filter_range, above.
           tabList[[i]] <- tabPanel(filter_name,
-                                   # plotOutput(hist_plot_name,
-                                   #            width = "100%",
-                                   #            height = 80),
+                                  #plotOutput( hist_plot_name,   # THIS CODE IS FOR THE HISTOGRAM ABOVE
+                                  #             width = "100%",
+                                  #             height = 80),
                                    sliderInput(inputId = filter_inputid,
                                                label = filter_name,
                                                min = filter_range[1],
@@ -808,11 +808,13 @@ server <- function(input, output, session) {
       tabList <- build_filter_panel_list(desc = rv_desc(), 
                                          sf   = input$sf, 
                                          all_anno = rv_anno())
+      
       do.call(tabsetPanel, tabList)
     })
     
   })
   
+
   # build the filter invert checkbox
   # 
   # output$invert <- which filter values should be inverted
@@ -922,8 +924,8 @@ server <- function(input, output, session) {
       desc <- rv_desc()
       filtered <- rv_anno()
       
-      filter_inputids <- names(filters$current)
-      
+      filter_inputids <- names(filters$current) 
+
       if(length(filter_inputids) > 0) {
         
         for(i in 1:length(filter_inputids)) {
@@ -936,7 +938,7 @@ server <- function(input, output, session) {
           
           if(filter_values[1] != "" & filter_base %in% input$sf) {
             if(filter_type == "cat") {
-              filter_text <- paste0(filter_id," %in% c(",paste(filter_values,collapse=","),")")
+              filter_text <- paste0("`",filter_id,"` %in% c(",paste(filter_values,collapse=","),")")
               # Take the opposite if invert filter set
               if (filter_base %in% invert_annos()){ 
                 filter_text <- paste0("!(",filter_text,")")
@@ -945,8 +947,8 @@ server <- function(input, output, session) {
               filtered <- filtered %>%
                 filter_(filter_text)
             } else if(filter_type == "num") {
-              filter_text_low <- paste0("as.numeric(",filter_label,") >= ",filter_values[1])
-              filter_text_high <- paste0("as.numeric(",filter_label,") <= ",filter_values[2])
+              filter_text_low <- paste0("as.numeric(`",filter_label,"`) >= ",filter_values[1])
+              filter_text_high <- paste0("as.numeric(`",filter_label,"`) <= ",filter_values[2])
               
               filtered <- filtered %>%
                 filter_(filter_text_low) %>%
@@ -1001,7 +1003,7 @@ server <- function(input, output, session) {
             anno_groups <- anno %>%
               select(one_of(filter_id,filter_label)) %>%
               unique() %>%
-              filter_(paste0(filter_id," %in% c(",paste(filter_values, collapse = ","),")"))
+              filter_(paste0("`",filter_id,"` %in% c(",paste(filter_values, collapse = ","),")"))
             filter_groups <- anno_groups[[filter_label]]
             
             if(length(filter_values) > 0) {
