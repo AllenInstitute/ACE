@@ -1,10 +1,10 @@
-# annotation_comparison
+# Annotation Comparison Explorer (ACE)
 
-R Shiny app for comparison of annotations such as (i) cell type assignments (e.g., from different mapping/clustering algorithms), (ii) donor metadata (e.g., donor, sex, age), and (iii) cell metadata (e.g., anatomic location, QC metrics).  This tool is now **[hosted on shinyapps.io](https://sea-ad.shinyapps.io/ACEapp/)**.
+R Shiny and [web-based](https://sea-ad.shinyapps.io/ACEapp/) tool for comparison of annotations such as (i) cell type assignments, (ii) donor metadata (e.g., donor, sex, age), and (iii) cell metadata (e.g., anatomic location, QC metrics).  Two primary use cases are (1) comparing user-defined clustering results and mapping results (e.g., after running [MapMyCells](https://portal.brain-map.org/atlases-and-data/bkp/mapmycells)) for the same set of cells and (2) comparing cell type names between different taxonomies on [Allen Brain Map](https://portal.brain-map.org/cell-types).  Additionally, ACE includes a data set comparing cell type names and associated abudance changes between multiple published studies of Alzheimer's disease in dorsolateral prefrontal cortex (see visualizations far below).
+
+**ACE is now [hosted on shinyapps.io](https://sea-ad.shinyapps.io/ACEapp/)**.
 
 ![main_ACE_app_page_top](https://github.com/user-attachments/assets/51375516-0203-45d7-a207-6f91a08140df)
-
-Additionally, this tool can compare results across more than two taxonomies at once. The three primary use cases are (1) annotating a novel taxonomy with information from multiple existing taxonomies (e.g., after running [MapMyCells](https://portal.brain-map.org/atlases-and-data/bkp/mapmycells)), (2) comparing cell type names between different taxonomies on [Allen Brain Map](https://portal.brain-map.org/cell-types), and (2) comparison of data from multiple studies of Alzheimer's disease (like in the example below).
 
 ## How to use 
 
