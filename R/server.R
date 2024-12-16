@@ -252,7 +252,7 @@ server <- function(input, output, session) {
         initial <- normalizePath(upload2$datapath)
       }
     }
-    print(paste("File location:", initial))
+    
     textInput(inputId = id, 
               label = strong(label), 
               value = initial, 
@@ -285,6 +285,8 @@ server <- function(input, output, session) {
         initial = normalizePath(upload$datapath)
       }
     }
+    
+    if(length(initial)==0) initial = " "  # Quick fix for users to provide upload cell info without providing cell type info
     
     textInput(inputId = id, 
               label = strong(label), 
@@ -1115,6 +1117,10 @@ server <- function(input, output, session) {
 
     anno <- river_anno()
     river_groups <- river_groups()
+    
+    # Account for errors in special characters in column names
+    colnames(anno) <- make.names(colnames(anno))
+    river_groups   <- make.names(river_groups)
         
     # New code for reordering riverplots to match first in the chain
     anno <- reorder_anno_for_river_plot(anno,river_groups)
