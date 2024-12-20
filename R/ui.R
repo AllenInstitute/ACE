@@ -40,10 +40,10 @@ ui <- function(request) {   # Note that I might need to remove "function(request
       ),
       actionButton(inputId = "tutorial", 
                    icon = icon("file-video", lib = "font-awesome"), 
-                   a("TUTORIAL (coming soon)",
+                   a("WEBINAR",
                      style="color: #000000; border-color: #2e6da4",
                      target = "_blank", 
-                     href="https://www.youtube.com/user/AllenInstitute")
+                     href="https://www.youtube.com/watch?v=csxRkTgP50k")
       ),
       actionButton(inputId = "email1", 
                    icon = icon("envelope", lib = "font-awesome"), 
