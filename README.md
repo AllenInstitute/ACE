@@ -43,6 +43,7 @@ The only difference between local and web versions is that the local version can
 ## Reporting issues or suggestions
 
 Please share any comments, suggestions, bugs, or any other thoughts using the button in the app, or by [submitting an issue](https://github.com/AllenInstitute/ACE/issues).
+
 ![image](https://github.com/AllenInstitute/ACE/assets/25486679/a0e2ee8d-5315-400d-a723-b9bb9719c4bd)
 
 ## License
