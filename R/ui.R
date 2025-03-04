@@ -60,6 +60,13 @@ ui <- function(request) {   # Note that I might need to remove "function(request
                      target = "_blank", 
                      href="https://github.com/AllenInstitute/ACE/")
       ),
+      actionButton(inputId = "manuscript", 
+                   icon = icon("book", lib = "font-awesome"), 
+                   a("PREPRINT",
+                     style="color: #000000; border-color: #2e6da4",
+                     target = "_blank", 
+                     href="https://doi.org/10.1101/2025.02.11.637559")
+      ),
       br(),
       h4("Click the three lines next to the title above to minimize this sidebar."),
       br(),
