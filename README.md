@@ -4,7 +4,8 @@
 
 R Shiny and [web-based](https://sea-ad.shinyapps.io/ACEapp/) tool for comparison of annotations such as (i) cell type assignments, (ii) donor metadata (e.g., donor, sex, age), and (iii) cell metadata (e.g., anatomic location, QC metrics).  Two primary use cases are (1) comparing user-defined clustering results and mapping results (e.g., after running [MapMyCells](https://portal.brain-map.org/atlases-and-data/bkp/mapmycells)) for the same set of cells and (2) comparing cell type names between different taxonomies on [Allen Brain Map](https://portal.brain-map.org/cell-types).  Additionally, ACE includes a data set comparing cell type names and associated abudance changes between multiple published studies of Alzheimer's disease in dorsolateral prefrontal cortex (see visualizations far below).
 
-**ACE is now [hosted on shinyapps.io](https://sea-ad.shinyapps.io/ACEapp/)**.
+### Quick start: **[try the web-based version of ACE](https://sea-ad.shinyapps.io/ACEapp/)** or **[read the ACE preprint on bioRxiv](https://doi.org/10.1101/2025.02.11.637559)**.
+<br>
 
 ![main_ACE_app_page_top](https://github.com/user-attachments/assets/51375516-0203-45d7-a207-6f91a08140df)
 
