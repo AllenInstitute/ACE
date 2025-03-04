@@ -1,3 +1,5 @@
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.14624012.svg)](https://doi.org/10.5281/zenodo.14624012)
+
 # Annotation Comparison Explorer (ACE)
 
 R Shiny and [web-based](https://sea-ad.shinyapps.io/ACEapp/) tool for comparison of annotations such as (i) cell type assignments, (ii) donor metadata (e.g., donor, sex, age), and (iii) cell metadata (e.g., anatomic location, QC metrics).  Two primary use cases are (1) comparing user-defined clustering results and mapping results (e.g., after running [MapMyCells](https://portal.brain-map.org/atlases-and-data/bkp/mapmycells)) for the same set of cells and (2) comparing cell type names between different taxonomies on [Allen Brain Map](https://portal.brain-map.org/cell-types).  Additionally, ACE includes a data set comparing cell type names and associated abudance changes between multiple published studies of Alzheimer's disease in dorsolateral prefrontal cortex (see visualizations far below).
@@ -41,6 +43,7 @@ The only difference between local and web versions is that the local version can
 ## Reporting issues or suggestions
 
 Please share any comments, suggestions, bugs, or any other thoughts using the button in the app, or by [submitting an issue](https://github.com/AllenInstitute/ACE/issues).
+
 ![image](https://github.com/AllenInstitute/ACE/assets/25486679/a0e2ee8d-5315-400d-a723-b9bb9719c4bd)
 
 ## License
@@ -60,3 +63,5 @@ We are actively updating this tool. **Community involvement is encouraged throug
 ### Comparing matched cell types across studies of AD
 
 ![multi_study_comparison_ACE_panel](https://github.com/user-attachments/assets/31c68130-3159-4d00-88d1-dd0a253bc5a2)
+
+*ACE is supported by the National Institute of Neurological Disorders and Stroke under Award Number U24NS133077 and by the National Institute On Aging under Award Number U19AG060909. The content is solely the responsibility of the authors and does not necessarily represent the official views of the National Institutes of Health.*
