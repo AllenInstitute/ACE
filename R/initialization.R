@@ -10,7 +10,8 @@ table_names <- c(
   "Initial cortex and hippocampus studies",
   "Motor cortex vs. whole brain",
   "Mouse visual cortex (GABAergic)",
-  "Mouse motor cortex"
+  "Mouse motor cortex",
+  "Mouse aging study"
 )
 
 #... what category each table is included in on the main page?
@@ -23,7 +24,8 @@ categories <- factor(c(
   "Mouse cell type classification",
   "Mouse cell type classification",
   "Patch-seq (shape + function + genes)",
-  "Patch-seq (shape + function + genes)"
+  "Patch-seq (shape + function + genes)",
+  "Mouse cell type classification"
   ),
 # This is the order they will show up on in the list. **MAKE SURE THERE ARE NO TYPOS!**
 levels = c("Disease studies", "Mouse cell type classification", "Human cell type classification","Patch-seq (shape + function + genes)")) 
@@ -40,7 +42,8 @@ table_locations <- c(
   "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/CTX_Hip_cellInfoM1VISp.csv.gz",
   "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/M1_to_WMB_cell_info.csv.gz",
   "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/gouwens_tasic_byCell.csv.gz",
-  "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/ToliasCTKE_byCell.csv"
+  "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/ToliasCTKE_byCell.csv",
+  "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/aging_mouse_brain_subsample.csv.gz"
 )
 
 #... where is the annotation information table (e.g., information about each specific cell type.)?  
@@ -54,7 +57,8 @@ metadata_locations <- c(
   "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/CTX_Hip_cellTypeInfo.csv",
   "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/WMB_cluster_annotations.csv.gz",
   "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/gouwens_tasic_byCellType.csv",
-  "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/CTX_Hip_cellTypeInfo.csv" # Only include for cell type ordering.
+  "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/CTX_Hip_cellTypeInfo.csv", # Only include for cell type ordering.
+  "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/WMB_cluster_annotations.csv.gz"
 )
 
 #... which panels to omit (e.g., because relevant data for that panel is not included)?
@@ -67,7 +71,8 @@ omit_panels <- list(
   "scatterplot",
   "scatterplot",
   "individual",
-  "individual"
+  "individual",
+  "none"
 )
 # Options used are: "confusion", "river", "individual", or "scatterplot". "none" is used by default but is just a placeholder for showing everything.
 
@@ -101,7 +106,9 @@ descriptions   <- c(
   
   "Mouse Patch-seq data from primary visual cortex (VISp). This table compares matched transcriptomic-type (T-Type) and morphoelectric transcriptomic type (MET-type) cell type assignments for the same cells from Gouwens, Sorensen, et al 2020 (DOI:10.1016/j.cell.2020.09.057). The cell type annotations for MET types was taken directly from supplemental materials in the manuscript. T-types were assigned through comparison with Tasic et al 2018 (DOI:10.1038/s41586-018-0654-5). In addition to cell type assigments, cell metadata and electrophysiological properties for each patch-seq cell is included for interactive visualization of electrophysiological properties.",
   
-  "Mouse Patch-seq data from primary motor cortex (MOp). Data from Scala, Kobak, et al 2020 (DOI:10.1038/s41586-020-2907-3). This table include transcriptomic types (T-Types) defined through comparison with MOp cell types linked in the Cell Type Knowledge Explorer (Yao, Liu, Xie, Fischer, et al 2021, DOI:10.1038/s41586-021-03500-8) and through comparison with primary visual cortex (VISp) types from Tasic et al 2018 (DOI:10.1038/s41586-018-0654-5). In addition to cell type assigments, cell metadata and electrophysiological properties for each patch-seq cell is included for interactive visualization of electrophysiological properties."
+  "Mouse Patch-seq data from primary motor cortex (MOp). Data from Scala, Kobak, et al 2020 (DOI:10.1038/s41586-020-2907-3). This table include transcriptomic types (T-Types) defined through comparison with MOp cell types linked in the Cell Type Knowledge Explorer (Yao, Liu, Xie, Fischer, et al 2021, DOI:10.1038/s41586-021-03500-8) and through comparison with primary visual cortex (VISp) types from Tasic et al 2018 (DOI:10.1038/s41586-018-0654-5). In addition to cell type assigments, cell metadata and electrophysiological properties for each patch-seq cell is included for interactive visualization of electrophysiological properties.",
+  
+  "Explore mouse cell type assignments from the recent study of the aging mouse brain ('AGING_'; Jin, et al 2025, DOI:10.1038/s41586-024-08350-8) in the context of the reported cell type hierarchy, donor metric (age, sex), cell metadata, and changes with age.  Importantly also allows for conversion to cell type classifications from the whole mouse brain study ('WMB_'; Yao et al 2023; AIT21, DOI:10.1038/s41586-023-06812-z).  Data from the aging study were subsampled to retain a randome 25% of the cells and to omit cells with 2 or fewer cells from a whole mouse brain study cluster. Any clusters from mouse whole brain that are NOT listed are either rare or absent in aging mouse brain study.  Both studies are currently available for further exploration on the Allen Brain Cell Atlas."
   
 )
 
