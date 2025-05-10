@@ -11,24 +11,26 @@ table_names <- c(
   "Motor cortex vs. whole brain",
   "Mouse visual cortex (GABAergic)",
   "Mouse motor cortex",
-  "Mouse aging study"
+  "Mouse aging study",
+  "Mammalian Basal Ganglia Consensus Cell Type Atlas"
 )
 
 #... what category each table is included in on the main page?
 categories <- factor(c(
   "Disease studies",
   "Mouse cell type classification",
-  "Human cell type classification",
-  "Human cell type classification",
+  "Human/NHP cell type classification",
+  "Human/NHP cell type classification",
   "Mouse cell type classification",
   "Mouse cell type classification",
   "Mouse cell type classification",
   "Patch-seq (shape + function + genes)",
   "Patch-seq (shape + function + genes)",
-  "Mouse cell type classification"
+  "Mouse cell type classification",
+  "Human/NHP cell type classification"
   ),
 # This is the order they will show up on in the list. **MAKE SURE THERE ARE NO TYPOS!**
-levels = c("Disease studies", "Mouse cell type classification", "Human cell type classification","Patch-seq (shape + function + genes)")) 
+levels = c("Disease studies", "Mouse cell type classification", "Human/NHP cell type classification","Patch-seq (shape + function + genes)")) 
 
 
 #... where is the cell x annotation table?
@@ -43,7 +45,8 @@ table_locations <- c(
   "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/M1_to_WMB_cell_info.csv.gz",
   "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/gouwens_tasic_byCell.csv.gz",
   "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/ToliasCTKE_byCell.csv",
-  "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/aging_mouse_brain_subsample.csv.gz"
+  "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/aging_mouse_brain_subsample.csv.gz",
+  "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/BG_cross_species_metadata.csv.gz"
 )
 
 #... where is the annotation information table (e.g., information about each specific cell type.)?  
@@ -58,7 +61,8 @@ metadata_locations <- c(
   "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/WMB_cluster_annotations.csv.gz",
   "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/gouwens_tasic_byCellType.csv",
   "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/CTX_Hip_cellTypeInfo.csv", # Only include for cell type ordering.
-  "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/WMB_cluster_annotations.csv.gz"
+  "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/WMB_cluster_annotations.csv.gz",
+  "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/BG_cross_species_annotation_information.csv"
 )
 
 #... which panels to omit (e.g., because relevant data for that panel is not included)?
@@ -72,6 +76,7 @@ omit_panels <- list(
   "scatterplot",
   "individual",
   "individual",
+  "none",
   "none"
 )
 # Options used are: "confusion", "river", "individual", or "scatterplot". "none" is used by default but is just a placeholder for showing everything.
@@ -108,7 +113,9 @@ descriptions   <- c(
   
   "Mouse Patch-seq data from primary motor cortex (MOp). Data from Scala, Kobak, et al 2020 (DOI:10.1038/s41586-020-2907-3). This table include transcriptomic types (T-Types) defined through comparison with MOp cell types linked in the Cell Type Knowledge Explorer (Yao, Liu, Xie, Fischer, et al 2021, DOI:10.1038/s41586-021-03500-8) and through comparison with primary visual cortex (VISp) types from Tasic et al 2018 (DOI:10.1038/s41586-018-0654-5). In addition to cell type assigments, cell metadata and electrophysiological properties for each patch-seq cell is included for interactive visualization of electrophysiological properties.",
   
-  "Explore mouse cell type assignments from the recent study of the aging mouse brain ('AGING_'; Jin, et al 2025, DOI:10.1038/s41586-024-08350-8) in the context of the reported cell type hierarchy, donor metric (age, sex), cell metadata, and changes with age.  Importantly also allows for conversion to cell type classifications from the whole mouse brain study ('WMB_'; Yao et al 2023; AIT21, DOI:10.1038/s41586-023-06812-z).  Data from the aging study were subsampled to retain a randome 25% of the cells and to omit cells with 2 or fewer cells from a whole mouse brain study cluster. Any clusters from mouse whole brain that are NOT listed are either rare or absent in aging mouse brain study.  Both studies are currently available for further exploration on the Allen Brain Cell Atlas."
+  "Explore mouse cell type assignments from the recent study of the aging mouse brain ('AGING_'; Jin, et al 2025, DOI:10.1038/s41586-024-08350-8) in the context of the reported cell type hierarchy, donor metric (age, sex), cell metadata, and changes with age.  Importantly also allows for conversion to cell type classifications from the whole mouse brain study ('WMB_'; Yao et al 2023; AIT21, DOI:10.1038/s41586-023-06812-z).  Data from the aging study were subsampled to retain a randome 25% of the cells and to omit cells with 2 or fewer cells from a whole mouse brain study cluster. Any clusters from mouse whole brain that are NOT listed are either rare or absent in aging mouse brain study.  Both studies are currently available for further exploration on the Allen Brain Cell Atlas.",
+  
+  "The Human and Mammalian Brain Atlas (HMBA) consortia has created a unified taxonomy of the mammalian basal ganglia, with >2 million cells collected from humans, macaques, and marmosets, and linkages to existing mouse brain data. More details are available here: https://alleninstitute.github.io/HMBA_BasalGanglia_Consensus_Taxonomy/.  The data table here includes 323,370 cells (random downsampling to 15% of cells + 10 random cells per cluster) along with information about cell type assignments (cluster, group, subclass, class, and neighborhood), dissected brain region, and species, and includes mapping results to existing whole human brain and whole mouse brain taxonomies available in MapMyCells and the ABC Atlas."
   
 )
 
