@@ -20,8 +20,8 @@ ui <- function(request) {   # Note that I might need to remove "function(request
       width = 250,
                   
       h3("What is ACE?"),
-      p("Annotation Comparison Explorer (ACE) is a versitile application for comparison of two or more annotations such as (i) cell type assignments (e.g., from different mapping/clustering algorithms), (ii) donor metadata (e.g., donor, sex, age), and (iii) cell metadata (e.g., anatomic location, QC metrics). Several example annotation tables are included, or you can point it at your own files.  Read the user guide linked below for more details and send a message if you have any comments."),
-      br(),
+      p("Annotation Comparison Explorer (ACE) is a versitile application for comparison of two or more annotations such as (i) cell type assignments (e.g., from different mapping/clustering algorithms), (ii) donor metadata (e.g., donor, sex, age), and (iii) cell metadata (e.g., anatomic location, QC metrics). Several example annotation tables are included, or you can point it at your own files."),
+      #br(),
       # h4("Bookmarking"),
       # p("To get the current state of the app, push 'Get state' and copy text. To set the state, paste text into the 'Set state' box."),
       # actionButton(inputId = "bookmark_url", label="Bookmark (BROKEN)",
@@ -30,7 +30,30 @@ ui <- function(request) {   # Note that I might need to remove "function(request
       # verbatimTextOutput("show_url"),
       # uiOutput("state_textbox"),
       # h4("More help"),
-
+      
+      h3("Get started"),
+      
+      actionButton(inputId = "usecase", 
+                   icon = icon("circle-play", lib = "font-awesome"), 
+                   a("USE CASES",
+                     style="color: #000000; border-color: #2e6da4",
+                     target = "_blank", 
+                     href="https://alleninstitute.github.io/HMBA_BasalGanglia_ACE/")
+      ),
+      actionButton(inputId = "tutorial", 
+                   icon = icon("file-video", lib = "font-awesome"), 
+                   a(" WEBINAR",
+                     style="color: #000000; border-color: #2e6da4",
+                     target = "_blank", 
+                     href="https://www.youtube.com/watch?v=csxRkTgP50k")
+      ),
+      actionButton(inputId = "manuscript", 
+                   icon = icon("book", lib = "font-awesome"), 
+                   a("PREPRINT",
+                     style="color: #000000; border-color: #2e6da4",
+                     target = "_blank", 
+                     href="https://doi.org/10.1101/2025.02.11.637559")
+      ),
       actionButton(inputId = "guide", 
                    icon = icon("hand-spock", lib = "font-awesome"), 
                    a("USER GUIDE",
@@ -38,13 +61,10 @@ ui <- function(request) {   # Note that I might need to remove "function(request
                      target = "_blank", 
                      href="https://github.com/AllenInstitute/ACE/blob/main/ACE_User_Guide.pdf")
       ),
-      actionButton(inputId = "tutorial", 
-                   icon = icon("file-video", lib = "font-awesome"), 
-                   a("WEBINAR",
-                     style="color: #000000; border-color: #2e6da4",
-                     target = "_blank", 
-                     href="https://www.youtube.com/watch?v=csxRkTgP50k")
-      ),
+
+      
+      h3("Contribute"),
+      
       actionButton(inputId = "email1", 
                    icon = icon("envelope", lib = "font-awesome"), 
                    a("PROVIDE FEEDBACK", 
@@ -60,19 +80,13 @@ ui <- function(request) {   # Note that I might need to remove "function(request
                      target = "_blank", 
                      href="https://github.com/AllenInstitute/ACE/")
       ),
-      actionButton(inputId = "manuscript", 
-                   icon = icon("book", lib = "font-awesome"), 
-                   a("PREPRINT",
-                     style="color: #000000; border-color: #2e6da4",
-                     target = "_blank", 
-                     href="https://doi.org/10.1101/2025.02.11.637559")
-      ),
+
       br(),
       h4("Click the three lines next to the title above to minimize this sidebar."),
       br(),
       p("----------------"),
       br(),
-      h4("Acknowledgements"),
+      h3("Acknowledgements"),
       p("App developed by Jeremy Miller with support from Aaron Oster and Bosiljka Tasic, using some original code developed by Lucas Graybuck. Included annotation tables created by Jeremy Miller, Kyle Travaglini, Tain Luquez, Rachel Hostetler, and Vilas Menon. Logo credit: Lauren Alfiler."),
       br(),
       p("If you would like to contribute to this app, please reach out via email or GitHub using the links above."),

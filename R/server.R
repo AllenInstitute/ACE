@@ -171,7 +171,7 @@ server <- function(input, output, session) {
   # })
 
   
-  updateSelectInput(session, inputId = "select_category", label = "Choose your data type:", choices = names(table_name)) # "Enter your own location"
+  updateSelectInput(session, inputId = "select_category", label = "Choose a category:", choices = names(table_name)) # "Enter your own location"
   
   observeEvent(input$select_category, {
     # Choose a value from the default table, if selected
