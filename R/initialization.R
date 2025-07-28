@@ -3,6 +3,7 @@
 #... what is is called in the main page?
 table_names <- c(
   "Alzheimer's disease (SEA-AD vs. community)",
+  "Parkinson's disease (ASAP-PMDBS project)",
   "Spatial localization of brain cell types",
   "Middle temporal gyrus (recent studies)",
   "Middle temporal gyrus (initial studies)",
@@ -17,6 +18,7 @@ table_names <- c(
 
 #... what category each table is included in on the main page?
 categories <- factor(c(
+  "Disease studies",
   "Disease studies",
   "Mouse cell type classification",
   "Human/NHP cell type classification",
@@ -37,6 +39,7 @@ levels = c("Disease studies", "Mouse cell type classification", "Human/NHP cell 
 # Note that this can be a csv file, a feather directory, or a scrattch.taxonomy h5ad file.  It can also be local or on the web.
 table_locations <- c(
   "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/DLPFC_SEAAD_cell_annotations_for_app.csv.gz",
+  "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/ASAP_CRN_cell_info_subsample.csv.gz",
   "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/WMB_MERFISH_subset.csv.gz", 
   "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/MTG_cell_metadata.csv.gz",  
   "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/hodge_to_seaad.csv.gz",   
@@ -53,6 +56,7 @@ table_locations <- c(
 # The goal is that this part will eventually be able to point to a cell type annotation table in TDT format.
 metadata_locations <- c(
   "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/AD_study_cell_types_for_app.csv",
+  "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/AD_study_cell_types_for_app.csv",
   "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/WMB_cluster_annotations.csv.gz",
   "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/mtg_whb_annotations.csv.gz", 
   "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/mtg_whb_annotations.csv.gz",
@@ -68,6 +72,7 @@ metadata_locations <- c(
 #... which panels to omit (e.g., because relevant data for that panel is not included)?
 omit_panels <- list(
   "scatterplot",
+  "none",
   "none",
   "scatterplot",
   "none",
@@ -96,6 +101,8 @@ tab_names <- setNames(c("Compare pairs of annotations",
 descriptions   <- c(
   
   "Data and associated cell type assignments from ten studies of Alzheimer's disease.  All data sets were mapped to SEA-AD data, and both the 10 data sets and the details of the data integration and mapping are described in Gabitto, Travaglini, et al 2023 (DOI:10.1101/2023.05.08.539485). For each data set, their mappings to SEA-AD as well as original cluster assignments are included in the tables.  In addition, each cell type's change in abundance in AD from the original study, as well as some basic information about the cell types are included.  Data is subsampled to 100 cells per SEA-AD supertype.  The way data is encoded, comparisons between each data set an SEA-AD are valid, but comparsisons CANNOT be accurately made between external data sets.  If you have additional data sets you'd like to see included in this study, please reach out!",
+  
+  "Integration of five Parkinson's disease data sets focusing on the Human Postmortem-derived Brain Sequencing Collection (PMDBS) from Aligning Science Across Parkinson’s (ASAP) (see https://portal.brain-map.org/atlases-and-data/bkp/abc-atlas/asap-parkinsons for details). All cells include cluster assignments and are mapped to middle temporal gyrus (MTG) from the SEA-AD project (Gabitto, Travaglini, et al 2023; DOI:10.1101/2023.05.08.539485) and to whole human brain (WHB; Siletti et al 2023; DOI:10.1126/science.add7046). Also includes other cell metadata, such as brain region and data set.",
                     
   "[This data set may be slow to load--please be patient!]  Data about brain cell types AND brain regions using MERFISH data collected from mouse whole brain (Yao et al 2023; DOI:10.1038/s41586-023-06812-z; AIT21).  This includes cell type assignments and spatial positions for MERFISH data, subsampled to 50 cells per cluster + 5000 cells per section. Cells have been assigned to CCF parcillations to allow direct matching between cell types and anatomic structures. The current version of this table may have rotated CCF coordinates, making visualization challenging using the scatterplot view--new coordinates are in process, but this will not impact any other exploration components.",
                     
