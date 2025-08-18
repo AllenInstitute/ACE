@@ -21,19 +21,18 @@ For power users, this tool can also be run locally in R Studio by following the 
 
 #### Setup RStudio
 (You only need do this step once).
-1. Install R
+1. Install R (ideally version 4.2.2)
 2. Install RStudio
-3. Install the following packages in R Studio**:
-```
-options(install.packages.compile.from.source = "always")
-packages <- setdiff(c("remotes","dplyr","data.table","DT","feather","ggplot2","ggbeeswarm","shiny","UpSetR","anndata"), installed.packages()[,"Package"])
-if(length(packages)>0) install.packages(packages, type = "both")
-remotes::install_github("AllenInstitute/scrattch.io")
-remotes::install_github("bokeh/rbokeh")
-```
-4. Download the files from this repo (you may want to repeat this step occasionally to check for updates!) 
+3. Download the files from this repo in a working directory
+4. Set up your R environment to align with the [renv.lock file](https://github.com/AllenInstitute/ACE/blob/main/renv.lock)
 
-**If there are issues with setup in step #3, note that the complete R environment is saved [in the renv folder](https://github.com/AllenInstitute/ACE/tree/main/renv).
+We recommend using [rig](https://github.com/r-lib/rig) for R installation management along with [renv](https://rstudio.github.io/renv/) for R environment management.  After installing rig, you should be able to run these rig commands in a terminal from your working directory to tackle steps #1 and #4:
+```
+rig add 4.2.2
+rig add rtools42
+rig rstudio renv.lock
+```
+This should set up and then launch RStudio with the correct package configurations. (The first two lines of code only need to be run once).
 
 #### Run the app
 1. In RStudio, open the file `ui.R` and click the "Run App" button in the upper right corner of the screen
