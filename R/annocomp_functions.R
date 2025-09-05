@@ -1,7 +1,7 @@
 ## Summarizes data.
 ## Gives count, mean, standard deviation, standard error of the mean, and confidence interval (default 95%).
 ##   data: a data frame.
-##   measurevar: the name of a column that contains the variable to be summariezed
+##   measurevar: the name of a column that contains the variable to be summarized
 ##   groupvars: a vector containing names of columns that contain grouping variables
 ##   na.rm: a boolean that indicates whether to ignore NA's
 ##   conf.interval: the percent range of the confidence interval (default is 95%)
@@ -365,6 +365,7 @@ build_annocomp_plot <- function(anno,
         p <- p +
           geom_point(data = plot_anno,
                      aes(x = xpos, y = ypos, size = frac, color = point_color))
+        p <- p + labs(size="Fraction\n(columns\nsum to 1)")
         
       } else if(denom == y_group) {
         # As fraction of all Y categories
@@ -379,11 +380,13 @@ build_annocomp_plot <- function(anno,
         p <- p +
           geom_point(data = plot_anno,
                      aes(x = xpos, y = ypos, size = frac, color = point_color))
+        p <- p + labs(size="Fraction\n(rows\nsum to 1)")
       } else {
         
         p <- p +
           geom_point(data = plot_anno,
                      aes(x = xpos, y = ypos, size = n, color = point_color))
+        p <- p + labs(size="Number\nof data\npoints")
         
       }
       

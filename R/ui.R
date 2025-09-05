@@ -5,7 +5,6 @@ suppressPackageStartupMessages({
   library(DT)
   library(rbokeh)
   library(shinydashboard)
-  #library(shinyjs)           # Not currently used
   #library(googleAnalyticsR)  # Some errors in dependencies if I include this, but also not needed yet
 })
 
@@ -17,10 +16,12 @@ ui <- function(request) {   # Note that I might need to remove "function(request
     
     dashboardSidebar(title = tags$img(src='ACE_logo.png', width = '225', style= 'display: block; margin-left: auto; margin-right: auto;'), #), #disable = TRUE
     
-      width = 250,
+      width = 300,
                   
       h3("What is ACE?"),
       p("Annotation Comparison Explorer (ACE) is a versitile application for comparison of two or more annotations such as (i) cell type assignments (e.g., from different mapping/clustering algorithms), (ii) donor metadata (e.g., donor, sex, age), and (iii) cell metadata (e.g., anatomic location, QC metrics). Several example annotation tables are included, or you can point it at your own files."),
+      p(tags$i("Click the three lines next to the title above to minimize this sidebar.")),
+      p(tags$i("Note: ACE must be reloaded if left idle for 10 minutes.")),
       #br(),
       # h4("Bookmarking"),
       # p("To get the current state of the app, push 'Get state' and copy text. To set the state, paste text into the 'Set state' box."),
@@ -33,37 +34,93 @@ ui <- function(request) {   # Note that I might need to remove "function(request
       
       h3("Get started"),
       
-      actionButton(inputId = "usecase", 
-                   icon = icon("circle-play", lib = "font-awesome"), 
-                   a("USE CASES",
+      p("We provide multiple entry points into ACE, from short use case videos to an extensive user guide."),
+      
+      fluidRow(
+        column(5,
+               actionButton(inputId = "tutorial", 
+                            icon = icon("file-video", lib = "font-awesome"), 
+                            a(" WEBINAR",
+                              style="color: #000000; border-color: #2e6da4",
+                              target = "_blank", 
+                              href="https://www.youtube.com/watch?v=csxRkTgP50k")
+               )
+        ),
+        column(5,
+               actionButton(inputId = "usecase", 
+                            icon = icon("circle-play", lib = "font-awesome"), 
+                            a("USE CASES",
+                              style="color: #000000; border-color: #2e6da4",
+                              target = "_blank", 
+                              href="https://alleninstitute.github.io/HMBA_BasalGanglia_ACE/")
+               )
+        )
+      ),
+      fluidRow(
+        column(5,
+               actionButton(inputId = "manuscript", 
+                            icon = icon("book", lib = "font-awesome"), 
+                            a("PREPRINT",
+                              style="color: #000000; border-color: #2e6da4",
+                              target = "_blank", 
+                              href="https://doi.org/10.1101/2025.02.11.637559")
+               )
+        ),
+        column(5,
+               actionButton(inputId = "guide", 
+                            icon = icon("hand-spock", lib = "font-awesome"), 
+                            a("USER GUIDE",
+                              style="color: #000000; border-color: #2e6da4",
+                              target = "_blank", 
+                              href="https://github.com/AllenInstitute/ACE/blob/main/ACE_User_Guide.pdf")
+               ),
+        )
+      ),
+      
+      h3("Related tools"),
+      
+      p("The Allen Institute provides additional tools for assigning cell type names to user data (MapMyCells) and visualizing single cell and spatial -omics data across the mammalian brain (ABC Atlas)."),
+      
+      actionButton(inputId = "mapmycellsWithAce", 
+                   icon = icon(
+                     name = NULL,
+                     style = "
+                       background: url('mapmycells-icon-black.png');
+                       background-size: contain;
+                       background-position: center;
+                       background-repeat: no-repeat;
+                       height: 20px;
+                       width: 20px;
+                       display: inline-block;
+                     "
+                   ),
+                   a("Using ACE with MapMyCells",
                      style="color: #000000; border-color: #2e6da4",
                      target = "_blank", 
-                     href="https://alleninstitute.github.io/HMBA_BasalGanglia_ACE/")
+                     href="https://portal.brain-map.org/atlases-and-data/bkp/mapmycells/step-by-step-guide")
       ),
-      actionButton(inputId = "tutorial", 
-                   icon = icon("file-video", lib = "font-awesome"), 
-                   a(" WEBINAR",
+      actionButton(inputId = "abcAtlas", 
+                   icon = icon(
+                     name = NULL,
+                     style = "
+                       background: url('abc-atlas-icon.png');
+                       background-size: contain;
+                       background-position: center;
+                       background-repeat: no-repeat;
+                       height: 20px;
+                       width: 20px;
+                       display: inline-block;
+                     "
+                   ),
+                   a("Visualizing data with ABC Atlas",
                      style="color: #000000; border-color: #2e6da4",
                      target = "_blank", 
-                     href="https://www.youtube.com/watch?v=csxRkTgP50k")
+                     href="https://portal.brain-map.org/atlases-and-data/bkp/abc-atlas")
       ),
-      actionButton(inputId = "manuscript", 
-                   icon = icon("book", lib = "font-awesome"), 
-                   a("PREPRINT",
-                     style="color: #000000; border-color: #2e6da4",
-                     target = "_blank", 
-                     href="https://doi.org/10.1101/2025.02.11.637559")
-      ),
-      actionButton(inputId = "guide", 
-                   icon = icon("hand-spock", lib = "font-awesome"), 
-                   a("USER GUIDE",
-                     style="color: #000000; border-color: #2e6da4",
-                     target = "_blank", 
-                     href="https://github.com/AllenInstitute/ACE/blob/main/ACE_User_Guide.pdf")
-      ),
-
       
       h3("Contribute"),
+      
+      p("If you would like to contribute to this app, please reach out via email or on GitHub."),
       
       actionButton(inputId = "email1", 
                    icon = icon("envelope", lib = "font-awesome"), 
@@ -80,20 +137,13 @@ ui <- function(request) {   # Note that I might need to remove "function(request
                      target = "_blank", 
                      href="https://github.com/AllenInstitute/ACE/")
       ),
-
-      br(),
-      h4("Click the three lines next to the title above to minimize this sidebar."),
-      br(),
-      p("----------------"),
-      br(),
+      
       h3("Acknowledgements"),
-      p("App developed by Jeremy Miller with support from Aaron Oster and Bosiljka Tasic, using some original code developed by Lucas Graybuck. Included annotation tables created by Jeremy Miller, Kyle Travaglini, Tain Luquez, Rachel Hostetler, and Vilas Menon. Logo credit: Lauren Alfiler."),
-      br(),
-      p("If you would like to contribute to this app, please reach out via email or GitHub using the links above."),
-      br()
+      p("App developed by Jeremy Miller with support from Aaron Oster and Bosiljka Tasic, using some original code developed by Lucas Graybuck. Included annotation tables created by Jeremy Miller, Kyle Travaglini, Tain Luquez, Rachel Hostetler, and Vilas Menon. Logo credit: Lauren Alfiler.")
     ),
     
     dashboardBody(
+      shinyjs::useShinyjs(),
       tags$head(includeHTML("google-analytics.html"),  # Tag for general Google Analytics!
                 tags$script('var dimension = [0, 0];
                           $(document).on("shiny:connected", function(e) {
@@ -112,10 +162,13 @@ ui <- function(request) {   # Note that I might need to remove "function(request
       
       fluidRow(width = 12,
                
-               box(title = "Select data set",
+               box(title = "Upload or select data set",
                    solidHeader = TRUE, status = "primary", width = 12,
                    collapsible = TRUE, collapsed = FALSE,
                    fluidRow(
+                     column(11, offset=0.5,
+                     p("Upload your own table(s) using the buttons -OR- select a category and a comparison table from the boxes below. After files are selected, please WAIT for the annotation table to load, which could take up to a minute after which the controls will become responsive. Once a data set is chosen, this pane can be minimized with the '-' in the upper right if desired.")
+                     ),
                      column(4,  # I can't get bookmarking to work with categories, but I can get it CLOSE with the nested list approach. If I eventually do get it working, then revisit the nested list approach, but for now, I like the categories better.
                             uiOutput("select_category")
                      ),
@@ -126,31 +179,31 @@ ui <- function(request) {   # Note that I might need to remove "function(request
                      #        bookmarkButton(label="Bookmark (BROKEN)")  # This button does nothing when clicked but SHOULD pop open the URL to copy
                      # )
                      # NEW - start
-                     column(2,#4  # Maybe remove this since it's broken
-                            actionButton(inputId = "bookmark_url", label="Bookmark (BROKEN)",
-                                         icon = icon("link", lib = "glyphicon")
-                            ),
-                            verbatimTextOutput("show_url")
-                     ),
+                     #column(2,#4  # Maybe remove this since it's broken
+                    #        actionButton(inputId = "bookmark_url", label="Bookmark (BROKEN)",
+                    #                     icon = icon("link", lib = "glyphicon")
+                    #        ),
+                    #        verbatimTextOutput("show_url")
+                    # ),
                      # NEW - END
                    ),
                    fluidRow(
+                     column(2,
+                            fileInput("database_upload", "UPLOAD or")
+                     ),
                      column(8,
                             uiOutput("database_textbox")
-                     ),
-                     column(2,
-                            fileInput("database_upload", "or UPLOAD")
                      ),
                      column(2,
                             uiOutput("checkInput")
                      )
                    ),
                    fluidRow(
+                     column(2,
+                            fileInput("metadata_upload", "UPLOAD or")
+                     ),
                      column(8,
                             uiOutput("metadata_textbox")
-                     ),
-                     column(2,
-                            fileInput("metadata_upload", "or UPLOAD")
                      ),
                      column(2,
                             uiOutput("metadata_checkInput")
@@ -247,25 +300,31 @@ ui <- function(request) {   # Note that I might need to remove "function(request
                                 )
                               ),
                               fluidRow(
-                                column(4,
-                                       strong("Download Options"),
+                                column(6,
+                                       strong("Plot download Options"),
                                        fluidRow(
                                          column(4,textInput("annocomp_dlw","Width (in)",8)),
                                          column(4,textInput("annocomp_dlh","Height (in)",4)),
-                                         column(4,textInput("annocomp_dlf","Font (pt)",6))),
-                                       uiOutput("annocomp_downloadButton"))
+                                         column(4,textInput("annocomp_dlf","Font (pt)",6))
+                                       ),
+                                       fluidRow(
+                                         column(5,uiOutput("annocomp_downloadButton")),
+                                         column(5,downloadButton("data_csv","Download Plot Data"))
+                                       ),
+                                ),
+                                
                               )
                      ),
                      tabPanel("Link 2+ annotations (river plots)",
                               fluidRow(
                                 column(11,
                                        uiOutput("river_group_selection")
-                                ),
-                                column(1,
-                                       br(),
-                                       actionButton("river_go","GO!",
-                                                    style="color: #fff; background-color: #EC008C; border-color: #BE1E2D; font-weight: bold;")
-                                )
+                                )#,  # Uncomment this comma and the next four lines to return the "Go" button for river plots
+                                #column(1,
+                                #       br(),
+                                #       actionButton("river_go","GO!",
+                                #                    style="color: #fff; background-color: #EC008C; border-color: #BE1E2D; font-weight: bold;")
+                                #)
                               ),
                               fluidRow(
                                 column(12,
@@ -316,6 +375,9 @@ ui <- function(request) {   # Note that I might need to remove "function(request
                                 ),
                               ),
                               fluidRow(
+                                downloadButton("download_explorer_table", "Download Table Data")
+                              ),
+                              fluidRow(
                                 width=12, br(), 
                               ),
                               fluidRow(
@@ -334,6 +396,7 @@ ui <- function(request) {   # Note that I might need to remove "function(request
                                 column(4,
                                        uiOutput("scatter_x_selection"),
                                        uiOutput("scatter_y_selection"),
+                                       uiOutput("radio_show_filtered_data"),
                                        textInput("scatter_pt_size","Point Size",6),
                                        uiOutput("radio_scatter_color_type"),
                                        conditionalPanel(condition = "input.scatter_color_type == 'Categoric Annotation'",

@@ -253,14 +253,16 @@ server <- function(input, output, session) {
       }
     }
     
-    textInput(inputId = id, 
-              label = strong(label), 
-              value = initial, 
-              width = "100%")
+    textInput(
+      inputId = id, 
+      label = strong(label),
+      value = initial, 
+      width = "100%"
+    )
     
   })
   
-  
+
   output$metadata_textbox <- renderUI({
     req(init$vals)
     
@@ -300,7 +302,7 @@ server <- function(input, output, session) {
    output$dataset_description <- renderUI({
     req(init$vals)
     
-    text_desc = "README: Select a category and a comparison table from the boxes above -OR- to compare your own annotation data, choose 'Enter your own location' from the 'Select annotation category' and enter the locations of relevant files in the two boxes above. After files are selected, please WAIT for the annotation table to load. This could take up to a minute, but will likely be much faster. Once loaded, the controls above and below will become responsive. Once a data set is chosen, this pane can be minimized with the '-' in the upper right. The '+' can then be pressed to re-open in order to select a new data set or bookmark the current state of the app."
+    text_desc = ""
     do_omit_panels = "none"
     
     
@@ -367,7 +369,7 @@ server <- function(input, output, session) {
     req(input$metadata)
     write("Checking and setting input$metadata.", stderr())
     
-    input$metadata
+    gsub("\\s", "", input$metadata)
   })
   
   
@@ -1098,11 +1100,13 @@ server <- function(input, output, session) {
     p()
   })
   
-  river_anno <- eventReactive(input$river_go, {
-    rv_filtered()
+#  river_anno <- eventReactive(input$river_go, {
+  river_anno <- reactive({  # Replace with above line to return "Go" button for river plots
+      rv_filtered()
   })
   
-  river_groups <- eventReactive(input$river_go, {
+#  river_groups <- eventReactive(input$river_go, {
+  river_groups <- reactive({  # Replace with above line to return "Go" button for river plots
     input$river_groups
   })
   
@@ -1142,6 +1146,13 @@ server <- function(input, output, session) {
       
       anno <- river_anno()
       river_groups <- river_groups()
+      
+      # Account for errors in special characters in column names
+      colnames(anno) <- make.names(colnames(anno))
+      river_groups   <- make.names(river_groups)
+      
+      # New code for reordering riverplots to match first in the chain
+      anno <- reorder_anno_for_river_plot(anno,river_groups)
       
       plot_river<-build_river_plot(anno = anno,
                                    group_by = river_groups)
@@ -1418,10 +1429,10 @@ server <- function(input, output, session) {
   # heatmap download objects
   output$annocomp_downloadButton <- renderUI({
     req(annocomp_plot())
-    downloadButton('annocomp_downloadPlot')
+    downloadButton('annocomp_downloadPlot', "Download Plot")
   })
   
-  
+
   output$annocomp_downloadPlot <- downloadHandler(
     
     filename = "distillery_annotation_plot.pdf",
@@ -1438,6 +1449,38 @@ server <- function(input, output, session) {
              height = out_h)
     }
   )
+  
+  
+  # Download handler for the annotation comparison table
+  output$data_csv <- downloadHandler(
+    filename = function() {"annotation_comparison_data.csv"},
+    content = function(file) {
+      out_table <- annocomp_data()
+      write.csv(out_table, file, quote = T, row.names = T)
+    }
+  )
+  
+  # Data for the annotation comparison table
+  annocomp_data <- reactive ({
+    
+    req(rv_filtered())
+    req(input$annocomp_x)
+    req(input$annocomp_y)
+    req(input$anno_reorderY)
+    
+    filtered = rv_filtered()
+    x_group  = input$annocomp_x
+    y_group  = input$annocomp_y
+    
+    x <- filtered[,paste0(x_group,"_id")]
+    x <- factor(filtered[,paste0(x_group,"_label")], levels = filtered[,paste0(x_group,"_label")][match(sort(unique(x)),x)])
+    y <- filtered[,paste0(y_group,"_id")]
+    y <- factor(filtered[,paste0(y_group,"_label")], levels = filtered[,paste0(y_group,"_label")][match(sort(unique(y), decreasing = TRUE),y)])
+    names(x) <- names(y) <- filtered$sample_id
+    
+    return_plot_data(x, y, reorderY=input$anno_reorderY) # in "pairwise_functions.R"
+  })
+  
   
   
   
@@ -1566,16 +1609,14 @@ server <- function(input, output, session) {
   
   ## Table with top annotation comparisons
   
-  output$explorer_table <- DT::renderDataTable({
+  # Data for the table, in a reactive call
+  df_for_download <- reactive({
     
     req(input$explorer_annotation)
     req(input$explorer_group)
     req(input$explorer_comparison)
     req(rv_filtered())
     req(rv_anno_metadata())
-    
-    # display top 5 rows at a time
-    options(DT.options = list(pageLength = 5, selection=list(mode="single", target="cell")))
     
     # Collect relevant inputs
     anno = as.data.frame(rv_filtered())
@@ -1629,8 +1670,33 @@ server <- function(input, output, session) {
     #}
     
     # set conditions and return the beautiful table
-    return(format_datatable(df,cats))
+    return(df)
   })
+  
+  # renderDataTable to use the above reactive data
+  output$explorer_table <- DT::renderDataTable({
+    options(DT.options = list(pageLength = 5, selection=list(mode="single", target="cell")))
+    
+    # Get the data frame from the reactive expression
+    df <- df_for_download()
+    
+    # Pass the data frame to your formatting function
+    format_datatable(df, input$explorer_comparison)
+  })
+  
+  # Download csv data via downloadHandler
+  output$download_explorer_table <- downloadHandler(
+    filename = function() {
+      paste("explorer_table-", Sys.Date(), ".csv", sep="")
+    },
+    content = function(file) {
+      # Get the raw data from the reactive expression.
+      df <- df_for_download()
+      
+      # Write the reactive data frame to a CSV
+      write.csv(df_for_download(), file, row.names = FALSE)
+    }
+  )
   
   
   # Plots with top annotation comparisons, if desired
@@ -1806,6 +1872,26 @@ server <- function(input, output, session) {
   })
   
   ## UI Elements
+  # UI for choosing to use annotations or expression for colors
+  output$radio_show_filtered_data <- renderUI({
+    req(init$vals)
+    
+    id <- "show_filtered_data"
+    label <- "Show omitted data points in grey?"
+    
+    initial <- ifelse(length(init$vals[[id]]) > 0,
+                      init$vals[[id]],
+                      "No")
+    
+    radioButtons(
+      inputId = id,
+      label = strong(label),
+      choices = c("No","Yes"),
+      selected = "No",
+      inline = TRUE
+    )
+  })
+  
   output$scatter_x_selection <- renderUI({
     req(init$vals)
 
@@ -2020,13 +2106,17 @@ server <- function(input, output, session) {
   })
   
   scatter_fg_bg <- eventReactive(input$scatter_plot_go, {
+    req(rv_anno())
     req(rv_filtered())
     req(rv_desc())
     req(input$scatter_x)
     req(input$scatter_y)
+    req(input$show_filtered_data)  # NEW
 
     select_anno <- rv_filtered()
+    anno <- rv_anno()
     names(select_anno)[names(select_anno) == "sample_id"] <- "sample_name"
+    names(anno)[names(anno) == "sample_id"] <- "sample_name"
     
     if(input$scatter_color_type == "Categoric Annotation") {
       red_num   <- green_num <- blue_num <- ""
@@ -2038,14 +2128,18 @@ server <- function(input, output, session) {
       color_by  <- ".numeric"
     }
     
-    build_scatter_fg_bg_points(select_anno = select_anno,
-                            color_by = color_by,
-                            x_group = input$scatter_x, 
-                            y_group = input$scatter_y, 
-                            desc = rv_desc(),
-                            red_num = red_num,
-                            green_num = green_num,
-                            blue_num = blue_num)
+    if(input$show_filtered_data == "No") 
+      anno = NULL
+    
+    build_scatter_fg_bg_points(anno = anno,
+                               select_anno = select_anno,
+                               color_by = color_by,
+                               x_group = input$scatter_x, 
+                               y_group = input$scatter_y, 
+                               desc = rv_desc(),
+                               red_num = red_num,
+                               green_num = green_num,
+                               blue_num = blue_num)
     
   })
   
@@ -2064,14 +2158,15 @@ server <- function(input, output, session) {
     names(anno)[names(anno) == "sample_id"] <- "sample_name"
     
     build_scatter_bokeh(foreground_points = scatter_fg_bg()$foreground_points,
-                     anno = anno,
-                     desc = rv_desc(),
-                     hovers = input$scatter_plot_hover,
-                     width = available_width,
-                     webgl = TRUE,
-                     pointSize = input$scatter_pt_size,
-                     xlab = input$scatter_x,
-                     ylab = input$scatter_y)
+                        background_points = scatter_fg_bg()$background_points,
+                        anno = anno,
+                        desc = rv_desc(),
+                        hovers = input$scatter_plot_hover,
+                        width = available_width,
+                        webgl = TRUE,
+                        pointSize = input$scatter_pt_size,
+                        xlab = input$scatter_x,
+                        ylab = input$scatter_y)
   })
   
   
@@ -2145,12 +2240,7 @@ server <- function(input, output, session) {
       
     }
   )
-  
-  
-  
-  
 
-   
 }
 
 

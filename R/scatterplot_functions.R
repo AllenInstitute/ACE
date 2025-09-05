@@ -10,15 +10,17 @@ color_sum <- function(col1, col2) {
   rgb(mix[1],mix[2],mix[3])
 }
 
-build_scatter_fg_bg_points <- function(select_anno=NULL, 
-                                    color_by = ".numeric",
-                                    x_group = "", 
-                                    y_group = "", 
-                                    desc = NULL,
-                                    red_num = "",
-                                    green_num = "",
-                                    blue_num = "") {
+build_scatter_fg_bg_points <- function(anno = NULL,
+                                       select_anno, 
+                                       color_by = ".numeric",
+                                       x_group = "", 
+                                       y_group = "", 
+                                       desc = NULL,
+                                       red_num = "",
+                                       green_num = "",
+                                       blue_num = "") {
   
+  common_samples  <- select_anno$sample_name
   cat_annotations <- desc$name[desc$type == "cat"]
   num_annotations <- desc$name[desc$type == "num"]
   
@@ -29,6 +31,14 @@ build_scatter_fg_bg_points <- function(select_anno=NULL,
   y_id <- paste0(y_group,"_id")
   y_label <- paste0(y_group,"_label")
   y_name <- desc$name[desc$base == y_group]
+  
+  if(is.null(anno)){
+    background_samples <- character(0)
+    background_points  <- NULL
+  } else {
+    background_samples <- setdiff(anno$sample_name,common_samples)
+    anno <- anno[is.element(anno$sample_name,background_samples),]
+  }
 
   if(color_by == ".numeric") {
     
@@ -36,6 +46,19 @@ build_scatter_fg_bg_points <- function(select_anno=NULL,
     colnames(foreground_points) <- substr(colnames(foreground_points),1,nchar(colnames(foreground_points))-6)
     foreground_points$x <- select_anno[[x_label]]
     foreground_points$y <- select_anno[[y_label]]
+    
+    if(length(background_samples)>1){
+      background_points   <- anno[,paste0(num_annotations,"_label")]
+      colnames(background_points) <- substr(colnames(background_points),1,nchar(colnames(background_points))-6)
+      background_points$x <- anno[[x_label]]
+      background_points$y <- anno[[y_label]]
+      
+      background_points <- background_points %>%
+        mutate(red = NA,
+               green = NA,
+               blue = NA) %>%
+        mutate(color = "#808080")
+    }
     
     if(red_num != "") {
       red_data <- foreground_points[[red_num]]
@@ -95,34 +118,62 @@ build_scatter_fg_bg_points <- function(select_anno=NULL,
     foreground_points$x <- as.numeric(select_anno[[x_label]])
     foreground_points$y <- as.numeric(select_anno[[y_label]])
     foreground_points$color <- as.character(select_anno[,paste0(color_by,"_color")])
+    
+    if(length(background_samples)>1){
+      background_points   <- anno[,paste0(cat_annotations,"_label")]
+      colnames(background_points) <- substr(colnames(background_points),1,nchar(colnames(background_points))-6)
+      background_points$x <- as.numeric(anno[[x_label]])
+      background_points$y <- as.numeric(anno[[y_label]])
+      
+      background_points <- background_points %>%
+        mutate(color = "#808080")
+    }
 
   }
 
   foreground_points$sample_name <- select_anno$sample_name
   
-  list(foreground_points = foreground_points)
+  if(length(background_samples)>1){
+    background_points$sample_name <- anno[is.element(anno$sample_name,background_samples),"sample_name"]
+  } else {
+    background_points = NULL
+  }
+  
+  list(foreground_points = foreground_points, 
+       background_points = background_points)
   
 }
 
 
 build_scatter_bokeh <- function(foreground_points = NULL,
-                             anno,
-                             desc,
-                             hovers = NULL,
-                             width = 1000,
-                             webgl = FALSE,
-                             pointSize = 6,
-                             xlab = "",
-                             ylab = "") {
+                                background_points = NULL,
+                                anno,
+                                desc,
+                                hovers = NULL,
+                                width = 1000,
+                                webgl = FALSE,
+                                pointSize = 6,
+                                xlab = "",
+                                ylab = "") {
   
   library(dplyr)
   library(rbokeh)
   foreground_points$pointSize = pointSize
   foreground_points$pointSize = as.numeric(foreground_points$pointSize)
   
+  if(length(background_points)>1){
+    write("TEST",stderr())
+    write(dim(foreground_points),stderr())
+    write(dim(background_points),stderr())
+    write(colnames(foreground_points),stderr())
+    write(colnames(background_points),stderr())
+    background_points$pointSize = 2
+    background_points$pointSize = as.numeric(background_points$pointSize)
+  }
+  
   write(xlab,stderr())
   write(ylab,stderr())
-  
+
   if(!is.null(hovers)) {
     hover_columns <- paste0(hovers,"_label")
     
@@ -152,6 +203,15 @@ build_scatter_bokeh <- function(foreground_points = NULL,
   }
   
   if(is.null(hovers)) {
+    
+    if(!is.null(background_points) > 0) {
+      b <- b %>%
+        ly_points(data = background_points,
+                  x = x, y = y,
+                  color = color,
+                  size = pointSize) 
+    }
+    
     b <- b %>%
       ly_points(data = foreground_points,
                 x = x, 
@@ -161,6 +221,15 @@ build_scatter_bokeh <- function(foreground_points = NULL,
                 fill_alpha = 1) 
     
   } else {
+    
+    if(!is.null(background_points) > 0) {
+      b <- b %>%
+        ly_points(data = background_points,
+                  x = x, y = y,
+                  color = color,
+                  size = pointSize) 
+    }
+    
     foreground_points <- foreground_points %>%
       left_join(hover_anno, by = "sample_name")
     

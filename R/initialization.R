@@ -150,3 +150,6 @@ category = "Enter your own location"
 
 names(omit_panels) <- table_names
 omit_panels[["Enter your own location"]] = "none"
+
+# Reorder to put the upload option first
+table_name <- table_name[c("Enter your own location",setdiff(names(table_name),"Enter your own location"))]

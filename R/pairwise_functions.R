@@ -11,12 +11,12 @@ build_compare_jaccard_plot <- function (anno, x_group, y_group, reorderY, maxInp
   } else if (numInputs>maxInputs){
     ggplot() + theme_void() + ggtitle("     Too many unique X+Y values to plot. Filter data or increase window size.")
   } else {
-    compare_plot(x, y, reorderY)
+    compare_plot(x, y, reorderY, x_group, y_group)
   }
 }
 
 
-compare_plot <- function (x, y, reorderY=TRUE) 
+compare_plot <- function (x, y, reorderY=TRUE, x_group="x", y_group="y") 
 {
   
   common.cells <- intersect(names(x), names(y))
@@ -47,6 +47,40 @@ compare_plot <- function (x, y, reorderY=TRUE)
     ggplot2::theme(axis.text.x = ggplot2::element_text(vjust = 0.3, hjust = 1, angle = 90, size = 10),
                    axis.text.y = ggplot2::element_text(vjust = 0.3, hjust = 1, size = 10)) + 
     ggplot2::scale_color_gradient(low = "yellow", high = "darkblue") + 
-    ggplot2::scale_size(range = c(0, 5))
+    ggplot2::scale_size(
+      name = "Number\nof data\npoints",      # Sets the new legend title
+      range = c(0, 5),
+      labels = function(x) round(signif(x^2,2), 0) # Reverses the sqrt() for the labels
+    ) +
+    ggplot2::labs(
+      color = "Jaccard\nSimilarity",
+      x = x_group,
+      y = y_group
+    )
   g
+}
+
+
+
+return_plot_data <- function (x, y, reorderY=TRUE) 
+{
+  
+  # Get the table to download
+  common.cells <- intersect(names(x), names(y))
+  y  <- y[common.cells]
+  x  <- x[common.cells]
+  tb <- table(x, y)
+  if(reorderY){
+    tmp   <- t(tb)
+    tmp   <- tmp/rowSums(tmp)
+    ord   <- order(-apply(tmp,1,which.max)*10,rowMeans(t(apply(tmp,1,cumsum))))
+    y     <- setNames(factor(y,levels = colnames(tb)[ord]),names(y))
+    tb    <- table(x, y)
+  }
+  
+  tb <- tb[,dim(tb)[2]:1] # reverse order of columns
+  tb <- t(tb) # swap rows and columns for download
+  
+  # Return the table
+  tb
 }
