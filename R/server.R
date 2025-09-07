@@ -736,12 +736,26 @@ server <- function(input, output, session) {
           # Add a tabPanel to the tabList for this annotation
           # using the choices (filter_opts) generated above
           tabList[[i]] <- tabPanel(filter_name,
-                                   selectizeInput(inputId = filter_inputid,
-                                                  label = filter_name,
-                                                  choices = filter_opts,
-                                                  selected = filter_init,
-                                                  multiple = TRUE,
-                                                  width = "100%"))
+                                   fluidRow(
+                                     column(6,
+                                            selectizeInput(inputId = filter_inputid,
+                                                           label = filter_name,
+                                                           choices = filter_opts,
+                                                           selected = filter_init,
+                                                           multiple = TRUE,
+                                                           width = "100%")
+                                     ),
+                                     column(4,
+                                            textInput(inputId = paste0(filter_inputid, "_grep_pattern"),
+                                                      label = "Also include anything with this string:")
+                                     ),
+                                     column(2,
+                                            br(), # This `br()` will help align the button
+                                            actionButton(inputId = paste0(filter_inputid, "_add_by_grep"),
+                                                         label = "Add")
+                                     )
+                                   )
+          )
         } else if(desc$type[i] == "num") {
           # If this is a numeric annotation, use sliderInput to allow
           # selection of a range of numeric values.
@@ -818,11 +832,59 @@ server <- function(input, output, session) {
     
   })
   
+  
+  # The for loop for the observe for the grep filter
+  #
+  # BETA TESTING THIS!
+  # grep_filters <- This holds the values from the grep filter for each of the "cat" variables
+  #
+  # initialize
+  grep_filters <- reactiveValues(grep_patterns = list())
+  
+  # This observer will re-run whenever the list of filter names changes
+  observe({
+    # This requires input$sf to have values.
+    req(input$sf)
+    
+    # This is the list of user-facing filter names (e.g., "Cell Type").
+    filter_names_from_ui <- input$sf
+    
+    # Get the mapping from `desc$name` to `desc$base`.
+    desc <- rv_desc()
+    name_to_base_map <- setNames(desc$base, desc$name)
+    
+    # Iterate over the user-facing names from the UI
+    lapply(filter_names_from_ui, function(filter_name) {
+      
+      # Use the mapping to get the correct backend ID.
+      base_id <- name_to_base_map[filter_name]
+      
+      # Define the dynamic input IDs just as you did in the UI code
+      filter_inputid <- paste0(base_id, "_filter")
+      grep_button_id <- paste0(filter_inputid, "_add_by_grep")
+      
+      # This observeEvent will now correctly listen for the button.
+      observeEvent(input[[grep_button_id]], {
+        
+        # Get the pattern from the text box
+        grep_pattern <- input[[paste0(filter_inputid, "_grep_pattern")]]
+        
+        write(grep_pattern, stderr())
+        
+        # Update the reactive value list. The name of the list item will be
+        # the dynamic ID you want to use later on.
+        grep_filters$grep_patterns[[filter_inputid]] <- grep_pattern
+        
+      }, ignoreInit = TRUE)
+    })
+  })
+
+  
 
   # build the filter invert checkbox
   # 
   # output$invert <- which filter values should be inverted
-  # invert_annos  <- THIS IS THE VARIABLE TO USE for which filter values shoudl be inverted
+  # invert_annos  <- THIS IS THE VARIABLE TO USE for which filter values should be inverted
   #
   invert_annos <- reactiveVal(character())
   observeEvent(input$invert,{
@@ -901,7 +963,6 @@ server <- function(input, output, session) {
           }
         }
       }
-      
     }
     
   })
@@ -918,6 +979,7 @@ server <- function(input, output, session) {
     req(rv_anno())
     req(filters$current)
     req(invert_annos)
+    req(grep_filters)
     write("Filtering annotations", stderr())
     
     withProgress({
@@ -947,6 +1009,19 @@ server <- function(input, output, session) {
               if (filter_base %in% invert_annos()){ 
                 filter_text <- paste0("!(",filter_text,")")
               } 
+              
+              ## START NEW TEXT FOR GREP
+              # Deal with grep filter changes
+              if(!is.null(grep_filters$grep_patterns[[filter_inputids[i]]])) {
+                filter_grep_values <- as.character(filtered[[filter_label]])
+                filter_grep_ids    <- as.character(filtered[[filter_id]])
+                all_choices      <- sort(unique(filter_grep_values))
+                matching_choices <- grepl(grep_filters$grep_patterns[[filter_inputids[i]]], filter_grep_values)
+                matching_ids <- sort(unique(filter_grep_ids[matching_choices]))
+                filter_grep_text <- paste0("`",filter_id,"` %in% c(",paste(matching_ids,collapse=","),")")
+                filter_text      <- paste0("(",filter_text,")|(",filter_grep_text,")")
+              }
+              ## END NEW TEXT FOR GREP
               
               filtered <- filtered %>%
                 filter_(filter_text)
@@ -978,6 +1053,7 @@ server <- function(input, output, session) {
     req(rv_desc())
     req(rv_filtered())
     req(invert_annos)
+    req(grep_filters)
     write("Building filter text.", stderr())
     
     anno <- rv_anno()
@@ -1051,7 +1127,7 @@ server <- function(input, output, session) {
         
         if(filter_text != "") {
           if(exists("applied_filters")) {
-            applied_filters <- paste0(applied_filters,"<br/>",filter_text)
+            applied_filters <- c(applied_filters,filter_text)
           } else {
             applied_filters <- filter_text
           }
@@ -1060,7 +1136,38 @@ server <- function(input, output, session) {
       }
     } 
     
+    ## START NEW TEXT FOR GREP
+    if(length(grep_filters) > 0) if(length(grep_filters$grep_patterns) > 0) {
+      for(i in 1:length(grep_filters$grep_patterns)) {
+        filter_inputid <- names(grep_filters$grep_patterns)[i]
+        filter_base <- sub("_filter","",filter_inputid)
+        filter_name <- desc$name[desc$base == filter_base]
+        
+        if(!is.null(grep_filters$grep_patterns[[filter_inputid]])) {
+          if(length(grep_filters$grep_patterns[[i]])>0)
+            filter_text <- paste0(filter_name,"__also includes any values with text in it's filter: '",grep_filters$grep_patterns[[i]],
+                         "'  <== NOTE: this is ignored if the ",filter_name," box is empty.")
+        } else {
+          filter_text <- ""
+        }
+        
+        if(filter_text != "") {
+          if(exists("applied_filters")) {
+            applied_filters <- c(applied_filters,filter_text)
+          } else {
+            applied_filters <- filter_text
+          }
+        }
+        
+      }
+    } 
+    ## END NEW TEXT FOR GREP
+    
+    
     if(!exists("applied_filters")) { applied_filters <- "No filters applied." }
+    
+    applied_filters <- sort(applied_filters)
+    applied_filters <- paste(applied_filters,collapse="<br/>")
     
     HTML(paste0(applied_filters,"<br/>",counts))
     
