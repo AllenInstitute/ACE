@@ -590,6 +590,9 @@ server <- function(input, output, session) {
   ## Filtering and Filter UI ##
   #############################
   
+  # This is required for the filter histograms
+  plot_creation_queue <- reactiveVal()
+  
   # Build a set of filter options from 
   # the rv_desc() data.frame
   #
@@ -697,6 +700,7 @@ server <- function(input, output, session) {
     n_desc <- nrow(desc)
     
     tabList <- list()
+    plot_instructions <- list()  # Store plot creation info
     
     if(n_desc > 0) {
       for(i in 1:n_desc) {
@@ -777,7 +781,14 @@ server <- function(input, output, session) {
           
           # Generate a histogram to show distribution of the numeric values
           # NOTE: THIS DOES NOT WORK.  The problem is that this plot correctly generates, but does not accurately update to reflect the current tab.  I think the issue has something to do with reactive values and and renderPlot not properly regenerating on new tabs, but I also don't know how to fix it.
-          # hist_plot_name <- paste0(filter_name, "_hist_plot")
+           hist_plot_name <- paste0(filter_name, "_hist_plot")
+           
+           # Store instructions for plot creation
+           plot_instructions[[hist_plot_name]] <- list(
+             data = values,
+             filter_name = filter_name
+           )
+           
           # 
           # output[[hist_plot_name]] <- renderPlot({
           # 
@@ -796,9 +807,9 @@ server <- function(input, output, session) {
           # Add a tabPanel to the tabList for this annotation
           # using the filter_range, above.
           tabList[[i]] <- tabPanel(filter_name,
-                                  #plotOutput( hist_plot_name,   # THIS CODE IS FOR THE HISTOGRAM ABOVE
-                                  #             width = "100%",
-                                  #             height = 80),
+                                   plotOutput( hist_plot_name,   # THIS CODE IS FOR THE HISTOGRAM ABOVE
+                                               width = "100%",
+                                               height = 80),
                                    sliderInput(inputId = filter_inputid,
                                                label = filter_name,
                                                min = filter_range[1],
@@ -808,9 +819,43 @@ server <- function(input, output, session) {
       }
     }
     
+    # Store plot instructions in a reactive value for later use
+    if (!exists("plot_creation_queue")) {
+      plot_creation_queue <<- reactiveVal()
+    }
+    plot_creation_queue(plot_instructions)
+    
     return(tabList)
     
   } # end of build_filter_panel_list()
+  
+  
+  # This is the plot for the histogram
+  #
+  observeEvent(plot_creation_queue(), {
+    instructions <- plot_creation_queue()
+    
+    for (plot_name in names(instructions)) {
+      local({
+        plot_info <- instructions[[plot_name]]
+        current_data <- plot_info$data
+        current_filter <- plot_info$filter_name
+        
+        output[[plot_name]] <- renderPlot({
+          req(input$filter_panel == current_filter)
+          
+          ggplot(current_data) +
+            geom_histogram(aes(x = val), bins = 100) +
+            scale_x_continuous("", expand = c(0,0)) +
+            scale_y_continuous("", expand = c(0,0)) +
+            theme_classic() +
+            theme(axis.title = element_blank(),
+                  axis.ticks.length = unit(0, "pt"),
+                  plot.margin = grid::unit(c(0,0,0,0), "cm"))
+        })
+      })
+    }
+  })
   
   # build the filter panel UI
   # 
@@ -827,7 +872,7 @@ server <- function(input, output, session) {
                                          sf   = input$sf, 
                                          all_anno = rv_anno())
       
-      do.call(tabsetPanel, tabList)
+      do.call(tabsetPanel, c(tabList, list(id = "filter_panel")))
     })
     
   })
