@@ -171,7 +171,7 @@ server <- function(input, output, session) {
   # })
 
   
-  updateSelectInput(session, inputId = "select_category", label = "Choose a category:", choices = names(table_name)) # "Enter your own location"
+  updateSelectInput(session, inputId = "select_category", label = "Choose a category:", choices = names(table_name)) # "Upload or enter your own location"
   
   observeEvent(input$select_category, {
     # Choose a value from the default table, if selected
@@ -245,10 +245,10 @@ server <- function(input, output, session) {
       #init$vals <- init$vals[colnames(init$vals)!=id]
     #} else { # Either pull from select_textbox or leave blank
     if (length(input$select_textbox)>0){
-      if (!is.element(input$select_textbox,c("Select comparison table...",'Enter your own location'))) {
+      if (!is.element(input$select_textbox,c("Select comparison table...",'Upload or enter your own location'))) {
         initial = table_info[table_info$table_name==input$select_textbox,"table_loc"]
       }
-      if((input$select_textbox=='Enter your own location')&(!is.null(upload2))){
+      if((input$select_textbox=='Upload or enter your own location')&(!is.null(upload2))){
         initial <- normalizePath(upload2$datapath)
       }
     }
@@ -280,10 +280,10 @@ server <- function(input, output, session) {
     #  init$vals <- init$vals[colnames(init$vals)!=id]
     #} else { # Either pull from select_textbox or leave blank
     if (length(input$select_textbox)>0){
-      if (!is.element(input$select_textbox,c("Select comparison table...",'Enter your own location'))) {
+      if (!is.element(input$select_textbox,c("Select comparison table...",'Upload or enter your own location'))) {
         initial = table_info[table_info$table_name==input$select_textbox,"metadata_loc"]
       }
-      if((input$select_textbox=='Enter your own location')&(!is.null(upload))){
+      if((input$select_textbox=='Upload or enter your own location')&(!is.null(upload))){
         initial = normalizePath(upload$datapath)
       }
     }
@@ -313,7 +313,7 @@ server <- function(input, output, session) {
         text_desc <- init$vals[["select_textbox"]]
       } else {
         
-        if (input$select_textbox == 'Enter your own location') {
+        if (input$select_textbox == 'Upload or enter your own location') {
           text_desc = "User-provided data and (optionally) metadata files. This option allows you to compare multiple annotations for your own cells. It does NOT compare your data against any pre-created annotation tables."
         } else if (input$select_textbox == 'Select comparison table...') {
           # Do nothing... text_desc should remain as initialized above

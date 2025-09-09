@@ -145,11 +145,11 @@ table_name <- list()
 for (cat in levels(categories)){
   table_name[[cat]] <- c("Select comparison table...", table_names[categories==cat])
 }
-table_name[["Enter your own location"]] = c("Enter your own location")
-category = "Enter your own location"
+table_name[["Upload or enter your own location"]] = c("Upload or enter your own location")
+category = "Upload or enter your own location"
 
 names(omit_panels) <- table_names
-omit_panels[["Enter your own location"]] = "none"
+omit_panels[["Upload or enter your own location"]] = "none"
 
 # Reorder to put the upload option first
-table_name <- table_name[c("Enter your own location",setdiff(names(table_name),"Enter your own location"))]
+table_name <- table_name[c("Upload or enter your own location",setdiff(names(table_name),"Upload or enter your own location"))]
