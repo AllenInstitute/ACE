@@ -2,6 +2,7 @@
 #    ordered first by the ordering in the metadata file, and then second alphabetically.
 # == NOTE: this function must be run AFTER auto_annotate or it will not work properly
 refactorize_annotations <- function(anno, metadata){
+  
   # Do nothing if cell type names are not provided
   if(sum(colnames(metadata)=="cell_type")==0)
     return(anno)
@@ -17,11 +18,19 @@ refactorize_annotations <- function(anno, metadata){
     }
     
     ## If a column is called "color" in the metadata file, then look for categorical variable colors in the "cell_type" column
+    # --- Updated to allow for only a subset of colors being included 
     
     if((sum(colnames(metadata)=="cell_type")==1)&(length(intersecting_cell_types)>0)){
       colors <- anno[,paste0(cn,"_color")][match(new_levels,anno[,paste0(cn,"_label")])]
-      if("color" %in% colnames(metadata))
-        colors[match(intersecting_cell_types,new_levels)] <- metadata$color[match(intersecting_cell_types,metadata$cell_type)]
+      if("color" %in% colnames(metadata)){
+        colors_new = colors
+        colors_new[match(intersecting_cell_types,new_levels)] <- metadata$color[match(intersecting_cell_types,metadata$cell_type)]
+        
+        # Only change colors if provided and valid
+        valid_colors <- as.logical(is_valid_color(colors_new))
+        colors[valid_colors] <- colors_new[valid_colors]
+        colors <- make_unique_colors(colors)
+      }
       anno[,paste0(cn,"_color")] <- colors[match(anno[,paste0(cn,"_label")],new_levels)]
       new_levels <- c(intersecting_cell_types,setdiff(as.character(anno[,paste0(cn,"_label")]),metadata$cell_type))
       anno[,paste0(cn,"_id")]  <- as.numeric(factor(anno[,paste0(cn,"_label")],levels=new_levels))
@@ -30,6 +39,46 @@ refactorize_annotations <- function(anno, metadata){
   }
   
   return(anno)
+}
+
+# Function to check if colors are valid
+is_valid_color <- function(x) {
+  vapply(x, function(col) {
+    if (is.na(col)) {
+      FALSE                      # Treat NA as invalid
+    } else {
+      tryCatch({
+        col2rgb(col)
+        TRUE
+      }, error = function(e) FALSE)
+    }
+  }, logical(1))
+}
+
+# Function to ensure that colors are unique
+make_unique_colors <- function(x, tweak = 0.1) {
+  # tweak = hue shift (0–1) per duplicate step
+  library(colorspace)
+  
+  out <- x
+  lower <- tolower(x)
+  seen <- list()
+  
+  for (i in seq_along(x)) {
+    key <- lower[i]
+    if (key %in% names(seen)) {
+      # How many times we've already seen this colour
+      k <- seen[[key]]
+      # Convert to HCL, rotate hue a bit each time
+      hcl <- hex2HCL(x[i])
+      hcl@coords[1] <- (hcl@coords[1] + k * 360 * tweak) %% 360
+      out[i] <- hex(HCL(hcl@coords[1], hcl@coords[2], hcl@coords[3]))
+      seen[[key]] <- k + 1
+    } else {
+      seen[[key]] <- 1
+    }
+  }
+  out
 }
 
 

@@ -1608,7 +1608,8 @@ server <- function(input, output, session) {
     filename = function() {"annotation_comparison_data.csv"},
     content = function(file) {
       out_table <- annocomp_data()
-      write.csv(out_table, file, quote = T, row.names = T)
+      row_names <- !sum(substr(rownames(out_table),1,3)!="ZZZ")==0
+      write.csv(out_table, file, quote = T, row.names = row_names)
     }
   )
   
@@ -1619,6 +1620,7 @@ server <- function(input, output, session) {
     req(input$annocomp_x)
     req(input$annocomp_y)
     req(input$anno_reorderY)
+    req(rv_desc())
     
     filtered = rv_filtered()
     x_group  = input$annocomp_x
@@ -1630,7 +1632,7 @@ server <- function(input, output, session) {
     y <- factor(filtered[,paste0(y_group,"_label")], levels = filtered[,paste0(y_group,"_label")][match(sort(unique(y), decreasing = TRUE),y)])
     names(x) <- names(y) <- filtered$sample_id
     
-    return_plot_data(x, y, reorderY=input$anno_reorderY) # in "pairwise_functions.R"
+    return_plot_data(x=x, y=y, desc=rv_desc(), reorderY=input$anno_reorderY, x_group=x_group, y_group=y_group) # in "pairwise_functions.R"
   })
   
   
@@ -2393,6 +2395,45 @@ server <- function(input, output, session) {
     }
   )
 
+  
+  
+  # Download handler for the annotation comparison table
+  output$scatterplot_data_csv <- downloadHandler(
+    filename = function() {"scatterplot_data.csv"},
+    content = function(file) {
+      out_table <- scatterplot_data()
+      write.csv(out_table, file, quote = T, row.names = F)
+    }
+  )
+  
+  # Data for the annotation comparison table
+  scatterplot_data <- reactive ({
+    
+    req(rv_filtered())
+    req(input$scatter_x)
+    req(input$scatter_y)
+    req(input$scatter_plot_color)
+    req(input$scatter_plot_hover)
+    req(rv_desc())
+    
+    filtered = rv_filtered()
+    x_group  = input$scatter_x
+    y_group  = input$scatter_y
+    
+    x <- filtered[,paste0(x_group,"_id")]
+    x <- factor(filtered[,paste0(x_group,"_label")], levels = filtered[,paste0(x_group,"_label")][match(sort(unique(x)),x)])
+    y <- filtered[,paste0(y_group,"_id")]
+    y <- factor(filtered[,paste0(y_group,"_label")], levels = filtered[,paste0(y_group,"_label")][match(sort(unique(y), decreasing = TRUE),y)])
+    names(x) <- names(y) <- filtered$sample_id
+    anno <- as.data.frame(filtered)
+    rownames(anno) <- filtered$sample_id
+   
+    other_columns = c(input$scatter_plot_color,input$scatter_plot_hover)
+    return_plot_data(x=x, y=y, desc=rv_desc(), reorderY=input$anno_reorderY, x_group=x_group, y_group=y_group,
+                     other_columns=other_columns, anno=anno) # in "pairwise_functions.R"
+  })
+  
+  
 }
 
 

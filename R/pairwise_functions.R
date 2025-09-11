@@ -62,25 +62,51 @@ compare_plot <- function (x, y, reorderY=TRUE, x_group="x", y_group="y")
 
 
 
-return_plot_data <- function (x, y, reorderY=TRUE) 
+return_plot_data <- function (x, y, desc, reorderY, x_group, y_group,
+                              other_columns=NULL, anno=NULL)  # This indicates which other columns to be appended; only used for scatterplot data returns
 {
-  
-  # Get the table to download
+  ## Subset to only include cells in both input vectors
   common.cells <- intersect(names(x), names(y))
-  y  <- y[common.cells]
-  x  <- x[common.cells]
-  tb <- table(x, y)
-  if(reorderY){
-    tmp   <- t(tb)
-    tmp   <- tmp/rowSums(tmp)
-    ord   <- order(-apply(tmp,1,which.max)*10,rowMeans(t(apply(tmp,1,cumsum))))
-    y     <- setNames(factor(y,levels = colnames(tb)[ord]),names(y))
-    tb    <- table(x, y)
+  y <- y[common.cells]
+  x <- x[common.cells]
+  
+  ## Determine the type of incoming data
+  cat_annotations <- desc$base[desc$type == "cat"]
+  num_annotations <- desc$base[desc$type == "num"]
+  x_type <- ifelse(x_group %in% cat_annotations,"cat","num")
+  y_type <- ifelse(y_group %in% cat_annotations,"cat","num")
+  
+  ## Return confusion matrix if both a categorical
+  if((x_type=="cat")&(y_type=="cat")){
+    
+    tb <- table(x, y)
+    if(reorderY){
+      tmp   <- t(tb)
+      tmp   <- tmp/rowSums(tmp)
+      ord   <- order(-apply(tmp,1,which.max)*10,rowMeans(t(apply(tmp,1,cumsum))))
+      y     <- setNames(factor(y,levels = colnames(tb)[ord]),names(y))
+      tb    <- table(x, y)
+    }
+    tb <- tb[,dim(tb)[2]:1] # reverse order of columns
+    
+    tb <- t(tb) # swap rows and columns for download
+    return(tb)
   }
   
-  tb <- tb[,dim(tb)[2]:1] # reverse order of columns
-  tb <- t(tb) # swap rows and columns for download
+  ## Otherwise:
+  ## -- Return Nx2 data matrix if both are numeric.  This can also be used for scatterplot_function data returns.
+  ## -- If exactly one is value is numeric, return a Nx2 data frame including a vector of values and the corresponding categorical for each value
+  data <- data.frame(sample_id=common.cells,x=x,y=y)
+  other_columns <- unique(intersect(setdiff(other_columns,c(x_group,y_group)),desc$base))
+  colnames(data) <- c("sample_id",x_group,y_group)
   
-  # Return the table
-  tb
+  if(length(other_columns)>0){
+    anno_out <- anno[common.cells,paste0(other_columns,"_label")]
+    colnames(anno_out) <- other_columns
+    data <- cbind(data,anno_out)
+  }
+  
+  rownames(data) <- paste0("ZZZ",rownames(data))
+  return(data)
+  
 }

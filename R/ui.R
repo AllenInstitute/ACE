@@ -375,7 +375,9 @@ ui <- function(request) {   # Note that I might need to remove "function(request
                                 ),
                               ),
                               fluidRow(
-                                downloadButton("download_explorer_table", "Download Table Data")
+                                downloadButton("download_explorer_table", 
+                                               "Download Table Data",
+                                               style = "width: 175px; margin-left: 15px;")
                               ),
                               fluidRow(
                                 width=12, br(), 
@@ -420,7 +422,8 @@ ui <- function(request) {   # Note that I might need to remove "function(request
                                        textOutput("scatter_plot_hover_warning"),
                                        actionButton("scatter_plot_go","GO!",
                                                     style="color: #fff; background-color: #EC008C; border-color: #BE1E2D; font-weight: bold;"),
-                                       p("  ^ Click 'Go!' after making updates to refresh display.")
+                                       p("  ^ Click 'Go!' after making updates to refresh display."),
+                                       column(5,downloadButton("scatterplot_data_csv","Download Plot Data"))
                                 ),
                                 
                                 column(8,
