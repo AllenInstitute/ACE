@@ -13,7 +13,8 @@ table_names <- c(
   "Mouse visual cortex (GABAergic)",
   "Mouse motor cortex",
   "Mouse aging study",
-  "Mammalian Basal Ganglia Consensus Cell Type Atlas"
+  "Mammalian Basal Ganglia Consensus Cell Type Atlas",
+  "PsychENCODE ('brainSCOPE' data sets)"
 )
 
 #... what category each table is included in on the main page?
@@ -29,7 +30,8 @@ categories <- factor(c(
   "Patch-seq (shape + function + genes)",
   "Patch-seq (shape + function + genes)",
   "Mouse cell type classification",
-  "Human/NHP cell type classification"
+  "Human/NHP cell type classification",
+  "Disease studies"
   ),
 # This is the order they will show up on in the list. **MAKE SURE THERE ARE NO TYPOS!**
 levels = c("Disease studies", "Mouse cell type classification", "Human/NHP cell type classification","Patch-seq (shape + function + genes)")) 
@@ -49,7 +51,8 @@ table_locations <- c(
   "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/gouwens_tasic_byCell.csv.gz",
   "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/ToliasCTKE_byCell.csv",
   "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/aging_mouse_brain_subsample.csv.gz",
-  "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/BG_cross_species_metadata.csv.gz"
+  "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/BG_cross_species_metadata.csv.gz",
+  "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/brainSCOPE_cell_info.csv.gz"
 )
 
 #... where is the annotation information table (e.g., information about each specific cell type.)?  
@@ -66,7 +69,8 @@ metadata_locations <- c(
   "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/gouwens_tasic_byCellType.csv",
   "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/CTX_Hip_cellTypeInfo.csv", # Only include for cell type ordering.
   "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/WMB_cluster_annotations.csv.gz",
-  "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/BG_cross_species_annotation_information.csv.gz"
+  "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/BG_cross_species_annotation_information.csv.gz",
+  "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/brainSCOPE_cell_types_for_app.csv"
 )
 
 #... which panels to omit (e.g., because relevant data for that panel is not included)?
@@ -82,9 +86,10 @@ omit_panels <- list(
   "individual",
   "individual",
   "none",
-  "none"
+  "none",
+  "scatterplot"
 )
-# Options used are: "confusion", "river", "individual", or "scatterplot". "none" is used by default but is just a placeholder for showing everything.
+# Options used are: "confusion", "river", "individual", or "scatterplot". "none" is used by default but is just a placeholder for showing everything. Multiple options can be selected using a vector [e.g., c("one","two")]
 
 # MAKE SURE THESE NAMES MATCH THE TAB NAMES IN ui.R!
 tab_names <- setNames(c("Compare pairs of annotations", 
@@ -122,7 +127,9 @@ descriptions   <- c(
   
   "Explore mouse cell type assignments from the recent study of the aging mouse brain ('AGING_'; Jin, et al 2025, DOI:10.1038/s41586-024-08350-8) in the context of the reported cell type hierarchy, donor metric (age, sex), cell metadata, and changes with age.  Importantly also allows for conversion to cell type classifications from the whole mouse brain study ('WMB_'; Yao et al 2023; AIT21, DOI:10.1038/s41586-023-06812-z).  Data from the aging study were subsampled to retain a random 25% of the cells and to omit cells with 2 or fewer cells from a whole mouse brain study cluster. Any clusters from mouse whole brain that are NOT listed are either rare or absent in aging mouse brain study.  Both studies are currently available for further exploration on the Allen Brain Cell Atlas.",
   
-  "The Human and Mammalian Brain Atlas (HMBA) consortia has created a unified taxonomy of the mammalian basal ganglia, with >2 million cells collected from humans, macaques, and marmosets, and linkages to existing mouse brain data. More details are available here: https://alleninstitute.github.io/HMBA_BasalGanglia_Consensus_Taxonomy/.  The data table here includes 296,671 cells (random downsampling to 15% of cells + 10 random cells per cluster after omitting cells not mapping to a 'group') along with information about cell type assignments (cluster, group, subclass, class, and neighborhood), dissected brain region, and species, and includes mapping results to existing whole human brain and whole mouse brain taxonomies available in MapMyCells and the ABC Atlas."
+  "The Human and Mammalian Brain Atlas (HMBA) consortia has created a unified taxonomy of the mammalian basal ganglia, with >2 million cells collected from humans, macaques, and marmosets, and linkages to existing mouse brain data. More details are available here: https://alleninstitute.github.io/HMBA_BasalGanglia_Consensus_Taxonomy/.  The data table here includes 296,671 cells (random downsampling to 15% of cells + 10 random cells per cluster after omitting cells not mapping to a 'group') along with information about cell type assignments (cluster, group, subclass, class, and neighborhood), dissected brain region, and species, and includes mapping results to existing whole human brain and whole mouse brain taxonomies available in MapMyCells and the ABC Atlas.",
+  
+  "In 2024 the PsychENCODE Consortium released a multi-omics resource focused on doroslateral prefrontal cortex (DLPFC) in humans with multiple disease conditions (Emani et al 2024; https://doi.org/10.1126/science.adi5199). The data set here includes RNA-seq data from seven single-nucleus RNA-seq data sets included in this study, and spans four brain disorders (autism spectrum disorder (ASD), major depressive disorder (MDD), post-traumatic stress disorder (PTSD), and William's syndrome) and controls. We include a downsampled set of 300,046 cells from 130 donors along with donor demographics, cluster assignments reported in the study ('brainSCOPE_') and results mapped to the SEA-AD MTG data set using the MapMyCells GUI in September 2025 using deep generative mapping ('SEAAD_')."
   
 )
 

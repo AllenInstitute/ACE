@@ -288,7 +288,7 @@ server <- function(input, output, session) {
       }
     }
     
-    if(length(initial)==0) initial = " "  # Quick fix for users to provide upload cell info without providing cell type info
+    if(length(initial)==0) initial = "[none provided]"  # Quick fix for users to provide upload cell info without providing cell type info
     
     textInput(inputId = id, 
               label = strong(label), 

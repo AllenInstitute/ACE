@@ -1,0 +1,401 @@
+cell_type,level,study,direction,description,notes
+Neuronal: GABAergic,class,SEA-AD,not_assessed,All inhibitory neurons,
+Neuronal: Glutamatergic,class,SEA-AD,not_assessed,All excitatory neurons,
+Non-neuronal and Non-neural,class,SEA-AD,not_assessed,All non-neuronal cells (glial and non-neural types),
+Lamp5 Lhx6,subclass,SEA-AD,not_assessed,Lamp5_Lhx6 interneurons,
+Lamp5,subclass,SEA-AD,not_assessed,Lamp CGE interneurons,
+Pax6,subclass,SEA-AD,not_assessed,Pax6 CGE interneurons,
+Sncg,subclass,SEA-AD,not_assessed,Sncg CGE interneurons,
+Vip,subclass,SEA-AD,not_assessed,Vip CGE interneurons,
+Sst Chodl,subclass,SEA-AD,not_assessed,Sst Chodl projecting MGE interneurons,
+Sst,subclass,SEA-AD,down,Sst MGE interneurons,
+Pvalb,subclass,SEA-AD,not_assessed,Pvalb MGE interneurons,
+Chandelier,subclass,SEA-AD,not_assessed,Chandelier MGE interneurons,
+L2/3 IT,subclass,SEA-AD,down,Layer 2/3 intratelencephalic neurons,
+L4 IT,subclass,SEA-AD,not_assessed,Layer 4 intratelencephalic neurons,
+L5 IT,subclass,SEA-AD,not_assessed,Layer 5 intratelencephalic neurons,
+L6 IT,subclass,SEA-AD,not_assessed,Layer 6 intratelencephalic neurons,
+L6 IT Car3,subclass,SEA-AD,not_assessed,"Layer 6, Car3 subtype intratelencephalic neurons",
+L5 ET,subclass,SEA-AD,not_assessed,Layer 5 extratelencephalic neurons,
+L6 CT,subclass,SEA-AD,not_assessed,Layer 6 cortico-thalamic,
+L5/6 NP,subclass,SEA-AD,not_assessed,Layer 5/6 near projecting neurons,
+L6b,subclass,SEA-AD,not_assessed,Layer 6b excitatory neurons,
+Astrocyte,subclass,SEA-AD,up,Astrocytes,
+OPC,subclass,SEA-AD,not_assessed,Oligodendrocyte precursor cells,
+Oligodendrocyte,subclass,SEA-AD,down,Oligodendrocytes,
+Endothelial,subclass,SEA-AD,not_assessed,Endothelial cells,
+VLMC,subclass,SEA-AD,not_assessed,Vascular and leptomeningeal cells,
+Microglia-PVM,subclass,SEA-AD,up,Microglia / Perivascular macrophages,
+Lamp5_Lhx6_1,supertype,SEA-AD,unchanged,Lamp5_Lhx6_1 supertype cell,
+Lamp5_1,supertype,SEA-AD,unchanged,Lamp5_1 supertype cell,
+Lamp5_2,supertype,SEA-AD,unchanged,Lamp5_2 supertype cell,
+Lamp5_3,supertype,SEA-AD,unchanged,Lamp5_3 supertype cell,
+Lamp5_4,supertype,SEA-AD,down,Lamp5_4 supertype cell,
+Lamp5_5,supertype,SEA-AD,down,Lamp5_5 supertype cell,
+Lamp5_6,supertype,SEA-AD,unchanged,Lamp5_6 supertype cell,
+Pax6_1,supertype,SEA-AD,unchanged,Pax6_1 supertype cell,
+Pax6_2,supertype,SEA-AD,unchanged,Pax6_2 supertype cell,
+Pax6_3,supertype,SEA-AD,unchanged,Pax6_3 supertype cell,
+Pax6_4,supertype,SEA-AD,unchanged,Pax6_4 supertype cell,
+Sncg_3,supertype,SEA-AD,unchanged,Sncg_3 supertype cell,
+Sncg_6,supertype,SEA-AD,unchanged,Sncg_6 supertype cell,
+Sncg_2,supertype,SEA-AD,unchanged,Sncg_2 supertype cell,
+Sncg_1,supertype,SEA-AD,down,Sncg_1 supertype cell,
+Sncg_8,supertype,SEA-AD,unchanged,Sncg_8 supertype cell,
+Sncg_4,supertype,SEA-AD,unchanged,Sncg_4 supertype cell,
+Sncg_5,supertype,SEA-AD,down,Sncg_5 supertype cell,
+Vip_14,supertype,SEA-AD,unchanged,Vip_14 supertype cell,
+Vip_15,supertype,SEA-AD,unchanged,Vip_15 supertype cell,
+Vip_16,supertype,SEA-AD,unchanged,Vip_16 supertype cell,
+Vip_4,supertype,SEA-AD,unchanged,Vip_4 supertype cell,
+Vip_5,supertype,SEA-AD,unchanged,Vip_5 supertype cell,
+Vip_6,supertype,SEA-AD,unchanged,Vip_6 supertype cell,
+Vip_9,supertype,SEA-AD,unchanged,Vip_9 supertype cell,
+Vip_2,supertype,SEA-AD,down,Vip_2 supertype cell,
+Vip_11,supertype,SEA-AD,unchanged,Vip_11 supertype cell,
+Vip_13,supertype,SEA-AD,unchanged,Vip_13 supertype cell,
+Vip_1,supertype,SEA-AD,down,Vip_1 supertype cell,
+Vip_12,supertype,SEA-AD,unchanged,Vip_12 supertype cell,
+Vip_18,supertype,SEA-AD,unchanged,Vip_18 supertype cell,
+Vip_19,supertype,SEA-AD,unchanged,Vip_19 supertype cell,
+Vip_21,supertype,SEA-AD,unchanged,Vip_21 supertype cell,
+Vip_23,supertype,SEA-AD,unchanged,Vip_23 supertype cell,
+Sst Chodl_1,supertype,SEA-AD,down,Sst Chodl_1 supertype cell,
+Sst Chodl_2,supertype,SEA-AD,unchanged,Sst Chodl_2 supertype cell,
+Sst_1,supertype,SEA-AD,unchanged,Sst_1 supertype cell,
+Sst_4,supertype,SEA-AD,unchanged,Sst_4 supertype cell,
+Sst_5,supertype,SEA-AD,unchanged,Sst_5 supertype cell,
+Sst_7,supertype,SEA-AD,unchanged,Sst_7 supertype cell,
+Sst_3,supertype,SEA-AD,down,Sst_3 supertype cell,
+Sst_19,supertype,SEA-AD,down,Sst_19 supertype cell,
+Sst_9,supertype,SEA-AD,down,Sst_9 supertype cell,
+Sst_10,supertype,SEA-AD,unchanged,Sst_10 supertype cell,
+Sst_13,supertype,SEA-AD,unchanged,Sst_13 supertype cell,
+Sst_12,supertype,SEA-AD,unchanged,Sst_12 supertype cell,
+Sst_11,supertype,SEA-AD,down,Sst_11 supertype cell,
+Sst_20,supertype,SEA-AD,down,Sst_20 supertype cell,
+Sst_22,supertype,SEA-AD,down,Sst_22 supertype cell,
+Sst_23,supertype,SEA-AD,down,Sst_23 supertype cell,
+Sst_25,supertype,SEA-AD,down,Sst_25 supertype cell,
+Sst_2,supertype,SEA-AD,down,Sst_2 supertype cell,
+Pvalb_6,supertype,SEA-AD,unchanged,Pvalb_6 supertype cell,
+Pvalb_5,supertype,SEA-AD,unchanged,Pvalb_5 supertype cell,
+Pvalb_8,supertype,SEA-AD,down,Pvalb_8 supertype cell,
+Pvalb_7,supertype,SEA-AD,unchanged,Pvalb_7 supertype cell,
+Pvalb_1,supertype,SEA-AD,unchanged,Pvalb_1 supertype cell,
+Pvalb_3,supertype,SEA-AD,down,Pvalb_3 supertype cell,
+Pvalb_2,supertype,SEA-AD,unchanged,Pvalb_2 supertype cell,
+Pvalb_15,supertype,SEA-AD,unchanged,Pvalb_15 supertype cell,
+Pvalb_14,supertype,SEA-AD,down,Pvalb_14 supertype cell,
+Pvalb_12,supertype,SEA-AD,down,Pvalb_12 supertype cell,
+Pvalb_10,supertype,SEA-AD,down,Pvalb_10 supertype cell,
+Pvalb_13,supertype,SEA-AD,unchanged,Pvalb_13 supertype cell,
+Pvalb_9,supertype,SEA-AD,unchanged,Pvalb_9 supertype cell,
+Chandelier_1,supertype,SEA-AD,unchanged,Chandelier_1 supertype cell,
+Chandelier_2,supertype,SEA-AD,unchanged,Chandelier_2 supertype cell,
+L2/3 IT_1,supertype,SEA-AD,down,L2/3 IT_1 supertype cell,
+L2/3 IT_2,supertype,SEA-AD,unchanged,L2/3 IT_2 supertype cell,
+L2/3 IT_6,supertype,SEA-AD,down,L2/3 IT_6 supertype cell,
+L2/3 IT_7,supertype,SEA-AD,unchanged,L2/3 IT_7 supertype cell,
+L2/3 IT_5,supertype,SEA-AD,down,L2/3 IT_5 supertype cell,
+L2/3 IT_13,supertype,SEA-AD,down,L2/3 IT_13 supertype cell,
+L2/3 IT_10,supertype,SEA-AD,unchanged,L2/3 IT_10 supertype cell,
+L2/3 IT_8,supertype,SEA-AD,down,L2/3 IT_8 supertype cell,
+L2/3 IT_12,supertype,SEA-AD,unchanged,L2/3 IT_12 supertype cell,
+L2/3 IT_3,supertype,SEA-AD,down,L2/3 IT_3 supertype cell,
+L4 IT_2,supertype,SEA-AD,unchanged,L4 IT_2 supertype cell,
+L4 IT_3,supertype,SEA-AD,unchanged,L4 IT_3 supertype cell,
+L4 IT_4,supertype,SEA-AD,unchanged,L4 IT_4 supertype cell,
+L4 IT_1,supertype,SEA-AD,unchanged,L4 IT_1 supertype cell,
+L5 IT_1,supertype,SEA-AD,unchanged,L5 IT_1 supertype cell,
+L5 IT_3,supertype,SEA-AD,unchanged,L5 IT_3 supertype cell,
+L5 IT_2,supertype,SEA-AD,unchanged,L5 IT_2 supertype cell,
+L5 IT_5,supertype,SEA-AD,unchanged,L5 IT_5 supertype cell,
+L5 IT_6,supertype,SEA-AD,unchanged,L5 IT_6 supertype cell,
+L5 IT_7,supertype,SEA-AD,down,L5 IT_7 supertype cell,
+L6 IT_1,supertype,SEA-AD,unchanged,L6 IT_1 supertype cell,
+L6 IT_2,supertype,SEA-AD,down,L6 IT_2 supertype cell,
+L6 IT Car3_1,supertype,SEA-AD,unchanged,L6 IT Car3_1 supertype cell,
+L6 IT Car3_2,supertype,SEA-AD,unchanged,L6 IT Car3_2 supertype cell,
+L6 IT Car3_3,supertype,SEA-AD,unchanged,L6 IT Car3_3 supertype cell,
+L5 ET_1,supertype,SEA-AD,unchanged,L5 ET_1 supertype cell,
+L5 ET_2,supertype,SEA-AD,unchanged,L5 ET_2 supertype cell,
+L6 CT_1,supertype,SEA-AD,unchanged,L6 CT_1 supertype cell,
+L6 CT_2,supertype,SEA-AD,down,L6 CT_2 supertype cell,
+L6 CT_3,supertype,SEA-AD,unchanged,L6 CT_3 supertype cell,
+L6 CT_4,supertype,SEA-AD,unchanged,L6 CT_4 supertype cell,
+L5/6 NP_1,supertype,SEA-AD,unchanged,L5/6 NP_1 supertype cell,
+L5/6 NP_2,supertype,SEA-AD,down,L5/6 NP_2 supertype cell,
+L5/6 NP_3,supertype,SEA-AD,unchanged,L5/6 NP_3 supertype cell,
+L5/6 NP_6,supertype,SEA-AD,unchanged,L5/6 NP_6 supertype cell,
+L5/6 NP_4,supertype,SEA-AD,unchanged,L5/6 NP_4 supertype cell,
+L6b_1,supertype,SEA-AD,unchanged,L6b_1 supertype cell,
+L6b_2,supertype,SEA-AD,unchanged,L6b_2 supertype cell,
+L6b_3,supertype,SEA-AD,unchanged,L6b_3 supertype cell,
+L6b_4,supertype,SEA-AD,unchanged,L6b_4 supertype cell,
+L6b_5,supertype,SEA-AD,unchanged,L6b_5 supertype cell,
+L6b_6,supertype,SEA-AD,unchanged,L6b_6 supertype cell,
+Astro_1,supertype,SEA-AD,unchanged,Astro_1 supertype cell,
+Astro_2,supertype,SEA-AD,up,Astro_2 supertype cell,
+Astro_6-SEAAD,supertype,SEA-AD,unchanged,Astro_6-SEAAD supertype cell,
+Astro_5,supertype,SEA-AD,unchanged,Astro_5 supertype cell,
+Astro_3,supertype,SEA-AD,unchanged,Astro_3 supertype cell,
+Astro_4,supertype,SEA-AD,unchanged,Astro_4 supertype cell,
+OPC_2,supertype,SEA-AD,unchanged,Oligodendrocyte precursor cell_2 supertype cell,
+OPC_2_1-SEAAD,supertype,SEA-AD,unchanged,Oligodendrocyte precursor cell_2_1-SEAAD supertype cell,
+OPC_2_2-SEAAD,supertype,SEA-AD,unchanged,Oligodendrocyte precursor cell_2_2-SEAAD supertype cell,
+OPC_1,supertype,SEA-AD,unchanged,Oligodendrocyte precursor cell_1 supertype cell,
+Oligo_1,supertype,SEA-AD,down,Oligo_1 supertype cell,
+Oligo_2,supertype,SEA-AD,down,Oligo_2 supertype cell,
+Oligo_2_1-SEAAD,supertype,SEA-AD,unchanged,Oligo_2_1-SEAAD supertype cell,
+Oligo_4,supertype,SEA-AD,down,Oligo_4 supertype cell,
+Oligo_3,supertype,SEA-AD,unchanged,Oligo_3 supertype cell,
+Endo_1,supertype,SEA-AD,unchanged,Endo_1 supertype cell,
+Endo_2,supertype,SEA-AD,unchanged,Endo_2 supertype cell,
+Endo_3,supertype,SEA-AD,unchanged,Endo_2 supertype cell,
+VLMC_1,supertype,SEA-AD,unchanged,VLMC_1 supertype cell,
+VLMC_2-SEAAD,supertype,SEA-AD,unchanged,VLMC_2-SEAAD supertype cell,
+VLMC_3-SEAAD,supertype,SEA-AD,unchanged,VLMC_3-SEAAD supertype cell,
+VLMC_2_1-SEAAD,supertype,SEA-AD,unchanged,SMC-SEAAD supertype cell (aka VLMC_2_1-SEAAD),
+SMC-SEAAD,supertype,SEA-AD,unchanged,SMC-SEAAD supertype cell (aka VLMC_2_1-SEAAD),
+VLMC_2,supertype,SEA-AD,unchanged,Pericyte_1 supertype cell (aka VLMC_2),
+Pericyte_1,supertype,SEA-AD,unchanged,Pericyte_1 supertype cell (aka VLMC_2),
+VLMC_2_2-SEAAD,supertype,SEA-AD,unchanged,Pericyte_2-SEAAD supertype cell (aka VLMC_2_2-SEAAD),
+Pericyte_2-SEAAD,supertype,SEA-AD,unchanged,Pericyte_2-SEAAD supertype cell (aka VLMC_2_2-SEAAD),
+Micro-PVM_1_1-SEAAD,supertype,SEA-AD,unchanged,Monocyte supertype cell (aka Micro-PVM_1_1-SEAAD),
+Monocyte,supertype,SEA-AD,unchanged,Monocyte supertype cell (aka Micro-PVM_1_1-SEAAD),
+Micro-PVM_1,supertype,SEA-AD,unchanged,Micro-PVM_1 supertype cell,
+Micro-PVM_2,supertype,SEA-AD,unchanged,Micro-PVM_2 supertype cell,
+Micro-PVM_3,supertype,SEA-AD,up,Micro-PVM_3 supertype cell,
+Micro-PVM_2_1-SEAAD,supertype,SEA-AD,unchanged,Micro-PVM_2_1-SEAAD supertype cell,
+Micro-PVM_2_3-SEAAD,supertype,SEA-AD,unchanged,Micro-PVM_2_3-SEAAD supertype cell,
+Micro-PVM_3-SEAAD,supertype,SEA-AD,up,Micro-PVM_3-SEAAD supertype cell,
+Micro-PVM_4-SEAAD,supertype,SEA-AD,unchanged,Micro-PVM_4-SEAAD supertype cell,
+Micro-PVM_2_2-SEAAD,supertype,SEA-AD,unchanged,Lymphocyte supertype cell (aka Micro-PVM_2_2-SEAAD),
+Lymphocyte,supertype,SEA-AD,unchanged,Lymphocyte supertype cell (aka Micro-PVM_2_2-SEAAD),
+Lamp5 Lhx6_B24,subclass,PsychENCODE (brainSCOPE),unchanged,Lamp5_Lhx6 interneurons,
+Lamp5_B24,subclass,PsychENCODE (brainSCOPE),unchanged,Lamp CGE interneurons,
+Pax6_B24,subclass,PsychENCODE (brainSCOPE),unchanged,Pax6 CGE interneurons,
+Sncg_B24,subclass,PsychENCODE (brainSCOPE),unchanged,Sncg CGE interneurons,
+Vip_B24,subclass,PsychENCODE (brainSCOPE),unchanged,Vip CGE interneurons,
+Sst Chodl_B24,subclass,PsychENCODE (brainSCOPE),unchanged,Sst Chodl projecting MGE interneurons,
+Sst_B24,subclass,PsychENCODE (brainSCOPE),down,Sst MGE interneurons,Down with AD.
+Pvalb_B24,subclass,PsychENCODE (brainSCOPE),down,Pvalb MGE interneurons,Down with AD.
+Chandelier_B24,subclass,PsychENCODE (brainSCOPE),down,Chandelier MGE interneurons,"This study reports Chandelier cells are decrease with AGE, but unchanged in AD."
+L2/3 IT_B24,subclass,PsychENCODE (brainSCOPE),down,Layer 2/3 intratelencephalic neurons,Down with AD.
+L4 IT_B24,subclass,PsychENCODE (brainSCOPE),unchanged,Layer 4 intratelencephalic neurons,
+L5 IT_B24,subclass,PsychENCODE (brainSCOPE),unchanged,Layer 5 intratelencephalic neurons,
+L6 IT_B24,subclass,PsychENCODE (brainSCOPE),unchanged,Layer 6 intratelencephalic neurons,
+L6 IT Car3_B24,subclass,PsychENCODE (brainSCOPE),unchanged,"Layer 6, Car3 subtype intratelencephalic neurons",
+L5 ET_B24,subclass,PsychENCODE (brainSCOPE),unchanged,Layer 5 extratelencephalic neurons,
+L6 CT_B24,subclass,PsychENCODE (brainSCOPE),unchanged,Layer 6 cortico-thalamic,
+L5/6 NP_B24,subclass,PsychENCODE (brainSCOPE),unchanged,Layer 5/6 near projecting neurons,
+L6b_B24,subclass,PsychENCODE (brainSCOPE),unchanged,Layer 6b excitatory neurons,
+Astro_B24,subclass,PsychENCODE (brainSCOPE),unchanged,Astrocytes,
+OPC_B24,subclass,PsychENCODE (brainSCOPE),down,Oligodendrocyte precursor cells,"This study reports Chandelier cells are decrease with AGE, but unchanged in AD."
+Oligo_B24,subclass,PsychENCODE (brainSCOPE),down,Oligodendrocytes,"This study did not report any changes with Oligodendrocytes.  However a different study (Hwang et al 2025, https://www.nature.com/articles/s41586-025-09083-y) with a subset of overlapping authors reported a decrease in abundance of oligos with PTSD"
+Endo_B24,subclass,PsychENCODE (brainSCOPE),unchanged,Endothelial cells,
+VLMC_B24,subclass,PsychENCODE (brainSCOPE),unchanged,Vascular and leptomeningeal cells,
+SMC_B24,subclass,PsychENCODE (brainSCOPE),unchanged,Smooth muscle cells,
+PC_B24,subclass,PsychENCODE (brainSCOPE),unchanged,Pericytes,
+Immune_B24,subclass,PsychENCODE (brainSCOPE),unchanged,Perivascular macrophages and other immune cells,
+Micro_B24,subclass,PsychENCODE (brainSCOPE),unchanged,Microglia,
+Lamp5 Lhx6-1_B24,cluster,PsychENCODE (brainSCOPE),not_assessed,Cells from Lamp5 Lhx6-1_B24 cluster,
+Lamp5-1_B24,cluster,PsychENCODE (brainSCOPE),not_assessed,Cells from Lamp5-1_B24 cluster,
+Sncg-1_B24,cluster,PsychENCODE (brainSCOPE),not_assessed,Cells from Sncg-1_B24 cluster,
+Sncg-2_B24,cluster,PsychENCODE (brainSCOPE),not_assessed,Cells from Sncg-2_B24 cluster,
+Vip-1_B24,cluster,PsychENCODE (brainSCOPE),not_assessed,Cells from Vip-1_B24 cluster,
+Vip-2_B24,cluster,PsychENCODE (brainSCOPE),not_assessed,Cells from Vip-2_B24 cluster,
+Vip-3_B24,cluster,PsychENCODE (brainSCOPE),not_assessed,Cells from Vip-3_B24 cluster,
+Sst-1_B24,cluster,PsychENCODE (brainSCOPE),not_assessed,Cells from Sst-1_B24 cluster,
+Sst-2_B24,cluster,PsychENCODE (brainSCOPE),not_assessed,Cells from Sst-2_B24 cluster,
+Pvalb-1_B24,cluster,PsychENCODE (brainSCOPE),not_assessed,Cells from Pvalb-1_B24 cluster,
+Pvalb-2_B24,cluster,PsychENCODE (brainSCOPE),not_assessed,Cells from Pvalb-2_B24 cluster,
+Pvalb-3_B24,cluster,PsychENCODE (brainSCOPE),not_assessed,Cells from Pvalb-3_B24 cluster,
+Chandelier-1_B24,cluster,PsychENCODE (brainSCOPE),not_assessed,Cells from Chandelier-1_B24 cluster,
+L2/3 IT-1_B24,cluster,PsychENCODE (brainSCOPE),not_assessed,Cells from L2/3 IT-1_B24 cluster,
+L2/3 IT-2_B24,cluster,PsychENCODE (brainSCOPE),not_assessed,Cells from L2/3 IT-2_B24 cluster,
+L2/3 IT-3_B24,cluster,PsychENCODE (brainSCOPE),not_assessed,Cells from L2/3 IT-3_B24 cluster,
+L2/3 IT-4_B24,cluster,PsychENCODE (brainSCOPE),not_assessed,Cells from L2/3 IT-4_B24 cluster,
+L2/3 IT-5_B24,cluster,PsychENCODE (brainSCOPE),not_assessed,Cells from L2/3 IT-5_B24 cluster,
+L2/3 IT-6_B24,cluster,PsychENCODE (brainSCOPE),not_assessed,Cells from L2/3 IT-6_B24 cluster,
+L2/3 IT-7_B24,cluster,PsychENCODE (brainSCOPE),not_assessed,Cells from L2/3 IT-7_B24 cluster,
+L2/3 IT-8_B24,cluster,PsychENCODE (brainSCOPE),not_assessed,Cells from L2/3 IT-8_B24 cluster,
+L2/3 IT-9_B24,cluster,PsychENCODE (brainSCOPE),not_assessed,Cells from L2/3 IT-9_B24 cluster,
+L5 IT-1_B24,cluster,PsychENCODE (brainSCOPE),not_assessed,Cells from L5 IT-1_B24 cluster,
+L5 IT-2_B24,cluster,PsychENCODE (brainSCOPE),not_assessed,Cells from L5 IT-2_B24 cluster,
+L5 IT-3_B24,cluster,PsychENCODE (brainSCOPE),not_assessed,Cells from L5 IT-3_B24 cluster,
+L5 IT-4_B24,cluster,PsychENCODE (brainSCOPE),not_assessed,Cells from L5 IT-4_B24 cluster,
+L5 IT-5_B24,cluster,PsychENCODE (brainSCOPE),not_assessed,Cells from L5 IT-5_B24 cluster,
+L6 IT-1_B24,cluster,PsychENCODE (brainSCOPE),not_assessed,Cells from L6 IT-1_B24 cluster,
+L6 IT-2_B24,cluster,PsychENCODE (brainSCOPE),not_assessed,Cells from L6 IT-2_B24 cluster,
+L6 IT-3_B24,cluster,PsychENCODE (brainSCOPE),not_assessed,Cells from L6 IT-3_B24 cluster,
+L6 IT-4_B24,cluster,PsychENCODE (brainSCOPE),not_assessed,Cells from L6 IT-4_B24 cluster,
+L6 IT-5_B24,cluster,PsychENCODE (brainSCOPE),not_assessed,Cells from L6 IT-5_B24 cluster,
+L6 IT-6_B24,cluster,PsychENCODE (brainSCOPE),not_assessed,Cells from L6 IT-6_B24 cluster,
+L6 IT-7_B24,cluster,PsychENCODE (brainSCOPE),not_assessed,Cells from L6 IT-7_B24 cluster,
+L6 IT Car3-1_B24,cluster,PsychENCODE (brainSCOPE),not_assessed,Cells from L6 IT Car3-1_B24 cluster,
+L5 ET-1_B24,cluster,PsychENCODE (brainSCOPE),not_assessed,Cells from L5 ET-1_B24 cluster,
+L6 CT-1_B24,cluster,PsychENCODE (brainSCOPE),not_assessed,Cells from L6 CT-1_B24 cluster,
+L5/6 NP-1_B24,cluster,PsychENCODE (brainSCOPE),not_assessed,Cells from L5/6 NP-1_B24 cluster,
+L6b-1_B24,cluster,PsychENCODE (brainSCOPE),not_assessed,Cells from L6b-1_B24 cluster,
+Astro-1_B24,cluster,PsychENCODE (brainSCOPE),not_assessed,Cells from Astro-1_B24 cluster,
+Astro-2_B24,cluster,PsychENCODE (brainSCOPE),not_assessed,Cells from Astro-2_B24 cluster,
+Astro-3_B24,cluster,PsychENCODE (brainSCOPE),not_assessed,Cells from Astro-3_B24 cluster,
+Astro-4_B24,cluster,PsychENCODE (brainSCOPE),not_assessed,Cells from Astro-4_B24 cluster,
+Astro-5_B24,cluster,PsychENCODE (brainSCOPE),not_assessed,Cells from Astro-5_B24 cluster,
+OPC-1_B24,cluster,PsychENCODE (brainSCOPE),not_assessed,Cells from OPC-1_B24 cluster,
+OPC-2_B24,cluster,PsychENCODE (brainSCOPE),not_assessed,Cells from OPC-2_B24 cluster,
+OPC-3_B24,cluster,PsychENCODE (brainSCOPE),not_assessed,Cells from OPC-3_B24 cluster,
+OPC-4_B24,cluster,PsychENCODE (brainSCOPE),not_assessed,Cells from OPC-4_B24 cluster,
+Oligo-1_B24,cluster,PsychENCODE (brainSCOPE),not_assessed,Cells from Oligo-1_B24 cluster,
+Oligo-10_B24,cluster,PsychENCODE (brainSCOPE),not_assessed,Cells from Oligo-10_B24 cluster,
+Oligo-2_B24,cluster,PsychENCODE (brainSCOPE),not_assessed,Cells from Oligo-2_B24 cluster,
+Oligo-3_B24,cluster,PsychENCODE (brainSCOPE),not_assessed,Cells from Oligo-3_B24 cluster,
+Oligo-4_B24,cluster,PsychENCODE (brainSCOPE),not_assessed,Cells from Oligo-4_B24 cluster,
+Oligo-5_B24,cluster,PsychENCODE (brainSCOPE),not_assessed,Cells from Oligo-5_B24 cluster,
+Oligo-6_B24,cluster,PsychENCODE (brainSCOPE),not_assessed,Cells from Oligo-6_B24 cluster,
+Oligo-7_B24,cluster,PsychENCODE (brainSCOPE),not_assessed,Cells from Oligo-7_B24 cluster,
+Oligo-8_B24,cluster,PsychENCODE (brainSCOPE),not_assessed,Cells from Oligo-8_B24 cluster,
+Oligo-9_B24,cluster,PsychENCODE (brainSCOPE),not_assessed,Cells from Oligo-9_B24 cluster,
+Endo-1_B24,cluster,PsychENCODE (brainSCOPE),not_assessed,Cells from Endo-1_B24 cluster,
+Endo-2_B24,cluster,PsychENCODE (brainSCOPE),not_assessed,Cells from Endo-2_B24 cluster,
+RB-1_B24,cluster,PsychENCODE (brainSCOPE),not_assessed,Cells from RB-1_B24 cluster (red blood lineage cells),
+RB-2_B24,cluster,PsychENCODE (brainSCOPE),not_assessed,Cells from RB-2_B24 cluster (red blood lineage cells),
+VLMC-1_B24,cluster,PsychENCODE (brainSCOPE),not_assessed,Cells from VLMC-1_B24 cluster,
+SMC-1_B24,cluster,PsychENCODE (brainSCOPE),not_assessed,Cells from SMC-1_B24 cluster,
+PC-1_B24,cluster,PsychENCODE (brainSCOPE),not_assessed,Cells from PC-1_B24 cluster (Pericytes),
+Immune-1_B24,cluster,PsychENCODE (brainSCOPE),not_assessed,Cells from Immune-1_B24 cluster,
+Microglia-1_B24,cluster,PsychENCODE (brainSCOPE),not_assessed,Cells from Microglia-1_B24 cluster,
+Microglia-2_B24,cluster,PsychENCODE (brainSCOPE),not_assessed,Cells from Microglia-2_B24 cluster,
+Microglia-3_B24,cluster,PsychENCODE (brainSCOPE),not_assessed,Cells from Microglia-3_B24 cluster,
+HSB1574_DFC,donor,PsychENCODE (brainSCOPE),not_assessed,male from DevBrain cohort,Age: 27; Disease: Williams Syndrome; 1000G_Ancestry: EUR
+HSB189_DFC,donor,PsychENCODE (brainSCOPE),not_assessed,male from DevBrain cohort,Age: 27; Disease: control; 1000G_Ancestry: EUR; Notes: Duplicates:IsoHuB:HSB189;Ma_et_al:HSB189
+HSB290_DFC,donor,PsychENCODE (brainSCOPE),not_assessed,male from DevBrain cohort,Age: 2; Disease: control; 1000G_Ancestry: EUR
+HSB317_DFC,donor,PsychENCODE (brainSCOPE),not_assessed,male from DevBrain cohort,Age: 19; Disease: control; 1000G_Ancestry: EUR
+HSB340,donor,PsychENCODE (brainSCOPE),not_assessed,male from DevBrain cohort,Age: 24; Disease: control; 1000G_Ancestry: AFR; Notes: Duplicate:Ma_et_al:HSB34
+HSB373_DFC,donor,PsychENCODE (brainSCOPE),not_assessed,male from DevBrain cohort,Age: 21; Disease: ASD; 1000G_Ancestry: EUR
+HSB375_DFC,donor,PsychENCODE (brainSCOPE),not_assessed,male from DevBrain cohort,Age: 17; Disease: ASD; 1000G_Ancestry: EUR
+HSB378_DFC,donor,PsychENCODE (brainSCOPE),not_assessed,male from DevBrain cohort,Age: 30; Disease: ASD; 1000G_Ancestry: AMR; Notes: Duplicate:UCLA-ASD:UMB5297
+HSB379_DFC,donor,PsychENCODE (brainSCOPE),not_assessed,female from DevBrain cohort,Age: 60; Disease: ASD; 1000G_Ancestry: EUR
+HSB380_DFC,donor,PsychENCODE (brainSCOPE),not_assessed,male from DevBrain cohort,Age: 41; Disease: ASD; 1000G_Ancestry: EUR
+HSB384_DFC,donor,PsychENCODE (brainSCOPE),not_assessed,male from DevBrain cohort,Age: 29; Disease: ASD; 1000G_Ancestry: EUR
+HSB434_DFC,donor,PsychENCODE (brainSCOPE),not_assessed,male from DevBrain cohort,Age: 9; Disease: ASD; 1000G_Ancestry: EUR
+HSB517_DFC,donor,PsychENCODE (brainSCOPE),not_assessed,male from DevBrain cohort,Age: 16; Disease: ASD; 1000G_Ancestry: EAS
+HSB533_DFC,donor,PsychENCODE (brainSCOPE),not_assessed,male from DevBrain cohort,Age: 8; Disease: ASD; 1000G_Ancestry: EUR
+HSB5437_DFC,donor,PsychENCODE (brainSCOPE),not_assessed,male from DevBrain cohort,Age: 28; Disease: Williams Syndrome; 1000G_Ancestry: AMR
+HSB5857_DFC,donor,PsychENCODE (brainSCOPE),not_assessed,female from DevBrain cohort,Age: 27; Disease: Williams Syndrome; 1000G_Ancestry: EUR
+AN08161,donor,PsychENCODE (brainSCOPE),not_assessed,female from IsoHuB cohort,Age: 17; Disease: control; 1000G_Ancestry: EUR
+UMB5168,donor,PsychENCODE (brainSCOPE),not_assessed,female from IsoHuB cohort,Age: 24; Disease: control; 1000G_Ancestry: EUR
+UMB5342,donor,PsychENCODE (brainSCOPE),not_assessed,male from IsoHuB cohort,Age: 29; Disease: control; 1000G_Ancestry: AFR
+UMB5376,donor,PsychENCODE (brainSCOPE),not_assessed,male from IsoHuB cohort,Age: 27; Disease: control; 1000G_Ancestry: EUR
+Br2720,donor,PsychENCODE (brainSCOPE),not_assessed,female from LIBD cohort,Age: 47; Disease: control; 1000G_Ancestry: EUR
+Br2743,donor,PsychENCODE (brainSCOPE),not_assessed,male from LIBD cohort,Age: 17; Disease: control; 1000G_Ancestry: EUR
+Br3942,donor,PsychENCODE (brainSCOPE),not_assessed,male from LIBD cohort,Age: 25; Disease: control; 1000G_Ancestry: EUR
+Br6423,donor,PsychENCODE (brainSCOPE),not_assessed,male from LIBD cohort,Age: 49; Disease: control; 1000G_Ancestry: EUR
+Br6432,donor,PsychENCODE (brainSCOPE),not_assessed,male from LIBD cohort,Age: 58; Disease: control; 1000G_Ancestry: EUR
+Br6471,donor,PsychENCODE (brainSCOPE),not_assessed,male from LIBD cohort,Age: 6; Disease: control; 1000G_Ancestry: EUR
+Br6522,donor,PsychENCODE (brainSCOPE),not_assessed,male from LIBD cohort,Age: 19; Disease: control; 1000G_Ancestry: EUR
+Br8325,donor,PsychENCODE (brainSCOPE),not_assessed,female from LIBD cohort,Age: 20; Disease: control; 1000G_Ancestry: EUR
+Br8492,donor,PsychENCODE (brainSCOPE),not_assessed,female from LIBD cohort,Age: 19; Disease: control; 1000G_Ancestry: EUR
+Br8667,donor,PsychENCODE (brainSCOPE),not_assessed,female from LIBD cohort,Age: 28; Disease: control; 1000G_Ancestry: EUR
+HSB106,donor,PsychENCODE (brainSCOPE),not_assessed,male from Ma_et_al cohort,Age: 24; Disease: Control; 1000G_Ancestry: EUR
+HSB628,donor,PsychENCODE (brainSCOPE),not_assessed,female from Ma_et_al cohort,Age: 23; Disease: Control; 1000G_Ancestry: AFR
+sc1,donor,PsychENCODE (brainSCOPE),not_assessed,male from PTSDBrainomics cohort,Age: 22; Disease: control; 1000G_Ancestry: EUR
+sc11,donor,PsychENCODE (brainSCOPE),not_assessed,female from PTSDBrainomics cohort,Age: 13; Disease: control; 1000G_Ancestry: EUR
+sc12,donor,PsychENCODE (brainSCOPE),not_assessed,female from PTSDBrainomics cohort,Age: 7; Disease: control; 1000G_Ancestry: EUR
+sc13,donor,PsychENCODE (brainSCOPE),not_assessed,male from PTSDBrainomics cohort,Age: 15; Disease: control; 1000G_Ancestry: EUR
+sc18,donor,PsychENCODE (brainSCOPE),not_assessed,male from PTSDBrainomics cohort,Age: 19; Disease: MDD; 1000G_Ancestry: EUR
+sc2,donor,PsychENCODE (brainSCOPE),not_assessed,male from PTSDBrainomics cohort,Age: 12; Disease: control; 1000G_Ancestry: AFR
+sc21,donor,PsychENCODE (brainSCOPE),not_assessed,male from PTSDBrainomics cohort,Age: 16; Disease: MDD; 1000G_Ancestry: EUR
+sc3,donor,PsychENCODE (brainSCOPE),not_assessed,male from PTSDBrainomics cohort,Age: 6; Disease: control; 1000G_Ancestry: AFR
+sc31,donor,PsychENCODE (brainSCOPE),not_assessed,female from PTSDBrainomics cohort,Age: 19; Disease: MDD; 1000G_Ancestry: EUR
+sc32,donor,PsychENCODE (brainSCOPE),not_assessed,male from PTSDBrainomics cohort,Age: 15; Disease: MDD; 1000G_Ancestry: EUR
+sc33,donor,PsychENCODE (brainSCOPE),not_assessed,male from PTSDBrainomics cohort,Age: 19; Disease: PTSD; 1000G_Ancestry: AFR
+sc34,donor,PsychENCODE (brainSCOPE),not_assessed,male from PTSDBrainomics cohort,Age: 34; Disease: PTSD; 1000G_Ancestry: AFR
+sc35,donor,PsychENCODE (brainSCOPE),not_assessed,male from PTSDBrainomics cohort,Age: 12; Disease: PTSD; 1000G_Ancestry: EUR
+sc42,donor,PsychENCODE (brainSCOPE),not_assessed,male from PTSDBrainomics cohort,Age: 21; Disease: PTSD; 1000G_Ancestry: EUR
+sc43,donor,PsychENCODE (brainSCOPE),not_assessed,female from PTSDBrainomics cohort,Age: 39; Disease: PTSD; 1000G_Ancestry: EUR
+sc44,donor,PsychENCODE (brainSCOPE),not_assessed,male from PTSDBrainomics cohort,Age: 12; Disease: PTSD; 1000G_Ancestry: EUR
+sc5,donor,PsychENCODE (brainSCOPE),not_assessed,male from PTSDBrainomics cohort,Age: 20; Disease: control; 1000G_Ancestry: EUR
+sc6,donor,PsychENCODE (brainSCOPE),not_assessed,male from PTSDBrainomics cohort,Age: 15; Disease: control; 1000G_Ancestry: EUR
+sc7,donor,PsychENCODE (brainSCOPE),not_assessed,male from PTSDBrainomics cohort,Age: 19; Disease: control; 1000G_Ancestry: EUR
+1185,donor,PsychENCODE (brainSCOPE),not_assessed,male from UCLA-ASD cohort,Age: 19; Disease: control; 1000G_Ancestry: EUR
+1743,donor,PsychENCODE (brainSCOPE),not_assessed,male from UCLA-ASD cohort,Age: 14; Disease: control; 1000G_Ancestry: EUR
+4787,donor,PsychENCODE (brainSCOPE),not_assessed,male from UCLA-ASD cohort,Age: 21; Disease: control; 1000G_Ancestry: AFR
+5023,donor,PsychENCODE (brainSCOPE),not_assessed,male from UCLA-ASD cohort,Age: 20; Disease: ASD; 1000G_Ancestry: EUR
+5144,donor,PsychENCODE (brainSCOPE),not_assessed,female from UCLA-ASD cohort,Age: 22; Disease: ASD; 1000G_Ancestry: EUR
+5302,donor,PsychENCODE (brainSCOPE),not_assessed,male from UCLA-ASD cohort,Age: 4; Disease: ASD; 1000G_Ancestry: EUR
+5308,donor,PsychENCODE (brainSCOPE),not_assessed,male from UCLA-ASD cohort,Age: 11; Disease: ASD; 1000G_Ancestry: EUR
+5391,donor,PsychENCODE (brainSCOPE),not_assessed,female from UCLA-ASD cohort,Age: 44; Disease: control; 1000G_Ancestry: EUR
+5408,donor,PsychENCODE (brainSCOPE),not_assessed,male from UCLA-ASD cohort,Age: 14; Disease: control; 1000G_Ancestry: AFR
+5576,donor,PsychENCODE (brainSCOPE),not_assessed,male from UCLA-ASD cohort,Age: ; Disease: control; 1000G_Ancestry: AFR
+5670,donor,PsychENCODE (brainSCOPE),not_assessed,female from UCLA-ASD cohort,Age: ; Disease: control; 1000G_Ancestry: EUR
+5925,donor,PsychENCODE (brainSCOPE),not_assessed,male from UCLA-ASD cohort,Age: ; Disease: control; 1000G_Ancestry: AFR
+285A,donor,PsychENCODE (brainSCOPE),not_assessed,male from UCLA-ASD cohort,Age: ; Disease: ASD; 1000G_Ancestry: EUR
+2GGP,donor,PsychENCODE (brainSCOPE),not_assessed,male from UCLA-ASD cohort,Age: ; Disease: control; 1000G_Ancestry: EUR
+2NA6,donor,PsychENCODE (brainSCOPE),not_assessed,male from UCLA-ASD cohort,Age: ; Disease: ASD; 1000G_Ancestry: EUR
+2YK7,donor,PsychENCODE (brainSCOPE),not_assessed,female from UCLA-ASD cohort,Age: ; Disease: ASD; 1000G_Ancestry: EUR
+35BV,donor,PsychENCODE (brainSCOPE),not_assessed,male from UCLA-ASD cohort,Age: ; Disease: ASD; 1000G_Ancestry: EUR
+3HUF,donor,PsychENCODE (brainSCOPE),not_assessed,male from UCLA-ASD cohort,Age: ; Disease: ASD; 1000G_Ancestry: EUR
+75QW,donor,PsychENCODE (brainSCOPE),not_assessed,male from UCLA-ASD cohort,Age: ; Disease: control; 1000G_Ancestry: EUR
+8XCF,donor,PsychENCODE (brainSCOPE),not_assessed,male from UCLA-ASD cohort,Age: ; Disease: ASD; 1000G_Ancestry: AFR
+AN00493,donor,PsychENCODE (brainSCOPE),not_assessed,male from UCLA-ASD cohort,Age: ; Disease: ASD; 1000G_Ancestry: EUR
+AN03345,donor,PsychENCODE (brainSCOPE),not_assessed,male from UCLA-ASD cohort,Age: ; Disease: ASD; 1000G_Ancestry: AMR
+AN03935,donor,PsychENCODE (brainSCOPE),not_assessed,male from UCLA-ASD cohort,Age: ; Disease: ASD; 1000G_Ancestry: EUR
+AN05983,donor,PsychENCODE (brainSCOPE),not_assessed,male from UCLA-ASD cohort,Age: ; Disease: ASD; 1000G_Ancestry: EUR
+AN07176,donor,PsychENCODE (brainSCOPE),not_assessed,male from UCLA-ASD cohort,Age: ; Disease: control; 1000G_Ancestry: EUR
+AN07444,donor,PsychENCODE (brainSCOPE),not_assessed,male from UCLA-ASD cohort,Age: ; Disease: control; 1000G_Ancestry: EUR
+AN08792,donor,PsychENCODE (brainSCOPE),not_assessed,male from UCLA-ASD cohort,Age: ; Disease: ASD; 1000G_Ancestry: EUR
+AN09714,donor,PsychENCODE (brainSCOPE),not_assessed,male from UCLA-ASD cohort,Age: ; Disease: ASD; 1000G_Ancestry: EUR
+AN10679,donor,PsychENCODE (brainSCOPE),not_assessed,female from UCLA-ASD cohort,Age: ; Disease: control; 1000G_Ancestry: AFR
+AN12457,donor,PsychENCODE (brainSCOPE),not_assessed,female from UCLA-ASD cohort,Age: ; Disease: ASD; 1000G_Ancestry: EUR
+AN14762,donor,PsychENCODE (brainSCOPE),not_assessed,male from UCLA-ASD cohort,Age: ; Disease: ASD; 1000G_Ancestry: EUR
+AN15451,donor,PsychENCODE (brainSCOPE),not_assessed,female from UCLA-ASD cohort,Age: ; Disease: ASD; 1000G_Ancestry: AFR
+AN19511,donor,PsychENCODE (brainSCOPE),not_assessed,male from UCLA-ASD cohort,Age: ; Disease: ASD; 1000G_Ancestry: EUR
+AN19760,donor,PsychENCODE (brainSCOPE),not_assessed,male from UCLA-ASD cohort,Age: ; Disease: control; 1000G_Ancestry: EUR
+E4FN,donor,PsychENCODE (brainSCOPE),not_assessed,male from UCLA-ASD cohort,Age: ; Disease: control; 1000G_Ancestry: EUR
+EUFW,donor,PsychENCODE (brainSCOPE),not_assessed,male from UCLA-ASD cohort,Age: ; Disease: control; 1000G_Ancestry: AFR
+FHN9,donor,PsychENCODE (brainSCOPE),not_assessed,male from UCLA-ASD cohort,Age: ; Disease: control; 1000G_Ancestry: EUR
+FXMN,donor,PsychENCODE (brainSCOPE),not_assessed,male from UCLA-ASD cohort,Age: ; Disease: ASD; 1000G_Ancestry: EUR
+G7YU,donor,PsychENCODE (brainSCOPE),not_assessed,male from UCLA-ASD cohort,Age: ; Disease: control; 1000G_Ancestry: AMR
+HctZGA002,donor,PsychENCODE (brainSCOPE),not_assessed,male from UCLA-ASD cohort,Age: ; Disease: control; 1000G_Ancestry: EUR
+HQ4T,donor,PsychENCODE (brainSCOPE),not_assessed,male from UCLA-ASD cohort,Age: ; Disease: control; 1000G_Ancestry: EAS
+JU7U,donor,PsychENCODE (brainSCOPE),not_assessed,male from UCLA-ASD cohort,Age: ; Disease: ASD; 1000G_Ancestry: EUR
+KMC3,donor,PsychENCODE (brainSCOPE),not_assessed,male from UCLA-ASD cohort,Age: ; Disease: ASD; 1000G_Ancestry: EUR
+M9H3,donor,PsychENCODE (brainSCOPE),not_assessed,female from UCLA-ASD cohort,Age: ; Disease: ASD; 1000G_Ancestry: EUR
+NEPX,donor,PsychENCODE (brainSCOPE),not_assessed,male from UCLA-ASD cohort,Age: ; Disease: ASD; 1000G_Ancestry: EUR
+PA38,donor,PsychENCODE (brainSCOPE),not_assessed,male from UCLA-ASD cohort,Age: ; Disease: ASD; 1000G_Ancestry: EUR
+PH2A,donor,PsychENCODE (brainSCOPE),not_assessed,male from UCLA-ASD cohort,Age: ; Disease: control; 1000G_Ancestry: EUR
+PZ65,donor,PsychENCODE (brainSCOPE),not_assessed,male from UCLA-ASD cohort,Age: ; Disease: control; 1000G_Ancestry: EUR
+U8DM,donor,PsychENCODE (brainSCOPE),not_assessed,female from UCLA-ASD cohort,Age: ; Disease: control; 1000G_Ancestry: EUR
+UPIT13161,donor,PsychENCODE (brainSCOPE),not_assessed,male from UCLA-ASD cohort,Age: ; Disease: ASD; 1000G_Ancestry: AFR
+UPIT3152,donor,PsychENCODE (brainSCOPE),not_assessed,male from UCLA-ASD cohort,Age: ; Disease: control; 1000G_Ancestry: AFR
+WBYA,donor,PsychENCODE (brainSCOPE),not_assessed,male from UCLA-ASD cohort,Age: ; Disease: control; 1000G_Ancestry: AFR
+4341_BA46,donor,PsychENCODE (brainSCOPE),not_assessed,male from Velmeshev_et_al cohort,Age: ; Disease: Control; 1000G_Ancestry: EUR
+5144_PFC_Nova,donor,PsychENCODE (brainSCOPE),not_assessed,male from Velmeshev_et_al cohort,Age: ; Disease: ASD; 1000G_Ancestry: EUR
+5278_PFC_Nova,donor,PsychENCODE (brainSCOPE),not_assessed,female from Velmeshev_et_al cohort,Age: ; Disease: ASD; 1000G_Ancestry: EUR
+5294_BA9,donor,PsychENCODE (brainSCOPE),not_assessed,male from Velmeshev_et_al cohort,Age: ; Disease: ASD; 1000G_Ancestry: EUR
+5387_BA9,donor,PsychENCODE (brainSCOPE),not_assessed,male from Velmeshev_et_al cohort,Age: ; Disease: Control; 1000G_Ancestry: EUR
+5403_PFC_Nova,donor,PsychENCODE (brainSCOPE),not_assessed,male from Velmeshev_et_al cohort,Age: ; Disease: ASD; 1000G_Ancestry: EUR
+5408_PFC_Nova,donor,PsychENCODE (brainSCOPE),not_assessed,male from Velmeshev_et_al cohort,Age: ; Disease: Control; 1000G_Ancestry: AFR
+5419_PFC,donor,PsychENCODE (brainSCOPE),not_assessed,female from Velmeshev_et_al cohort,Age: ; Disease: ASD; 1000G_Ancestry: EUR
+5531_BA9,donor,PsychENCODE (brainSCOPE),not_assessed,male from Velmeshev_et_al cohort,Age: ; Disease: ASD; 1000G_Ancestry: EUR
+5538_PFC_Nova,donor,PsychENCODE (brainSCOPE),not_assessed,female from Velmeshev_et_al cohort,Age: ; Disease: Control; 1000G_Ancestry: EUR
+5546_BA9_Nova,donor,PsychENCODE (brainSCOPE),not_assessed,female from Velmeshev_et_al cohort,Age: ; Disease: Control; 1000G_Ancestry: EUR
+5565_BA9,donor,PsychENCODE (brainSCOPE),not_assessed,male from Velmeshev_et_al cohort,Age: ; Disease: ASD; 1000G_Ancestry: AFR
+5577_BA9,donor,PsychENCODE (brainSCOPE),not_assessed,male from Velmeshev_et_al cohort,Age: ; Disease: Control; 1000G_Ancestry: EUR
+5787_BA9_Nova,donor,PsychENCODE (brainSCOPE),not_assessed,male from Velmeshev_et_al cohort,Age: ; Disease: Control; 1000G_Ancestry: EUR
+5841_BA9,donor,PsychENCODE (brainSCOPE),not_assessed,male from Velmeshev_et_al cohort,Age: ; Disease: ASD; 1000G_Ancestry: EUR
+5864_BA9,donor,PsychENCODE (brainSCOPE),not_assessed,male from Velmeshev_et_al cohort,Age: ; Disease: ASD; 1000G_Ancestry: AMR
+5879_PFC_Nova,donor,PsychENCODE (brainSCOPE),not_assessed,male from Velmeshev_et_al cohort,Age: ; Disease: Control; 1000G_Ancestry: AFR
+5893_BA9,donor,PsychENCODE (brainSCOPE),not_assessed,male from Velmeshev_et_al cohort,Age: ; Disease: Control; 1000G_Ancestry: EUR
+5893_PFC_Nova,donor,PsychENCODE (brainSCOPE),not_assessed,male from Velmeshev_et_al cohort,Age: ; Disease: Control; 1000G_Ancestry: EUR
+5936_PFC_Nova,donor,PsychENCODE (brainSCOPE),not_assessed,female from Velmeshev_et_al cohort,Age: ; Disease: Control; 1000G_Ancestry: AFR
+5939_BA9,donor,PsychENCODE (brainSCOPE),not_assessed,male from Velmeshev_et_al cohort,Age: ; Disease: ASD; 1000G_Ancestry: EUR
+5945_PFC_Nova,donor,PsychENCODE (brainSCOPE),not_assessed,male from Velmeshev_et_al cohort,Age: ; Disease: ASD; 1000G_Ancestry: EUR
+5958_BA9,donor,PsychENCODE (brainSCOPE),not_assessed,male from Velmeshev_et_al cohort,Age: ; Disease: Control; 1000G_Ancestry: AFR
+5976_BA9,donor,PsychENCODE (brainSCOPE),not_assessed,female from Velmeshev_et_al cohort,Age: ; Disease: Control; 1000G_Ancestry: UNKNOWN
+5978_BA9,donor,PsychENCODE (brainSCOPE),not_assessed,male from Velmeshev_et_al cohort,Age: ; Disease: ASD; 1000G_Ancestry: EUR
+5981_BA9_Nova,donor,PsychENCODE (brainSCOPE),not_assessed,female from Velmeshev_et_al cohort,Age: ; Disease: Control; 1000G_Ancestry: EUR
+6033_BA9,donor,PsychENCODE (brainSCOPE),not_assessed,female from Velmeshev_et_al cohort,Age: ; Disease: ASD; 1000G_Ancestry: EUR
