@@ -420,10 +420,13 @@ ui <- function(request) {   # Note that I might need to remove "function(request
                                        ),
                                        uiOutput("scatter_plot_hover_selectize"),
                                        textOutput("scatter_plot_hover_warning"),
-                                       actionButton("scatter_plot_go","GO!",
-                                                    style="color: #fff; background-color: #EC008C; border-color: #BE1E2D; font-weight: bold;"),
-                                       p("  ^ Click 'Go!' after making updates to refresh display."),
-                                       column(5,downloadButton("scatterplot_data_csv","Download Plot Data"))
+                                       fluidRow(
+                                         column(4, actionButton("scatter_plot_go","GO!",
+                                                    style="color: #fff; background-color: #EC008C; border-color: #BE1E2D; font-weight: bold;")),
+                                         column(8,downloadButton("scatterplot_data_csv","Download Plot Data"))
+                                       ),
+                                       p("  ^ Click 'GO!' after making updates to refresh display."),
+                                       
                                 ),
                                 
                                 column(8,
