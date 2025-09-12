@@ -14,7 +14,8 @@ table_names <- c(
   "Mouse motor cortex",
   "Mouse aging study",
   "Mammalian Basal Ganglia Consensus Cell Type Atlas",
-  "PsychENCODE ('brainSCOPE' data sets)"
+  "PsychENCODE ('brainSCOPE' data sets)",
+  "AIFI (peripheral) Immune Health Atlas"
 )
 
 #... what category each table is included in on the main page?
@@ -31,7 +32,8 @@ categories <- factor(c(
   "Patch-seq (shape + function + genes)",
   "Mouse cell type classification",
   "Human/NHP cell type classification",
-  "Disease studies"
+  "Disease studies",
+  "Human/NHP cell type classification"
   ),
 # This is the order they will show up on in the list. **MAKE SURE THERE ARE NO TYPOS!**
 levels = c("Disease studies", "Mouse cell type classification", "Human/NHP cell type classification","Patch-seq (shape + function + genes)")) 
@@ -52,7 +54,8 @@ table_locations <- c(
   "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/ToliasCTKE_byCell.csv",
   "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/aging_mouse_brain_subsample.csv.gz",
   "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/BG_cross_species_metadata.csv.gz",
-  "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/brainSCOPE_cell_info.csv.gz"
+  "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/brainSCOPE_cell_info.csv.gz",
+  "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/HISE_cell_info.csv.gz"
 )
 
 #... where is the annotation information table (e.g., information about each specific cell type.)?  
@@ -70,7 +73,8 @@ metadata_locations <- c(
   "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/CTX_Hip_cellTypeInfo.csv", # Only include for cell type ordering.
   "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/WMB_cluster_annotations.csv.gz",
   "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/BG_cross_species_annotation_information.csv.gz",
-  "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/brainSCOPE_cell_types_for_app.csv"
+  "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/brainSCOPE_cell_types_for_app.csv",
+  "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/HISE_cell_types_for_app.csv"
 )
 
 #... which panels to omit (e.g., because relevant data for that panel is not included)?
@@ -87,7 +91,8 @@ omit_panels <- list(
   "individual",
   "none",
   "none",
-  "scatterplot"
+  "scatterplot",
+  "none"
 )
 # Options used are: "confusion", "river", "individual", or "scatterplot". "none" is used by default but is just a placeholder for showing everything. Multiple options can be selected using a vector [e.g., c("one","two")]
 
@@ -129,7 +134,9 @@ descriptions   <- c(
   
   "The Human and Mammalian Brain Atlas (HMBA) consortia has created a unified taxonomy of the mammalian basal ganglia, with >2 million cells collected from humans, macaques, and marmosets, and linkages to existing mouse brain data. More details are available here: https://alleninstitute.github.io/HMBA_BasalGanglia_Consensus_Taxonomy/.  The data table here includes 296,671 cells (random downsampling to 15% of cells + 10 random cells per cluster after omitting cells not mapping to a 'group') along with information about cell type assignments (cluster, group, subclass, class, and neighborhood), dissected brain region, and species, and includes mapping results to existing whole human brain and whole mouse brain taxonomies available in MapMyCells and the ABC Atlas.",
   
-  "In 2024 the PsychENCODE Consortium released a multi-omics resource focused on doroslateral prefrontal cortex (DLPFC) in humans with multiple disease conditions (Emani et al 2024; https://doi.org/10.1126/science.adi5199). The data set here includes RNA-seq data from seven single-nucleus RNA-seq data sets included in this study, and spans four brain disorders (autism spectrum disorder (ASD), major depressive disorder (MDD), post-traumatic stress disorder (PTSD), and William's syndrome) and controls. We include a downsampled set of 300,046 cells from 130 donors along with donor demographics, cluster assignments reported in the study ('brainSCOPE_') and results mapped to the SEA-AD MTG data set using the MapMyCells GUI in September 2025 using deep generative mapping ('SEAAD_')."
+  "In 2024 the PsychENCODE Consortium released a multi-omics resource focused on doroslateral prefrontal cortex (DLPFC) in humans with multiple disease conditions (Emani et al 2024; https://doi.org/10.1126/science.adi5199). The data set here includes RNA-seq data from seven single-nucleus RNA-seq data sets included in this study, and spans four brain disorders (autism spectrum disorder (ASD), major depressive disorder (MDD), post-traumatic stress disorder (PTSD), and William's syndrome) and controls. We include a downsampled set of 300,046 cells from 130 donors along with donor demographics, cluster assignments reported in the study ('brainSCOPE_') and results mapped to the SEA-AD MTG data set using the MapMyCells GUI in September 2025 using deep generative mapping ('SEAAD_').",
+  
+  "The Allen Institute for Immunology has generated single cell RNA-seq data from > 1.8 million cells obtained from 108 healthy pediatric, young adult, and older adult donors with no history of chronic or autoimmune disease, chronic infections, or severe allergy to generate a cross-age atlas of healthy peripheral blood mononuclear cells (PBMCs).  Additional information is available on the Human Immune System Explorer (https://apps.allenimmunology.org/aifi/resources/imm-health-atlas/) and in the bioRxiv preprint (Gong et al 2024; DOI:10.1101/2024.09.10.612119). In this dataset we include a downsampled version of the data (95,136 cells) with both cell type- and donor-level metadata. **Due to the large number of variables, this data set may be a bit slow, so please have patience!**"
   
 )
 
