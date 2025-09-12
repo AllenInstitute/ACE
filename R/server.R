@@ -2433,6 +2433,44 @@ server <- function(input, output, session) {
                      other_columns=other_columns, anno=anno) # in "pairwise_functions.R"
   })
   
+  ## THE NEXT THREE BITS RELATE TO THE CORRELATION BUTTON
+  
+  # Reactive that runs ONLY when button is clicked
+  corr_vals <- eventReactive(input$do_corr, {
+    req(rv_filtered())
+    req(input$scatter_x)
+    req(input$scatter_y)
+    req(rv_desc())
+    
+    filtered = rv_filtered()
+    x_group  = input$scatter_x
+    y_group  = input$scatter_y
+    
+    x <- filtered[,paste0(x_group,"_id")]
+    x <- factor(filtered[,paste0(x_group,"_label")], levels = filtered[,paste0(x_group,"_label")][match(sort(unique(x)),x)])
+    y <- filtered[,paste0(y_group,"_id")]
+    y <- factor(filtered[,paste0(y_group,"_label")], levels = filtered[,paste0(y_group,"_label")][match(sort(unique(y), decreasing = TRUE),y)])
+    names(x) <- names(y) <- filtered$sample_id
+    xy_data <- return_plot_data(x=x, y=y, desc=rv_desc(), reorderY=input$anno_reorderY, 
+                                x_group=x_group, y_group=y_group) # in "pairwise_functions.R"
+    x1 <- as.numeric(as.character(xy_data[, 2]))
+    y1 <- as.numeric(as.character(xy_data[, 3]))
+    res <- cor.test(x1, y1, method = "pearson")
+    list(R = unname(res$estimate), p = res$p.value)
+  })
+  
+  # Display the formatted result
+  output$corr_result <- renderText({
+    vals <- corr_vals()
+    sprintf("Pearson Correlation: r = %.3f, p = %.4g", vals$R, vals$p)
+  })
+  
+  # Logical output to drive the conditional panel
+  output$showCorrelation <- reactive({
+    input$do_corr > 0
+  })
+  outputOptions(output, "showCorrelation", suspendWhenHidden = FALSE)
+  
   
 }
 

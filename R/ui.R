@@ -188,10 +188,10 @@ ui <- function(request) {   # Note that I might need to remove "function(request
                      # NEW - END
                    ),
                    fluidRow(
-                     column(2,
+                     column(3,
                             fileInput("database_upload", "UPLOAD or")
                      ),
-                     column(8,
+                     column(7,
                             uiOutput("database_textbox")
                      ),
                      column(2,
@@ -199,10 +199,10 @@ ui <- function(request) {   # Note that I might need to remove "function(request
                      )
                    ),
                    fluidRow(
-                     column(2,
+                     column(3,
                             fileInput("metadata_upload", "UPLOAD or")
                      ),
-                     column(8,
+                     column(7,
                             uiOutput("metadata_textbox")
                      ),
                      column(2,
@@ -420,13 +420,16 @@ ui <- function(request) {   # Note that I might need to remove "function(request
                                        ),
                                        uiOutput("scatter_plot_hover_selectize"),
                                        textOutput("scatter_plot_hover_warning"),
-                                       fluidRow(
-                                         column(4, actionButton("scatter_plot_go","GO!",
-                                                    style="color: #fff; background-color: #EC008C; border-color: #BE1E2D; font-weight: bold;")),
-                                         column(8,downloadButton("scatterplot_data_csv","Download Plot Data"))
-                                       ),
+                                       actionButton("scatter_plot_go","GO!",
+                                                    style="color: #fff; background-color: #EC008C; border-color: #BE1E2D; font-weight: bold;"),
                                        p("  ^ Click 'GO!' after making updates to refresh display."),
-                                       
+                                       fluidRow(
+                                         column(5,downloadButton("scatterplot_data_csv","Download Plot Data")),
+                                         column(7,actionButton("do_corr", "Compute correlation"))
+                                       ),
+                                       br(),
+                                       conditionalPanel(condition = "output.showCorrelation == true", 
+                                                        div(style = "font-size: 1.5em;", textOutput("corr_result")))
                                 ),
                                 
                                 column(8,
