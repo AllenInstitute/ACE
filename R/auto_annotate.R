@@ -58,6 +58,9 @@ is_valid_color <- function(x) {
 # Function to ensure that colors are unique
 make_unique_colors <- function(x, tweak = 0.1) {
   # tweak = hue shift (0–1) per duplicate step
+  if (!requireNamespace("colorspace", quietly = TRUE)) {
+    stop("Please install the 'colorspace' package: install.packages('colorspace')")
+  }
   library(colorspace)
   
   out <- x
@@ -66,20 +69,41 @@ make_unique_colors <- function(x, tweak = 0.1) {
   
   for (i in seq_along(x)) {
     key <- lower[i]
+    
+    # convert any named colour (e.g. "red") or hex to a hex string reliably
+    rgb_vals <- grDevices::col2rgb(x[i])          # 3 x n matrix; here n==1
+    hex_in <- grDevices::rgb(rgb_vals[1,1],
+                             rgb_vals[2,1],
+                             rgb_vals[3,1],
+                             maxColorValue = 255)
+    
     if (key %in% names(seen)) {
-      # How many times we've already seen this colour
       k <- seen[[key]]
-      # Convert to HCL, rotate hue a bit each time
-      hcl <- hex2HCL(x[i])
-      hcl@coords[1] <- (hcl@coords[1] + k * 360 * tweak) %% 360
-      out[i] <- hex(HCL(hcl@coords[1], hcl@coords[2], hcl@coords[3]))
+      
+      # hex -> RGB object -> polarLUV (HCL-like)
+      rgb_obj <- colorspace::hex2RGB(hex_in)
+      hcl_obj <- methods::as(rgb_obj, "polarLUV")
+      co <- colorspace::coords(hcl_obj)   # co = c(H, C, L)
+      
+      # rotate hue
+      co[1] <- (co[1] + k * 360 * tweak) %% 360
+      
+      # rebuild polarLUV and convert to hex
+      newcol <- colorspace::polarLUV(L = co[3], C = co[2], H = co[1])
+      out[i] <- colorspace::hex(newcol)
+      
       seen[[key]] <- k + 1
     } else {
+      # first time we see this colour — keep original hex form
+      out[i] <- hex_in
       seen[[key]] <- 1
     }
   }
+  
   out
 }
+
+
 
 
 #################################################################################
