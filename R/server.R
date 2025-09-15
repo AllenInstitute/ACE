@@ -22,6 +22,7 @@ source("multistudy_functions.R")
 source("bookmark_functions.R")    # this shouldn't be required at all, as it is a workaround for regular bookmarking (both are currently broken)
 source("scatterplot_functions.R") 
 source("auto_annotate.R")  # This can be removed when scrattch.io is updated with new version of auto_annotate
+source("statistics.R")
 
 enableBookmarking("url")  # It was "server", but it doesn't seem to work either way
 
@@ -1636,6 +1637,46 @@ server <- function(input, output, session) {
   })
   
   
+  ## THE NEXT THREE BITS RELATE TO THE STATISTICS BUTTON ON THE 'COMPARE PAIRS OF ANNOTATIONS' TAB
+  
+  # Reactive that runs ONLY when button is clicked
+  stats_vals <- eventReactive(input$do_stats, {
+    req(rv_filtered())
+    req(input$annocomp_x)
+    req(input$annocomp_y)
+    req(rv_desc())
+    
+    filtered = rv_filtered()
+    x_group  = input$annocomp_x
+    y_group  = input$annocomp_y
+    
+    write(paste(x_group,"vs.",y_group),stderr())
+    
+    x <- filtered[,paste0(x_group,"_id")]
+    x <- factor(filtered[,paste0(x_group,"_label")], levels = filtered[,paste0(x_group,"_label")][match(sort(unique(x)),x)])
+    y <- filtered[,paste0(y_group,"_id")]
+    y <- factor(filtered[,paste0(y_group,"_label")], levels = filtered[,paste0(y_group,"_label")][match(sort(unique(y), decreasing = TRUE),y)])
+    names(x) <- names(y) <- filtered$sample_id
+    xy_data <- return_plot_data(x=x, y=y, desc=rv_desc(), reorderY=input$anno_reorderY, 
+                                x_group=x_group, y_group=y_group) # in "pairwise_functions.R"
+    out <- return_pairwise_statistics_text(xy_data) # in statistics.R
+    write(out,stderr())
+    out
+  })
+  
+  # Display the formatted result
+  output$stats_result <- renderText({
+    print("Calculating statistics!",stderr())
+    vals <- stats_vals()
+    vals
+  })
+  
+  # Logical output to drive the conditional panel
+  output$showStatistics <- reactive({
+    input$do_stats > 0
+  })
+  outputOptions(output, "showStatistics", suspendWhenHidden = FALSE)
+  
   
   
   ##############################
@@ -2453,16 +2494,13 @@ server <- function(input, output, session) {
     names(x) <- names(y) <- filtered$sample_id
     xy_data <- return_plot_data(x=x, y=y, desc=rv_desc(), reorderY=input$anno_reorderY, 
                                 x_group=x_group, y_group=y_group) # in "pairwise_functions.R"
-    x1 <- as.numeric(as.character(xy_data[, 2]))
-    y1 <- as.numeric(as.character(xy_data[, 3]))
-    res <- cor.test(x1, y1, method = "pearson")
-    list(R = unname(res$estimate), p = res$p.value)
+    return_pairwise_statistics_text(xy_data) # in statistics.R
   })
   
   # Display the formatted result
   output$corr_result <- renderText({
     vals <- corr_vals()
-    sprintf("Pearson Correlation: r = %.3f, p = %.4g", vals$R, vals$p)
+    vals
   })
   
   # Logical output to drive the conditional panel

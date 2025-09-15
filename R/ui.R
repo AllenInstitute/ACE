@@ -300,7 +300,7 @@ ui <- function(request) {   # Note that I might need to remove "function(request
                                 )
                               ),
                               fluidRow(
-                                column(6,
+                                column(7,
                                        strong("Plot download Options"),
                                        fluidRow(
                                          column(4,textInput("annocomp_dlw","Width (in)",8)),
@@ -308,10 +308,14 @@ ui <- function(request) {   # Note that I might need to remove "function(request
                                          column(4,textInput("annocomp_dlf","Font (pt)",6))
                                        ),
                                        fluidRow(
-                                         column(5,uiOutput("annocomp_downloadButton")),
-                                         column(5,downloadButton("data_csv","Download Plot Data"))
+                                         column(4,uiOutput("annocomp_downloadButton")),
+                                         column(4,downloadButton("data_csv","Download Plot Data")),
+                                         column(4,actionButton("do_stats", "Compute statistics"))
                                        ),
                                 ),
+                                column(5,conditionalPanel(condition = "output.showStatistics == true", 
+                                                          div(style = "font-size: 1.5em;", textOutput("stats_result")))
+                                       ),
                                 
                               )
                      ),
