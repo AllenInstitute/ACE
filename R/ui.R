@@ -189,7 +189,7 @@ ui <- function(request) {   # Note that I might need to remove "function(request
                    ),
                    fluidRow(
                      column(3,
-                            fileInput("database_upload", "UPLOAD or")
+                            fileInput("database_upload", "UPLOAD")
                      ),
                      column(7,
                             uiOutput("database_textbox")
@@ -200,7 +200,7 @@ ui <- function(request) {   # Note that I might need to remove "function(request
                    ),
                    fluidRow(
                      column(3,
-                            fileInput("metadata_upload", "UPLOAD or")
+                            fileInput("metadata_upload", "UPLOAD")
                      ),
                      column(7,
                             uiOutput("metadata_textbox")

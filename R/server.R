@@ -12,7 +12,7 @@ suppressPackageStartupMessages({
   library(vroom)
 })
 options(stringsAsFactors = F)
-options(shiny.maxRequestSize = 50 * 1024^2)  # For uploading files
+options(shiny.maxRequestSize = 1 * 1024^3)  # 1GB max For uploading files
 
 source("initialization.R")
 source("annocomp_functions.R")
@@ -745,7 +745,7 @@ server <- function(input, output, session) {
                                      column(6,
                                             selectizeInput(inputId = filter_inputid,
                                                            label = filter_name,
-                                                           choices = filter_opts,
+                                                           choices = sort(filter_opts),  # Order this one
                                                            selected = filter_init,
                                                            multiple = TRUE,
                                                            width = "100%")
