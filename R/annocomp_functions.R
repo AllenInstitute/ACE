@@ -130,9 +130,9 @@ build_annocomp_plot <- function(anno,
   }
   
   if(c_group=="Jaccard"){
-    # Set maxInputs at the max of 100 or 10% of the total number of points. 
+    # Set maxInputs at the max of 100 or 5% of the total number of points. 
     # The goal is to avoid plotting numeric values here before the reactive resets
-    maxInputs <- round(max(c(100,dim(filtered)[1]*0.1)))
+    maxInputs <- round(max(c(100,dim(filtered)[1]*0.05)))
 
     # These functions are located in "pairwise_functions.R" currently
     p <- build_compare_jaccard_plot(anno = filtered, 

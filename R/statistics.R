@@ -30,7 +30,7 @@ return_pairwise_statistics_text <- function(input){
   input2 = smart_unfactor(input[,3])
 
   # Calculate correlation if both values are numeric
-  if(is.numeric(input1)&is.numeric(input1)){
+  if(is.numeric(input1)&is.numeric(input2)){
     return(correlation_summary(input1,input2))
   }
   
@@ -60,21 +60,15 @@ kruskal_summary <- function(group, value) {
   top_group <- sorted_groups[1]
   second_group <- sorted_groups[2]
   
-  # Pairwise Wilcoxon p-values
-  pw <- pairwise.wilcox.test(value, group, p.adjust.method = "BH")
-  pmat <- pw$p.value
-  if (top_group %in% rownames(pmat) && second_group %in% colnames(pmat)) {
-    pw_p <- pmat[top_group, second_group]
-  } else if (second_group %in% rownames(pmat) && top_group %in% colnames(pmat)) {
-    pw_p <- pmat[second_group, top_group]
-  } else {
-    pw_p <- NA
-  }
-  
-  # Effect size for the top vs. second-highest Wilcoxon
+  # Values for top and second group
   vals1 <- value[group == top_group]
   vals2 <- value[group == second_group]
-  wtest <- wilcox.test(vals1, vals2, exact = FALSE, correct = FALSE)
+  
+  # One-sided Wilcoxon test (top_group > second_group)
+  wtest <- wilcox.test(vals1, vals2, 
+                       alternative = "greater", 
+                       exact = FALSE, correct = FALSE)
+  pw_p <- wtest$p.value
   
   # Convert W to Z-score approximation
   n1 <- length(vals1)

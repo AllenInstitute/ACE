@@ -7,7 +7,8 @@ build_compare_jaccard_plot <- function (anno, x_group, y_group, reorderY, maxInp
   print(paste("numInputs:",numInputs),stderr())
   if (numInputs>maxInputs){
     print("BLANK PLOT RETURNING",stderr())
-    return(ggplot() + theme_void() + ggtitle("     Too many unique X+Y values to plot. Filter data or increase window size."))
+    return(ggplot() + theme_void() + theme(plot.title = element_text(hjust = 0.5)) +
+             ggtitle("If you are comparing two categorical values: There are too many unique X+Y values to plot.\nIf you are expecting a numeric plot, please be patient; for large data sets plots can take up to a minute to load.\nIn either case, consider filtering data or increasing window size."))
   }
   
   x <- factor(anno[,paste0(x_group,"_label")], levels = anno[,paste0(x_group,"_label")][match(sort(unique(x)),x)])
