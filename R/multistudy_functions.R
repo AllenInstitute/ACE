@@ -14,7 +14,9 @@ labeled_barplot_summary <- function(df, cats, maxTypes = 10, minPercent = 2){
       dataTmp$Direction <- df[1:maxTypes,paste0(cat,"_direction")]
       dataTmp$Direction[dataTmp$Direction=="up"] = "Up with disease"
       dataTmp$Direction[dataTmp$Direction=="none"] = "No change"
+      dataTmp$Direction[dataTmp$Direction=="unchanged"] = "No change"
       dataTmp$Direction[dataTmp$Direction=="down"] = "Down with disease"
+      dataTmp$Direction[dataTmp$Direction=="not_assessed"] = "Not assessed"
     } else {
       dataTmp$Direction = "Not provided"
     }
@@ -23,8 +25,8 @@ labeled_barplot_summary <- function(df, cats, maxTypes = 10, minPercent = 2){
   Data <- Data[Data$PercentOfCellsInReferenceCluster>=minPercent,]
   
   Data$DataSet = factor(Data$DataSet, levels=cats)
-  Data$Direction= factor(Data$Direction, levels=c("Up with disease","No change","Down with disease","Not provided"))
-  colors = c("pink", "white", "lightblue","grey")
+  Data$Direction= factor(Data$Direction, levels=c("Up with disease","No change","Down with disease","Not provided","Not assessed"))
+  colors = c("pink", "white", "lightblue","grey","lightgrey")
   colorsUse = colors[is.element(levels(Data$Direction),Data$Direction)]
   
   
