@@ -1945,8 +1945,8 @@ server <- function(input, output, session) {
           cluster  <- as.character(df[i,cat])
           whichRow <- which(metadata==cluster, arr.ind = TRUE)
           if(dim(whichRow)[1]>0){
-            direction <- as.character(metadata[as.character(whichRow[1,1]),"direction"])
-            if(!is.element(direction,c("none", "up","down"))) direction = "none"  # REMOVE THIS HARDCODED LINE
+            direction <- tolower(as.character(metadata[as.character(whichRow[1,1]),"direction"]))
+            if(!is.element(direction,c("none", "up", "down", "unchanged", "not_assessed"))) direction = "none"  # Hardcoded for now
             df[i,paste0(cat,"_direction")] = direction
           }
         }

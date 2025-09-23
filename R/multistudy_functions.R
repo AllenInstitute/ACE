@@ -9,7 +9,6 @@ labeled_barplot_summary <- function(df, cats, maxTypes = 10, minPercent = 2){
     dataTmp <- data.frame(DataSet=cat, CellType=df[1:maxTypes,cat], Rank = letters[maxTypes:1],
                           PercentOfCellsInReferenceCluster = df[1:maxTypes,paste0(cat,"_percent")],
                           Direction = letters[maxTypes:1])
-    
     if(sum(grepl(paste0(cat,"_direction"),colnames(df)))>0){
       dataTmp$Direction <- df[1:maxTypes,paste0(cat,"_direction")]
       dataTmp$Direction[dataTmp$Direction=="up"] = "Up with disease"
@@ -28,8 +27,7 @@ labeled_barplot_summary <- function(df, cats, maxTypes = 10, minPercent = 2){
   Data$Direction= factor(Data$Direction, levels=c("Up with disease","No change","Down with disease","Not provided","Not assessed"))
   colors = c("pink", "white", "lightblue","grey","lightgrey")
   colorsUse = colors[is.element(levels(Data$Direction),Data$Direction)]
-  
-  
+
   g <- ggplot(Data, aes(x=DataSet, y=PercentOfCellsInReferenceCluster, fill = Direction, label = CellType)) +
     geom_bar(stat = "identity") +
     geom_col(color = 'black') +

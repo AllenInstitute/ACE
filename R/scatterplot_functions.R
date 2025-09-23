@@ -209,7 +209,8 @@ build_scatter_bokeh <- function(foreground_points = NULL,
         ly_points(data = background_points,
                   x = x, y = y,
                   color = color,
-                  size = pointSize) 
+                  size = pointSize,
+                  legend = FALSE) 
     }
     
     b <- b %>%
@@ -218,7 +219,8 @@ build_scatter_bokeh <- function(foreground_points = NULL,
                 y = y,
                 color = color,
                 size = pointSize,
-                fill_alpha = 1) 
+                fill_alpha = 1,
+                legend = FALSE) 
     
   } else {
     
@@ -227,7 +229,8 @@ build_scatter_bokeh <- function(foreground_points = NULL,
         ly_points(data = background_points,
                   x = x, y = y,
                   color = color,
-                  size = pointSize) 
+                  size = pointSize,
+                  legend = FALSE) 
     }
     
     foreground_points <- foreground_points %>%
@@ -249,7 +252,8 @@ build_scatter_bokeh <- function(foreground_points = NULL,
                   y = y,
                   color = color,
                   size = pointSize,
-                  fill_alpha = 1) 
+                  fill_alpha = 1,
+                  legend = FALSE) 
     }
     
     b <- b %>%
