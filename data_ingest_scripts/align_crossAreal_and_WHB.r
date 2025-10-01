@@ -5,10 +5,6 @@
 # For whole human brain I downloaded the "Neurons.h5ad" and "Nonneurons.h5ad" files from https://github.com/linnarsson-lab/adult-human-brain
 # The code below then joins together data based on barcode (to the extent possible) using overlapping cells.
 
-
-#glia <- read_h5ad("/allen/programs/celltypes/workgroups/hct/cellTaxonomy/adult-human-brain_v1/additional_files/01_2024/Nonneurons.h5ad", backed="r")
-#neuron <- read_h5ad("/allen/programs/celltypes/workgroups/hct/cellTaxonomy/adult-human-brain_v1/additional_files/01_2024/Neurons.h5ad", backed="r")
-
 # Use python version of anndata to load it backed 
 
 ## Read in the obs metadata
@@ -20,8 +16,7 @@ anndata  <- import("anndata")
 
 ## First join the non-neuronal tables, since they are smaller
 # Read in the data
-WHB_NN <- anndata$read_h5ad("/allen/programs/celltypes/workgroups/hct/cellTaxonomy/adult-human-brain_v1/additional_files/01_2024/Nonneurons.h5ad", backed="r")
-#WHB_NN <- anndata$read_h5ad("Nonneurons.h5ad", backed = "r")
+WHB_NN <- anndata$read_h5ad("Nonneurons.h5ad", backed = "r")
 WHB_NN <- py_to_r(WHB_NN$obs)
 CA_NN  <- anndata$read_h5ad("CA_Non_neurons.h5ad", backed = "r")
 CA_NN <- py_to_r(CA_NN$obs)
@@ -55,8 +50,7 @@ rownames(whb_anno_nn) <- rownames(ca_anno_nn) <- kp_bc
 ## Next, join the neuronal tables
 # Read in the data
 
-WHB_NN <- anndata$read_h5ad("/allen/programs/celltypes/workgroups/hct/cellTaxonomy/adult-human-brain_v1/additional_files/01_2024/Neurons.h5ad", backed="r")
-#WHB_NN <- anndata$read_h5ad("Neurons.h5ad", backed = "r")
+WHB_NN <- anndata$read_h5ad("Neurons.h5ad", backed = "r")
 WHB_NN <- py_to_r(WHB_NN$obs)
 
 CA_NN <- NULL
