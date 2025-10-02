@@ -11,7 +11,6 @@
 ########################################################################
 
 ## Set up the work space
-#setwd("\\\\allen\\programs\\celltypes\\workgroups\\humancelltypes\\JeremyM\\github\\annotation_comparison\\example\\BG\\")
 library(data.table)
 library(anndata)
 library(stringr)
