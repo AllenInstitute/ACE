@@ -69,6 +69,6 @@ fwrite(all_info,"HISE_cell_info.csv.gz")
 ## We end by creating the cell annotation table.  This is largely done manually (see below)  ##
 ###############################################################################################
 
-# Start with the donor metadata file for SEA-AD (human_immune_health_atlas_metadata_clinical_labs.csv) and then edit to to add additional CLUSTER and information from HISE.  Note that cell type information and cell type order are taken directly from https://apps.allenimmunology.org/aifi/resources/imm-health-atlas/
+# We start with the donor metadata file (human_immune_health_atlas_metadata_clinical_labs.csv) and then edit to to add additional CLUSTER and information from HISE.  Note that cell type information and cell type order are taken directly from https://apps.allenimmunology.org/aifi/resources/imm-health-atlas/
 
 # Cell type orders and colors come from the Cell Type Colorset files at https://apps.allenimmunology.org/aifi/resources/imm-health-atlas/downloads/models/
