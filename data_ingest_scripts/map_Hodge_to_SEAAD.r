@@ -60,9 +60,11 @@ cols  <- seaad[match(mapping$SEAAD_supertype_label,seaad[,1]),2:3]
 colnames(cols) <- c("SEAAD_supertype_color","SEAAD_supertype_id")
 mapping <- cbind(mapping,cols)
 
-## Read in the Hodge subclass values and cluster color/order
-hodge_taxonomy <- read.csv("hodge_taxonomy.csv")
-clustering     <- hodge_taxonomy[match(sampInfo$cluster,hodge_taxonomy$Hodge_cluster_label),]
+## Read in the Hodge subclass values and cluster color/order, as well as the NEW NAMES for 6 clusters
+#    (between the file release and publication, some cluster names changed)
+hodge_taxonomy   <- read.csv("hodge_taxonomy.csv")
+sampInfo$cluster <- hodge_taxonomy$Hodge_cluster_label[match(sampInfo$cluster,hodge_taxonomy$Old_Hodge_cluster_label)]
+clustering       <- hodge_taxonomy[match(sampInfo$cluster,hodge_taxonomy$Hodge_cluster_label),1:5]
 
 ## Subset and rename the columns we want from the sampleInfo file
 sampSubset <- sampInfo[,c("donor","brain_subregion","sex","genes_detected_cpm_criterion")]

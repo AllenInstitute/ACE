@@ -20,6 +20,7 @@ smart_unfactor <- function(f) {
 # Wrapper for all statistical tests
 return_pairwise_statistics_text <- function(input){
   print(head(colnames(input)),stderr())
+  save(input,file="tmp.RData")
   
   # Calculate Chi squared and cramer for confusion matrix if a confusion is entered
   if(colnames(input)[1]!="sample_id"){
@@ -93,6 +94,10 @@ kruskal_summary <- function(group, value) {
 
 # Calculate chi-squared test of independence and Cramer's V statistics for confusion matrix analysis.
 confusion_summary <- function(conf_mat) {
+  # Remove rows or columns that sum to 0
+  conf_mat = conf_mat[rowSums(conf_mat)>0,]
+  conf_mat = conf_mat[,colSums(conf_mat)>0]
+  
   # Run chi-squared test of independence
   chisq <- suppressWarnings(chisq.test(conf_mat))
   

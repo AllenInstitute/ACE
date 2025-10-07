@@ -36,6 +36,7 @@ colnames(seaad) <- c("cell_label","SEAAD_supertype","SEAAD_supertype_confidence"
 siletti_kp <- c("cell_label","subcluster_name","subcluster_bootstrapping_probability","cluster_name","cluster_bootstrapping_probability","supercluster_name","supercluster_bootstrapping_probability")
 siletti    <- as.data.frame(siletti)[,siletti_kp]
 colnames(siletti) <- c("cell_label","WHB_subcluster","WHB_subcluster_confidence","WHB_cluster","WHB_cluster_confidence","WHB_supercluster","WHB_supercluster_confidence")
+siletti$WHB_supercluster <- paste0(siletti$WHB_supercluster,"_WHB") # Append "_WHB" at end of "WHB_supercluster"
 
 # Sample to include only cells with metadata and merge to a single table 
 seaad   <- seaad[match(metadata$cell_label,seaad$cell_label),]

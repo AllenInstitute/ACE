@@ -9,8 +9,10 @@ labeled_barplot_summary <- function(df, cats, maxTypes = 10, minPercent = 2){
     dataTmp <- data.frame(DataSet=cat, CellType=df[1:maxTypes,cat], Rank = letters[maxTypes:1],
                           PercentOfCellsInReferenceCluster = df[1:maxTypes,paste0(cat,"_percent")],
                           Direction = letters[maxTypes:1])
-    if(sum(grepl(paste0(cat,"_direction"),colnames(df)))>0){
+    if(is.element(paste0(cat,"_direction"),colnames(df))){
+      #save(Data, dataTmp, maxTypes, cat, cats, df, file="tmp.RData")
       dataTmp$Direction <- df[1:maxTypes,paste0(cat,"_direction")]
+      dataTmp$Direction[is.na(dataTmp$Direction)] = "No change"
       dataTmp$Direction[dataTmp$Direction=="up"] = "Up with disease"
       dataTmp$Direction[dataTmp$Direction=="none"] = "No change"
       dataTmp$Direction[dataTmp$Direction=="unchanged"] = "No change"
