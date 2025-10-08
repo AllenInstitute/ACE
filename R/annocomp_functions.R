@@ -132,7 +132,7 @@ build_annocomp_plot <- function(anno,
   if(c_group=="Jaccard"){
     # Set maxInputs at the max of 100 or 5% of the total number of points. 
     # The goal is to avoid plotting numeric values here before the reactive resets
-    maxInputs <- round(max(c(100,dim(filtered)[1]*0.05)))
+    maxInputs <- round(max(c(250,dim(filtered)[1]*0.05)))
 
     # These functions are located in "pairwise_functions.R" currently
     p <- build_compare_jaccard_plot(anno = filtered, 
@@ -406,6 +406,60 @@ build_annocomp_plot <- function(anno,
       scale_y_continuous(y_name, breaks = y_labels$ypos, labels = y_labels$y_label) +
       theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.3))
     }
+  
+ 
+  ################ NEW CODE TO ADD COLOR LEGEND FOR CATEGORICAL VARIABLES #########
+  if ((c_group != "none")&((x_type == "num" & y_type == "cat")|(y_type == "num" & x_type == "cat"))){
+    point_label   <- plot_anno[[paste0(c_group,"_label")]]
+    if(!is.numeric(point_label)){
+      # 1. Prep the input for the legend
+      point_id      <- plot_anno[[paste0(c_group,"_id")]]
+      point_color   <- plot_anno[[paste0(c_group,"_color")]]
+      point_colors  <- point_color[match(sort(unique(point_id)),point_id)]
+      point_labels  <- point_label[match(sort(unique(point_id)),point_id)]
+      max_items     <- 25
+      n_items       <- min(max_items,length(unique(point_id)))
+      if(n_items<length(unique(point_id))){
+        point_colors <- c(point_colors[1:n_items],"black")
+        point_labels <- c(point_labels[1:n_items],paste("(And",length(unique(point_id))-n_items,"more)"))
+        n_items = n_items+1
+      }
+  
+      # 2. Start the legend
+      p_legend <- ggplot() +
+        
+        # 3. Add the legend title
+        geom_text(
+          aes(x = 0.05, y = 0.95, label = c_group), # Centered at x=0.5
+          fontface = "bold",
+          hjust = 0,
+          size = 4
+        ) +
+        
+        # 4. Add the legend items (vectorized, just like before)
+        geom_text(
+          aes(
+            x = 0.05, # Small indent from the left
+            y = 0.94 - (1:n_items) * 0.88/n_items, # Position items from the top
+            label = point_labels[1:n_items]
+          ),
+          colour = point_colors[1:n_items], # Use the actual colors
+          hjust = 0, # Left-align the text
+          size = 3.5
+        ) +
+        
+        # 5. Set the coordinate system to match our defined limits
+        coord_cartesian(xlim = c(0, 1), ylim = c(0, 1)) +
+        
+        # 6. IMPORTANT: Remove all plot themes, axes, and gridlines
+        theme_void()
+      
+      library(patchwork)
+      p <- p + p_legend + plot_layout(widths=c(0.85,0.15))
+    }
+  }
+  ############ END NEW CODE FOR ADDING COLOR LEGEND #############
+  
   }
   
   return(p)

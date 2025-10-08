@@ -19,7 +19,7 @@ source("annocomp_functions.R")
 source("river_functions.R")
 source("pairwise_functions.R")
 source("multistudy_functions.R")
-source("bookmark_functions.R")    # this shouldn't be required at all, as it is a workaround for regular bookmarking (both are currently broken)
+#source("bookmark_functions.R")    # this shouldn't be required at all, as it is a workaround for regular bookmarking (both are currently broken)
 source("scatterplot_functions.R") 
 source("auto_annotate.R")  # This can be removed when scrattch.io is updated with new version of auto_annotate
 source("statistics.R")
@@ -1845,7 +1845,7 @@ server <- function(input, output, session) {
     # First check in the anno
     for (cat in cats) if(is.element(paste0(cat,"_direction"),colnames(anno))){
       df[,paste0(cat,"_direction")] <- anno[,paste0(cat,"_direction")][match(df[,cat],anno[,paste0(cat,"_label")])]
-      df[,paste0(cat,"_direction")][is.na(df[,paste0(cat,"_direction")])] = "none"
+      df[,paste0(cat,"_direction")][is.na(df[,paste0(cat,"_direction")])] = "Not provided"
     }
     # Next check in the metadata table, if available
     metadata <- rv_anno_metadata()
@@ -1854,16 +1854,12 @@ server <- function(input, output, session) {
         cluster  <- as.character(df[i,cat])
         whichRow <- which(metadata==cluster, arr.ind = TRUE)
         if(dim(whichRow)[1]>0){
-          direction <- as.character(metadata[as.character(whichRow[1,1]),"direction"])
-          if(!is.element(direction,c("none", "up","down"))) direction = "none"  # REMOVE THIS HARDCODED LINE
+          direction <- tolower(as.character(metadata[as.character(whichRow[1,1]),"direction"]))
+          if(!is.element(direction,c("none", "up", "down", "unchanged", "not_assessed"))) 
+            direction = "Not provided"  # Hardcoded for now
           df[i,paste0(cat,"_direction")] = direction
         }
       }
-    # Finally, set all values to "none" if no data exists NOTE: THIS BREAKS THE COLOR CODE, I need to figure out why!
-    #for (cat in cats) if(!is.element(paste0(cat,"_direction"),colnames(anno))){
-    #  df[,paste0(cat,"_direction")] = rep("none",dim(df)[1])
-    #}
-    
     # set conditions and return the beautiful table
     return(df)
   })
@@ -1936,7 +1932,7 @@ server <- function(input, output, session) {
       # First check in the anno
       for (cat in cats) if(is.element(paste0(cat,"_direction"),colnames(anno))){
         df[,paste0(cat,"_direction")] <- anno[,paste0(cat,"_direction")][match(df[,cat],anno[,paste0(cat,"_label")])]
-        df[,paste0(cat,"_direction")][is.na(df[,paste0(cat,"_direction")])] = "none"
+        df[,paste0(cat,"_direction")][is.na(df[,paste0(cat,"_direction")])] = "Not provided"
       }
       # Next check in the metadata table, if available
       metadata <- rv_anno_metadata()
@@ -1946,14 +1942,11 @@ server <- function(input, output, session) {
           whichRow <- which(metadata==cluster, arr.ind = TRUE)
           if(dim(whichRow)[1]>0){
             direction <- tolower(as.character(metadata[as.character(whichRow[1,1]),"direction"]))
-            if(!is.element(direction,c("none", "up", "down", "unchanged", "not_assessed"))) direction = "none"  # Hardcoded for now
+            if(!is.element(direction,c("none", "up", "down", "unchanged", "not_assessed"))) 
+              direction = "Not provided"  # Hardcoded for now
             df[i,paste0(cat,"_direction")] = direction
           }
         }
-      # Finally, set all values to "none" if no data exists  # NOTE: THIS BREAKS THE COLOR CODE, I need to figure out why!
-      #for (cat in cats) if(!is.element(paste0(cat,"_direction"),colnames(anno))){
-      #  df[,paste0(cat,"_direction")] = rep("none",dim(df)[1])
-      #}
       maxTypes = as.numeric(input$explorer_maxtypes)
       #save(df,cats,maxTypes, file="tmp.RData")
       labeled_barplot_summary(df,cats,maxTypes = maxTypes)
