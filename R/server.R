@@ -1323,7 +1323,7 @@ server <- function(input, output, session) {
   output$river_plot_ui <- renderUI({
     req(rv_filtered())
     if(nrow(rv_filtered()) > 0) {
-      rbokehOutput("river_plot", height = 800)
+      rbokehOutput("river_plot", height = 500)
     } else {
       p("No cells meet the current filtering criteria.")
     }

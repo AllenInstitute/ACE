@@ -334,7 +334,7 @@ ui <- function(request) {   # Note that I might need to remove "function(request
                                 column(12,
                                        uiOutput("river_plot_ui"),
                                        plotOutput("river_widthfinder",width = "100%",
-                                                  height = "10px")
+                                                  height = "1px")
                                 )
                               ),
                               fluidRow(
@@ -379,9 +379,14 @@ ui <- function(request) {   # Note that I might need to remove "function(request
                                 ),
                               ),
                               fluidRow(
-                                downloadButton("download_explorer_table", 
-                                               "Download Table Data",
-                                               style = "width: 175px; margin-left: 15px;")
+                                column(8,
+                                  downloadButton("download_explorer_table", 
+                                                 "Download Table Data",
+                                                 style = "width: 175px; margin-left: 15px;")
+                                ),
+                                column(4,
+                                       p("For provided tables, directionality is defined in the relevant published manuscript.")
+                                ),
                               ),
                               fluidRow(
                                 width=12, br(), 

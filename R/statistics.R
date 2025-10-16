@@ -22,7 +22,7 @@ return_pairwise_statistics_text <- function(input){
   print(head(colnames(input)),stderr())
   save(input,file="tmp.RData")
   
-  # Calculate Chi squared and cramer for confusion matrix if a confusion is entered
+  # Calculate Chi squared and Cramer V for confusion matrix if a confusion is entered
   if(colnames(input)[1]!="sample_id"){
     return(confusion_summary(input))
   }
