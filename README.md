@@ -1,4 +1,4 @@
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.14624012.svg)](https://doi.org/10.5281/zenodo.14624012)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17382357.svg)](https://doi.org/10.5281/zenodo.17382357)
 
 # Annotation Comparison Explorer (ACE)
 
@@ -7,7 +7,7 @@ R Shiny and [web-based](https://sea-ad.shinyapps.io/ACEapp/) tool for comparison
 ### Quick start: **[try the web-based version of ACE](https://sea-ad.shinyapps.io/ACEapp/)** or **[read the ACE preprint on bioRxiv](https://doi.org/10.1101/2025.02.11.637559)**.
 <br>
 
-![main_ACE_app_page_top](https://github.com/user-attachments/assets/51375516-0203-45d7-a207-6f91a08140df)
+<img width="1273" height="924" alt="main_ACE_app_page_top" src="https://github.com/user-attachments/assets/83804ed3-c9a4-4e89-805d-d927003b0afc" />
 
 ## How to use 
 
@@ -58,10 +58,10 @@ We are actively updating this tool. **Community involvement is encouraged throug
 
 ### Confusion matrices
 
-![main_ACE_app_page_bottom](https://github.com/user-attachments/assets/4fd8eb94-5700-4c79-8729-e2bf6cfb34f3)
+<img width="1154" height="739" alt="confusion matrix" src="https://github.com/user-attachments/assets/310afba8-c50e-4890-bf3d-b2e8e3ba8424" />
 
 ### Comparing matched cell types across studies of AD
 
-![multi_study_comparison_ACE_panel](https://github.com/user-attachments/assets/31c68130-3159-4d00-88d1-dd0a253bc5a2)
+<img width="1220" height="856" alt="multi_study_comparison_ACE_panel" src="https://github.com/user-attachments/assets/8d15e984-9040-4ae6-8c21-f581f9726b9c" />
 
 *ACE is supported by the National Institute of Neurological Disorders and Stroke under Award Number U24NS133077 and by the National Institute On Aging under Award Number U19AG060909. The content is solely the responsibility of the authors and does not necessarily represent the official views of the National Institutes of Health.*
