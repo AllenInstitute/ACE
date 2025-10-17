@@ -51,7 +51,7 @@ write_h5ad(anndata, "hodge.h5ad", compression="gzip")
 
 ## Read in and rename mapping columns
 mapping <- read.csv("hodge_mapping.csv",row.names=1,skip=3)
-mapping <- mapping[,c(8,9,5,6)]
+mapping <- mapping[,c(8,9,5,2)]
 colnames(mapping) <- c("SEAAD_supertype_label","SEAAD_confidence","SEAAD_subclass","SEAAD_class")
 
 ## Add colors and ids (order) for SEAAD taxonomy
