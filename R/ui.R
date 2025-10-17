@@ -17,6 +17,22 @@ ui <- function(request) {   # Note that I might need to remove "function(request
     dashboardSidebar(title = tags$img(src='ACE_logo.png', width = '225', style= 'display: block; margin-left: auto; margin-right: auto;'), #), #disable = TRUE
     
       width = 300,
+      
+      br(),
+      
+      actionButton(
+        "open_video_btn",
+        HTML("New to ACE?<br/>Watch this overview!"),
+        icon = icon("video"),
+        style = "font-size: 125%; 
+                            padding: 5px 5px; 
+                            width: 225px; /* Give it a specific width so margin: auto can work */
+                            display: block; /* Make it a block element */
+                            margin: 0 auto; /* Center the block element horizontally */
+                            text-align: center; 
+                            white-space: normal;",  
+        onclick = paste0("window.open('https://alleninstitute.github.io/ACE/ACE_overview.mp4', '_blank');")
+      ),
                   
       h3("What is ACE?"),
       p("Annotation Comparison Explorer (ACE) is a versitile application for comparison of two or more annotations such as (i) cell type assignments (e.g., from different mapping/clustering algorithms), (ii) donor metadata (e.g., donor, sex, age), and (iii) cell metadata (e.g., anatomic location, QC metrics). Several example annotation tables are included, or you can point it at your own files."),
