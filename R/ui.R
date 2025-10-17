@@ -238,8 +238,21 @@ ui <- function(request) {   # Note that I might need to remove "function(request
                      )
                    ),
                    fluidRow(
-                     column(12,
+                     column(9,
                             uiOutput("summary_text")
+                     ),
+                     conditionalPanel(
+                       condition = "output.sf_active == true",
+                       column(3,
+                              p("Filters misbehaving?"),
+                              actionButton(
+                                "refresh_btn",
+                                "Reset App",
+                                icon = icon("redo"),
+                                onclick = "window.location.reload(true);",
+                                style = "background-color: #f8d7da; color: #721c24; border-color: #f5c6cb;"
+                              ),
+                       )
                      )
                    )
                ),
