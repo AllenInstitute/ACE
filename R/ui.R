@@ -359,6 +359,8 @@ ui <- function(request) {   # Note that I might need to remove "function(request
                                 #                    style="color: #fff; background-color: #EC008C; border-color: #BE1E2D; font-weight: bold;")
                                 #)
                               ),
+                              # Comment this next line of code when I return the "Go" button.
+                              p("NOTE: do not resize your browser window while a river plot is showing or ACE may freeze. Instead, try downloading plots with different sizes below."),
                               fluidRow(
                                 column(12,
                                        uiOutput("river_plot_ui"),
