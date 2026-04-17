@@ -19,12 +19,12 @@ source("annocomp_functions.R")
 source("river_functions.R")
 source("pairwise_functions.R")
 source("multistudy_functions.R")
-#source("bookmark_functions.R")    # this shouldn't be required at all, as it is a workaround for regular bookmarking (both are currently broken)
+source("bookmark_functions.R")    # Shareable URL state management
 source("scatterplot_functions.R") 
 source("auto_annotate.R")  # This can be removed when scrattch.io is updated with new version of auto_annotate
 source("statistics.R")
 
-enableBookmarking("url")  # It was "server", but it doesn't seem to work either way
+# Bookmarking replaced by custom URL state sync in bookmark_functions.R
 
 guess_type <- function(x) {
   if(try(sum(is.na(as.numeric(x))) > 0,silent = T)) {
@@ -47,129 +47,56 @@ default_vals <- list(db = "Enter a file path or URL here, or choose from dropdow
 
 server <- function(input, output, session) {
 
-  ##########################################
-  ## Bookmarking and State Initialization ##
-  ##########################################
+  #################################################
+  ## URL State Initialization & Synchronization  ##
+  #################################################
   
-  write("Reading bookmarks and setting state.", stderr())
+  write("Initializing state from URL parameters.", stderr())
   
-  # When the bookmark button is clicked, store the input values as a string
-  onBookmark(function(state) {
-    
-    # build_storage_string() is in bookmark_functions.R
-    state$values$vals <- build_storage_string(input, keep_empty = FALSE)
-    
-  })
+  # ---- Initialize state from URL query parameters ----
+  # parse_url_state() is in bookmark_functions.R
+  # It handles multi-value params (comma-separated) for inputs like sf, river_groups
   
-
-  # When the page is restored from a bookmark, read the stored values as a reactive list
-  restored_vals <- reactiveValues(vals = list())
-  
-  onRestore(function(state) {
-    
-    store <- state$values$vals
-    
-    if(!is.null(store)) {
-      
-      # parse_storage_string() is in bookmark_functions.R
-      restored_vals$vals <- parse_storage_string(store)
-      
-    }
-    
-  })
-  
-
   init <- reactiveValues(vals = list())
   
-  # Build initial values list
-  # These are used to set the state of the input values for UI elements
-  
-  # First from default_vals,
-  # then dropdown_vals,
-  # then from URL parsing
-
   observe({
-    
-    # default values
-    # defined in the default_vals list before the server() call, above.
+    # Start with default values
     vals <- default_vals
     
-    # restored values
-    # defined by the stored input value string, parsed in onRestore(), above.
-    # These supercede the defaults
-    restored <- restored_vals$vals
+    # Override with URL query parameters (from shared links)
+    # parse_url_state() splits comma-separated values for multi-select inputs
+    url_vals <- parse_url_state(session$clientData$url_search)
     
-    #write(paste0("RESTORED LENGTH: ",length(restored)),stderr())
-    
-    # Substitute default values for initialized values
-    if(length(restored) > 0) {
-      for(val in names(restored)) {
-        vals[[val]] <- restored[[val]]
-        #write(paste(val, restored[[val]], collapse=": "),stderr())
-        
-      }
-      
-    }
-    
-    # URL values
-    # defined in the URL
-    # These supercede both defaults and restored values
-    if(length(session$clientData$url_search) > 0) {
-      
-      #write("RESTORED URL OBSERVED",stderr())
-      #write(paste0("URL VALUE: ",session$clientData$url_search),stderr())
-      
-      query <- as.list(parseQueryString(session$clientData$url_search))
-      
-      for(val in names(query)) {
-        vals[[val]] <- query[[val]]
+    if (length(url_vals) > 0) {
+      write(paste0("Restoring ", length(url_vals), " values from URL."), stderr())
+      for (val in names(url_vals)) {
+        vals[[val]] <- url_vals[[val]]
       }
     }
     
     init$vals <- vals
-    
   })
   
-  
-  # Direct link based on input parsing
-  # This can be used to provide a direct URL to users that can be bookmarked.
-  output$url <- renderUI({
-    req(input)
-    url <- build_url(session, input)
-    a("Direct Link", href = url)
+  # ---- Restore the active visualization tab from URL ----
+  # Tab selection requires updateTabsetPanel after the UI renders.
+  # Use a one-shot flag so this only fires once on startup.
+  tab_restored <- reactiveVal(FALSE)
+  observe({
+    req(init$vals)
+    if (!tab_restored()) {
+      tab <- init$vals[["visualizations"]]
+      if (!is.null(tab) && nzchar(tab)) {
+        updateTabsetPanel(session, "visualizations", selected = tab)
+      }
+      tab_restored(TRUE)
+    }
   })
   
-  
-  output$show_url <- renderText("")
-  observeEvent(input$bookmark_url, {
-    req(input)
-    url <- build_url(session, input)
-    output$show_url <- renderText(url)
-  })
-  
-  ### THIS DOESN'T WORK
-  # ### Manual state restoration
-  # output$state_textbox <- renderUI({
-  #   id <- "restore_state"
-  #   label <- "Set state"
-  #   
-  #   textInput(inputId = id, 
-  #             label = strong(label), 
-  #             value = "", 
-  #             width = "100%")
-  #   
-  # })
-  # rv_path <- observeEvent(input$restore_state,{
-  #   write("Checking and setting $restore_state.", stderr())
-  #   write(input$restore_state,stderr())
-  #   vals <- parse_storage_string(input$restore_state)
-  #   
-  #   for (nm in names(vals)){
-  #     write(nm,stderr())
-  #     write(vals[[nm]],stderr())
-  #     init[[nm]] <- vals[[nm]]
-  #   }
-  # })
+  # ---- Set up live URL synchronization ----
+  # This watches shareable inputs and updates the browser URL when they change.
+  # Also handles the "Copy Link" button.
+  # setup_url_sync() is in bookmark_functions.R
+  setup_url_sync(input, output, session)
 
   
   updateSelectInput(session, inputId = "select_category", label = "Choose a category:", choices = names(table_name)) # "Upload or enter your own location"
@@ -200,7 +127,6 @@ server <- function(input, output, session) {
   # input$db - character object
   # 
   
-  # Doesn't work with bookmarking
    output$select_category <- renderUI({
      req(init$vals)
      
@@ -239,12 +165,6 @@ server <- function(input, output, session) {
     initial <- input$Not_on_list
     upload2 <- input$database_upload
     
-    # For Bookmarking... does not work
-    # If a stored db exists, pull the value from init$vals
-    #if(length(init$vals[[id]]) > 0){
-    #  initial <- init$vals[[id]]
-      #init$vals <- init$vals[colnames(init$vals)!=id]
-    #} else { # Either pull from select_textbox or leave blank
     if (length(input$select_textbox)>0){
       if (!is.element(input$select_textbox,c("Select comparison table...",'Upload or enter your own location'))) {
         initial = table_info[table_info$table_name==input$select_textbox,"table_loc"]
@@ -272,14 +192,6 @@ server <- function(input, output, session) {
     initial <- input$Not_on_list
     upload  <- input$metadata_upload
     
-    # For Bookmarking... does not work
-    # If a stored db exists, pull the value from init$vals
-    #if(length(init$vals[[id]]) > 0){
-    #  write("DB EXISTS",stderr())
-    #  initial <- init$vals[[id]]
-    #  write(initial,stderr())
-    #  init$vals <- init$vals[colnames(init$vals)!=id]
-    #} else { # Either pull from select_textbox or leave blank
     if (length(input$select_textbox)>0){
       if (!is.element(input$select_textbox,c("Select comparison table...",'Upload or enter your own location'))) {
         initial = table_info[table_info$table_name==input$select_textbox,"metadata_loc"]

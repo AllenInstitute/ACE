@@ -8,6 +8,89 @@ suppressPackageStartupMessages({
   #library(googleAnalyticsR)  # Some errors in dependencies if I include this, but also not needed yet
 })
 
+# Custom JavaScript for clipboard copy and share URL toast notification
+share_url_head <- tags$head(
+  tags$style(HTML("
+    /* Toast notification for 'Link copied' feedback */
+    #share-toast {
+      visibility: hidden;
+      min-width: 250px;
+      background-color: #28a745;
+      color: #fff;
+      text-align: center;
+      border-radius: 6px;
+      padding: 12px 24px;
+      position: fixed;
+      z-index: 9999;
+      bottom: 30px;
+      right: 30px;
+      font-size: 15px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+    }
+    #share-toast.show {
+      visibility: visible;
+      animation: fadein 0.3s, fadeout 0.3s 2.2s;
+    }
+    @keyframes fadein { from {bottom: 0; opacity: 0;} to {bottom: 30px; opacity: 1;} }
+    @keyframes fadeout { from {bottom: 30px; opacity: 1;} to {bottom: 0; opacity: 0;} }
+    
+    /* Share button styling */
+    #copy_share_link {
+      font-size: 110%;
+      padding: 6px 12px;
+      width: 225px;
+      display: block;
+      margin: 0 auto;
+      text-align: center;
+      white-space: normal;
+    }
+  ")),
+  tags$script(HTML("
+    // Handler for copying the share URL to clipboard
+    Shiny.addCustomMessageHandler('copy_to_clipboard', function(url) {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(url).then(function() {
+          showShareToast('Link copied to clipboard!');
+        }, function() {
+          fallbackCopy(url);
+        });
+      } else {
+        fallbackCopy(url);
+      }
+    });
+    
+    // Fallback copy method for older browsers / non-HTTPS contexts
+    function fallbackCopy(text) {
+      var ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.left = '-9999px';
+      document.body.appendChild(ta);
+      ta.select();
+      try {
+        document.execCommand('copy');
+        showShareToast('Link copied to clipboard!');
+      } catch (err) {
+        showShareToast('Could not copy. URL is in the address bar.');
+      }
+      document.body.removeChild(ta);
+    }
+    
+    // Show a toast notification at the bottom-right
+    function showShareToast(msg) {
+      var toast = document.getElementById('share-toast');
+      if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'share-toast';
+        document.body.appendChild(toast);
+      }
+      toast.textContent = msg;
+      toast.className = 'show';
+      setTimeout(function(){ toast.className = toast.className.replace('show', ''); }, 2500);
+    }
+  "))
+)
+
 # Define UI for application that draws a histogram
 ui <- function(request) {   # Note that I might need to remove "function(request)" for Google Analytics to work.  Revisit later if this breaks anything.
   dashboardPage(
@@ -38,15 +121,20 @@ ui <- function(request) {   # Note that I might need to remove "function(request
       p("Annotation Comparison Explorer (ACE) is a versitile application for comparison of two or more annotations such as (i) cell type assignments (e.g., from different mapping/clustering algorithms), (ii) donor metadata (e.g., donor, sex, age), and (iii) cell metadata (e.g., anatomic location, QC metrics). Several example annotation tables are included, or you can point it at your own files."),
       p(tags$i("Click the three lines next to the title above to minimize this sidebar.")),
       p(tags$i("Note: ACE must be reloaded if left idle for 10 minutes.")),
-      #br(),
-      # h4("Bookmarking"),
-      # p("To get the current state of the app, push 'Get state' and copy text. To set the state, paste text into the 'Set state' box."),
-      # actionButton(inputId = "bookmark_url", label="Bookmark (BROKEN)",
-      #              icon = icon("link", lib = "glyphicon")
-      # ),
-      # verbatimTextOutput("show_url"),
-      # uiOutput("state_textbox"),
-      # h4("More help"),
+      br(),
+      actionButton(
+        "copy_share_link",
+        HTML("Share this view<br/>(copy link)"),
+        icon = icon("share-alt"),
+        style = "font-size: 110%;
+                 padding: 6px 12px;
+                 width: 225px;
+                 display: block;
+                 margin: 0 auto;
+                 text-align: center;
+                 white-space: normal;"
+      ),
+      br(),
       
       h3("Get started"),
       
@@ -159,6 +247,7 @@ ui <- function(request) {   # Note that I might need to remove "function(request
     ),
     
     dashboardBody(
+      share_url_head,
       shinyjs::useShinyjs(),
       tags$head(includeHTML("google-analytics.html"),  # Tag for general Google Analytics!
                 tags$script('var dimension = [0, 0];
@@ -185,23 +274,13 @@ ui <- function(request) {   # Note that I might need to remove "function(request
                      column(11, offset=0.5,
                      p("Upload your own table(s) using the buttons -OR- select a category and a comparison table from the boxes below. After files are selected, please WAIT for the annotation table to load, which could take up to a minute after which the controls will become responsive. Once a data set is chosen, this pane can be minimized with the '-' in the upper right if desired.")
                      ),
-                     column(4,  # I can't get bookmarking to work with categories, but I can get it CLOSE with the nested list approach. If I eventually do get it working, then revisit the nested list approach, but for now, I like the categories better.
+                     column(4,
                             uiOutput("select_category")
                      ),
                      column(4,
                             uiOutput("select_textbox")
                      ),
-                     #column(1,
-                     #        bookmarkButton(label="Bookmark (BROKEN)")  # This button does nothing when clicked but SHOULD pop open the URL to copy
-                     # )
-                     # NEW - start
-                     #column(2,#4  # Maybe remove this since it's broken
-                    #        actionButton(inputId = "bookmark_url", label="Bookmark (BROKEN)",
-                    #                     icon = icon("link", lib = "glyphicon")
-                    #        ),
-                    #        verbatimTextOutput("show_url")
-                    # ),
-                     # NEW - END
+
                    ),
                    fluidRow(
                      column(3,
