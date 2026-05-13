@@ -19,7 +19,9 @@ table_names <- c(
   "AIFI (peripheral) Immune Health Atlas",
   "Human neocortex (L2-L3 glutamatergic neurons)",
   "Human neocortex (L1 GABAergic neurons)",
-  "Human neocortex (L2-L6 GABAergic neurons)"
+  "Human neocortex (L2-L6 GABAergic neurons)",
+  "Developing mouse visual cortex",
+  "Consensus whole mouse brain"
 )
 
 #... what category each table is included in on the main page?
@@ -41,7 +43,9 @@ categories <- factor(c(
   "Human/NHP cell type classification",
   "Patch-seq (shape + function + genes)",
   "Patch-seq (shape + function + genes)",
-  "Patch-seq (shape + function + genes)"
+  "Patch-seq (shape + function + genes)",
+  "Mouse cell type classification",
+  "Mouse cell type classification"
   ),
 # This is the order they will show up on in the list. **MAKE SURE THERE ARE NO TYPOS!**
 levels = c("Disease studies", "Mouse cell type classification", "Human/NHP cell type classification","Patch-seq (shape + function + genes)")) 
@@ -67,7 +71,9 @@ table_locations <- c(
   "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/HISE_cell_info.csv.gz",
   "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/Berg_byCell.csv",
   "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/Chartrand_byCell.csv",
-  "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/LeeDalley_byCell.csv"
+  "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/LeeDalley_byCell.csv",
+  "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/mouse_development_metadata.csv.gz",
+  "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/consensus_to_WMB_cell_info.csv.gz"
 )
 
 #... where is the annotation information table (e.g., information about each specific cell type.)?  
@@ -90,7 +96,9 @@ metadata_locations <- c(
   "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/HISE_cell_types_for_app.csv",
   "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/mtg_whb_annotations.csv.gz",
   "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/mtg_whb_annotations.csv.gz",
-  "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/mtg_whb_annotations.csv.gz"
+  "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/mtg_whb_annotations.csv.gz",
+  "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/mouse_development_annotation_information.csv",
+  "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/WMB_cluster_annotations.csv.csv"
 )
 
 #... which panels to omit (e.g., because relevant data for that panel is not included)?
@@ -112,7 +120,9 @@ omit_panels <- list(
   "none",
   "individual",
   "individual",
-  "individual"
+  "individual",
+  "none",
+  "none"
 )
 # Options used are: "confusion", "river", "individual", or "scatterplot". "none" is used by default but is just a placeholder for showing everything. Multiple options can be selected using a vector [e.g., c("one","two")]
 
@@ -164,7 +174,11 @@ descriptions   <- c(
   
   "This table includes data from a study of GABAergic neurons in layer 1 of human neocortex (Chartrand et al 2023; DOI:10.1126/science.adf0805). Annotations for cell type assigments, QC metrics, cell metadata, morphological features, and electrophysiological properties for each patch-seq cell are all included for interactive visualization.",
   
-  "This table includes data from a study of GABAergic neurons in layers 2-6 of human neocortex (Lee, Dalley et al, 2023; DOI:10.1126/science.adf6484). Annotations for cell type assigments, QC metrics, cell metadata, morphological features, and electrophysiological properties for each patch-seq cell are all included for interactive visualization.  While this study technically covers all remaining cortical layers, the deeper layers are relatively undersampled."
+  "This table includes data from a study of GABAergic neurons in layers 2-6 of human neocortex (Lee, Dalley et al, 2023; DOI:10.1126/science.adf6484). Annotations for cell type assigments, QC metrics, cell metadata, morphological features, and electrophysiological properties for each patch-seq cell are all included for interactive visualization.  While this study technically covers all remaining cortical layers, the deeper layers are relatively undersampled.",
+  
+  "Explore mouse cell type assignments from the recent study of the developing mouse visual cortex (Gao, et al 2025, DOI:10.1038/s41586-025-09644-1) in the context of the reported cell type hierarchy, donor metrics (age, sex), cell metadata, and changes with age.  Data from this study were subsampled to retain a random 25% of the cells + 10 cells per subcluster. Cell-type assignments for 'subclass' are broadly consistent with those from the 'consensus whole mouse brain' while providing finer cell-type and temporal resolutions with cluster and subcluster annotations.",
+  
+  "Convert mouse cell type assignments from the whole mouse brain taxonomy ('WMB_'; Yao et al 2023; AIT21, DOI:10.1038/s41586-023-06812-z) to a more recent 'consensus' taxonomy generated by combining these data with single nucleus RNA-seq data set from the Broad Institute ('CONS_'; Langlieb et al 2023; DOI:10.1038/s41586-023-06818-7). Data from this study were subsampled to retain a random 8% of the cells + 3 cells per CONS_cluster/WMB_cluster combo. Note that this table only includes cells from the original whole mouse brain taxonomy (Yao et al 2023)."
   
 )
 
