@@ -98,7 +98,7 @@ metadata_locations <- c(
   "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/mtg_whb_annotations.csv.gz",
   "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/mtg_whb_annotations.csv.gz",
   "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/mouse_development_annotation_information.csv",
-  "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/WMB_cluster_annotations.csv.csv"
+  "https://raw.githubusercontent.com/AllenInstitute/ACE/main/data/WMB_cluster_annotations.csv.gz"
 )
 
 #... which panels to omit (e.g., because relevant data for that panel is not included)?
