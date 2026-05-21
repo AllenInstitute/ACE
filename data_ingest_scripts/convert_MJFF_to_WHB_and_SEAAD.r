@@ -10,6 +10,9 @@
 # We also need the results of the mapping to the above two data sets from here: https://alleninstitute.github.io/abc_atlas_access/descriptions/ASAP-PMDBS-MapMyCells.html (files are called "mmc_results_seaad.csv" and "mmc_results_siletti_whb.csv" and are in this AWS bucket: https://allen-brain-cell-atlas.s3.us-west-2.amazonaws.com/index.html#metadata/ASAP-PMDBS-taxonomy/20250331/).  
 # Essentially all this script does is merge files together
 
+# UPDATE May 2026: we now align the matched subset of the data to the Consensus Basal Ganglia taxonomy (CCN20250428)
+# For this we need to download the raw data here: https://allen-brain-cell-atlas.s3-us-west-2.amazonaws.com/expression_matrices/ASAP-PMDBS-10X/20250331/ASAP-PMDBS-10X-raw.h5ad
+# We then subset and map using the MapMyCells GUI (see below)
 
 ##############################################################
 ## Read in all the data sets
@@ -48,13 +51,43 @@ fwrite(output,"ASAP_CRN_cell_info.csv.gz")
 
 set.seed(42)
 keepCells <- sample(1:dim(output)[1],279674)
-output_sub <- output[keepCells,colnames(output)!="cell_label"]
-fwrite(output_sub,"ASAP_CRN_cell_info_subsample.csv.gz")
+output_sub <- output[keepCells,c("cell_label",setdiff(colnames(output),"cell_label"))]
+
+
+########################################################################
+## Read in the ASAP data set, subset and write out for mapping
+
+library(anndata)
+asap = read_h5ad("ASAP-PMDBS-10X-raw.h5ad")
+rn   = rownames(asap)
+reorder_keep = match(output$cell_label[keepCells],rn)
+
+asap_subset = asap[reorder_keep,]
+write_h5ad(asap_subset, "asap_subset.h5ad", compression="gzip")			 
+
+
+########################################################################
+## Break to run these data in the MapMyCells GUI. Results are         ##
+##  downloaded and the csv file is renamed as "asap_bg_mapping.csv"     ##
+########################################################################  
+
+
+########################################################################
+## Read back in the mapping, and join with existing results
+
+## Read in and rename mapping columns
+mapping <- read.csv("asap_bg_mapping.csv",row.names=1,skip=4)
+mapping <- mapping[,c(11,12,8,9,5,6,2,3)]
+colnames(mapping) <- c("BG_group","BG_group_confidence","BG_subclass","BG_subclass_confidence",
+                       "BG_class","BG_class_confidence","BG_neighborhood","BG_neighborhood_confidence")
+metadata_out <- cbind(output_sub, mapping)
+metadata_out$BG_subclass <- paste0(metadata_out$BG_subclass,".")
+fwrite(metadata_out,"ASAP_CRN_cell_info_subsample.csv.gz")
 
 
 ###############################################################################################
 ## We end by creating the cell annotation table.  This is largely done manually (see below)  ##
 ###############################################################################################
 
-# This is the same file used for the AD studies, and it's creation is described in the relevant data_igest_script.
-
+# This is the same file used for the AD studies ("AD_study_cell_types_for_app.csv"), and it's creation is described in the relevant data_ingest_script.
+# NOTE: we have appended all information from the "BG_cross_species_annotation_information.csv" file to the end of this file. This has no effect for any of the other cell type taxonomies, but allows this one to access cell type information from both.
