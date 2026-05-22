@@ -16,6 +16,12 @@ jobs:
         with:
           r-version: '4.2.2'
 
+
+      - name: Install system libraries for curl (and friends)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y pkg-config libcurl4-openssl-dev libssl-dev
+
       - name: Install packages
         run: |
           R -e 'install.packages("renv"); renv::restore()'
