@@ -26,7 +26,11 @@ jobs:
             token = Sys.getenv("SHINYAPPS_TOKEN"),
             secret = Sys.getenv("SHINYAPPS_SECRET")
           )
-          rsconnect::deployApp(appDir = "R", appName="ACEapp")
+          rsconnect::deployApp(
+             appDir = "R", 
+             appName="ACEapp",
+             forceUpdate = TRUE
+          )
           '
         env:
           SHINYAPPS_NAME: ${{ secrets.SHINYAPPS_NAME }}
