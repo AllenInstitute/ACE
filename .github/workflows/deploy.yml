@@ -31,6 +31,9 @@ jobs:
           R -e '
           options(rsconnect.packrat = FALSE)
           options(repos = c(CRAN="https://cloud.r-project.org"))
+          
+          install.packages("remotes")
+          remotes::install_version("pryr", version = "0.1.6")
 
           rsconnect::setAccountInfo(
             name = Sys.getenv("SHINYAPPS_NAME"),
