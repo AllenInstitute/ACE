@@ -37,8 +37,6 @@ jobs:
         run: |
           R -e '
           options(repos = c(CRAN="https://cloud.r-project.org"))
-          install.packages("remotes")
-          remotes::install_github("jeremymiller/pryr")
           install.packages("renv")
           renv::restore()
           '
