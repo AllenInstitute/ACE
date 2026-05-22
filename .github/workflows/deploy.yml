@@ -29,6 +29,9 @@ jobs:
       - name: Deploy to shinyapps.io
         run: |
           R -e '
+          options(rsconnect.packrat = FALSE)
+          options(repos = c(CRAN="https://cloud.r-project.org"))
+
           rsconnect::setAccountInfo(
             name = Sys.getenv("SHINYAPPS_NAME"),
             token = Sys.getenv("SHINYAPPS_TOKEN"),
