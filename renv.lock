@@ -304,13 +304,13 @@
     },
     "codetools": {
       "Package": "codetools",
-      "Version": "0.2-19",
+      "Version": "0.2-18",
       "Source": "Repository",
-      "Repository": "CRAN",
+      "Repository": "RSPM",
       "Requirements": [
         "R"
       ],
-      "Hash": "c089a619a7fae175d149d89164f8c7d8"
+      "Hash": "019388fc48e48b3da0d3a76ff94608a8"
     },
     "colorspace": {
       "Package": "colorspace",
@@ -866,9 +866,9 @@
     },
     "lobstr": {
       "Package": "lobstr",
-      "Version": "1.1.2",
+      "Version": "1.2.1",
       "Source": "Repository",
-      "Repository": "CRAN",
+      "Repository": "RSPM",
       "Requirements": [
         "R",
         "cpp11",
@@ -877,7 +877,7 @@
         "prettyunits",
         "rlang"
       ],
-      "Hash": "f2a94f8fc9db382a642e965339635ad6"
+      "Hash": "9fec72097a9811b221476c2b463a7961"
     },
     "magrittr": {
       "Package": "magrittr",
@@ -1054,8 +1054,14 @@
     "pryr": {
       "Package": "pryr",
       "Version": "0.1.6",
-      "Source": "Repository",
+      "Source": "GitHub",
       "Repository": "CRAN",
+      "RemoteType": "github",
+      "RemoteHost": "api.github.com",
+      "RemoteRepo": "pryr",
+      "RemoteUsername": "jeremymiller",
+      "RemoteRef": "HEAD",
+      "RemoteSha": "b51bca8bfc0b89db912857778721b4b8add2c67f",
       "Requirements": [
         "R",
         "Rcpp",
@@ -1064,7 +1070,7 @@
         "methods",
         "stringr"
       ],
-      "Hash": "cfcbe960eca81ceca61df5fa622693de"
+      "Hash": "060b3eb7637e0e35d58400b8c1b940ed"
     },
     "purrr": {
       "Package": "purrr",
