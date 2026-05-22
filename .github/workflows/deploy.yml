@@ -1,3 +1,4 @@
+
 name: Deploy Shiny App
 
 on:
@@ -16,30 +17,44 @@ jobs:
         with:
           r-version: '4.2.2'
 
+      - name: Cache R packages
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/R
+            ~/.local/share/renv
+            ~/R
+          key: ${{ runner.os }}-r-${{ hashFiles('**/renv.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-r-
 
-      - name: Install system libraries for curl (and friends)
+      - name: Install system libraries
         run: |
           sudo apt-get update
           sudo apt-get install -y pkg-config libcurl4-openssl-dev libssl-dev
 
       - name: Install packages
         run: |
-          R -e 'install.packages("renv"); renv::restore()'
+          R -e '
+          options(repos = c(CRAN="https://cloud.r-project.org"))
+          install.packages("remotes")
+          remotes::install_github("jeremymiller/pryr")
+          install.packages("renv")
+          renv::restore()
+          '
 
       - name: Deploy to shinyapps.io
         run: |
           R -e '
           options(rsconnect.packrat = FALSE)
           options(repos = c(CRAN="https://cloud.r-project.org"))
-          
-          install.packages("remotes")
-          remotes::install_version("pryr", version = "0.1.6")
 
           rsconnect::setAccountInfo(
             name = Sys.getenv("SHINYAPPS_NAME"),
             token = Sys.getenv("SHINYAPPS_TOKEN"),
             secret = Sys.getenv("SHINYAPPS_SECRET")
           )
+
           rsconnect::deployApp(
              appDir = "R", 
              appName="ACEapp",
