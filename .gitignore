@@ -8,3 +8,5 @@ R/tmp*
 tmp*
 R/data
 videos*
+rsconne*
+.r*ignore
