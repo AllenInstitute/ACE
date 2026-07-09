@@ -32,7 +32,11 @@ rig add 4.2.2
 rig add rtools42
 rig rstudio renv.lock
 ```
-This should set up and then launch RStudio with the correct package configurations. (The first two lines of code only need to be run once).
+This should set up and then launch RStudio with the correct package configurations. (The first two lines of code only need to be run once). Note that if you go the `rig` route, you'll need to run this command the first time you launch R Studio:
+```
+install.packages("renv")
+renv::restore()
+```
 
 #### Run the app
 1. In RStudio, open the file `ui.R` and click the "Run App" button in the upper right corner of the screen
