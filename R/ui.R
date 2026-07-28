@@ -30,9 +30,9 @@ ui <- function(request) {   # Note that I might need to remove "function(request
       tags$li(
         class = "dropdown ace-nav-link",
         tags$a(
-          href = "https://alleninstitute.org",
+          href = "https://brain-map.org/consortia/sea-ad",
           target = "_blank",
-          icon("building"), " Allen Institute"
+          icon("brain", lib = "font-awesome"), " SEA-AD.org"
         )
       ),
       
@@ -181,7 +181,7 @@ ui <- function(request) {   # Note that I might need to remove "function(request
              ========================================================== */
           .skin-blue .main-header .logo,
           .skin-blue .main-header .navbar {
-            background-color: #000000 !important;
+            background-color: #252525 !important;
           }
 
           .skin-blue .main-header .logo:hover,
@@ -293,7 +293,7 @@ ui <- function(request) {   # Note that I might need to remove "function(request
              SIDEBAR
              ========================================================== */
           .main-sidebar {
-            background-color: #000000 !important;
+            background-color: #0E3D5A !important;
           }
 
           /* ==========================================================
