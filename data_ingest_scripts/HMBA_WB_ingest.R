@@ -32,6 +32,7 @@ subsampleCells <- function(cluster.names, subSamp = 25, seed = 5) {
 ## Load libraries
 library(data.table)
 
+
 ##############################################################
 ## Read in and subsample the metadata files 
 
@@ -82,7 +83,8 @@ colnames(human_sub) <- colnames(marmoset_sub) <- colnames(macaque_sub) <- colnam
 ## Read in the cell type file, identify and correct non-uniqueness 
 
 # Read in file
-celltype  = fread("HMBA_WB/WB_crossSpecies_cell_types_for_ACE.csv")
+celltype = fread("HMBA_WB/WB_crossSpecies_cell_types_for_ACE.csv")
+celltype = as.data.frame(celltype)
 
 # See what isn't unique
 nonUnique = names(table(celltype$cell_type))[table(celltype$cell_type)>1]
@@ -96,12 +98,14 @@ nonUnique_levels
 
 source = setNames(c("_BG", "_sub", "_mWB", "_hWB", "_csHB"),
                   c("HMBA_BasalGanglia", "Marmoset_Subcortex", "Mouse_WB", "Siletti_WB", "cross_species_WB"))
+nonUnique_source <- unique(paste0(as.character(source[celltype$source]),substr(celltype$level,1,1))[is.element(celltype$cell_type,nonUnique)])
+names(nonUnique_source) = nonUnique_levels
 
-suffix = setNames(c("", "", "_csHB", "_csHB", "_csHB", "", "", "", "", "", "", "_sub", "_sub", "_BG", "_BG", "_BG", "_BG", "_hWB", "", "", "", "", "", "", "", "", ""), colnames(human))
+suffix = setNames(c("", "", "_csHBn", "_csHBc", "_csHBs", "", "", "", "", "", "", "_subc", "_subg", "_BGn", "_BGc", "_BGs", "_BGg", "_hWBs", "", "", "", "", "", "", "", "", ""), colnames(human))
 
 # Replace the relevant items in celltype table
 lev = is.element(paste(celltype$source,celltype$level),nonUnique_levels)
-celltype$cell_type[lev] <- paste0(celltype$cell_type[lev],source[celltype$source[lev]])
+celltype$cell_type[lev] <- paste0(celltype$cell_type[lev],nonUnique_source[paste(celltype$source,celltype$level)[lev]])
 
 # Now replace all the items in the relevant columns for the human, marmoset, and macaque files
 
@@ -111,6 +115,16 @@ for (cn in colnames(human)) if(suffix[cn]!=""){
   macaque_sub[,cn]  <- paste0(macaque_sub[,cn],suffix[cn])
 }
 
+# Now remove more duplicate columns
+
+kp = (celltype$source=="cross_species_WB")&(is.element(celltype$level,c("class","subclass","neighborhood")))
+celltype_main = celltype[!kp,]
+
+celltype_WB <- celltype[kp,]
+celltype_WB <- celltype_WB[order(celltype_WB$level,celltype_WB$cell_type),]
+celltype_WB <- celltype_WB[!duplicated(celltype_WB$cell_type),]
+celltype_WB$species <- "multi"
+celltype <- rbind(celltype_main,celltype_WB)
 
 ##############################################################
 ## Remove unnecessary columns and output gzipped files
@@ -125,6 +139,12 @@ macaque_sub  <- macaque_sub[,cn_keep]
 human_sub    <- human_sub[,cn_keep!="clustermap_human WB cl:majority vote"]
 marmoset_sub <- marmoset_sub[,cn_keep!="clustermap_marmoset WB cl:majority vote"]
 macaque_sub  <- macaque_sub[,cn_keep!="clustermap_macaque WB cl:majority vote"]
+
+# Reorder columns
+cn12         <- c("subclass","roi")
+human_sub    <- human_sub[,c(cn12,setdiff(colnames(human_sub),cn12))]
+marmoset_sub <- marmoset_sub[,c(cn12,setdiff(colnames(marmoset_sub),cn12))]
+macaque_sub  <- macaque_sub[,c(cn12,setdiff(colnames(macaque_sub),cn12))]
 
 # Write out all four files to the data directory
 fwrite(celltype,"HMBA_WB_celltypes.csv.gz")

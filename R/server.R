@@ -1885,7 +1885,7 @@ server <- function(input, output, session) {
       df <- df_for_download()
       
       # Write the reactive data frame to a CSV
-      write.csv(df_for_download(), file, row.names = FALSE)
+      write.csv(df, file, row.names = FALSE)
     }
   )
   
