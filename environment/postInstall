@@ -1,0 +1,16 @@
+#!/bin/bash
+set -eu
+
+export RENV_CONFIG_REPOS_OVERRIDE="https://cloud.r-project.org"
+export RENV_PATHS_LIBRARY="/opt/renv/library"
+export RENV_PATHS_CACHE="/opt/renv/cache"
+
+mkdir -p /opt/ace-renv
+mkdir -p /opt/renv/library
+mkdir -p /opt/renv/cache
+
+curl -fsSL \
+  "https://raw.githubusercontent.com/AllenInstitute/ACE/main/renv.lock" \
+  -o /opt/ace-renv/renv.lock
+
+Rscript -e "options(repos = c(CRAN = 'https://cloud.r-project.org')); install.packages('renv'); renv::restore(project = '/opt/ace-renv', library = '/opt/renv/library', lockfile = '/opt/ace-renv/renv.lock', prompt = FALSE)"

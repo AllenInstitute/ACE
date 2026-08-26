@@ -1,0 +1,28 @@
+{
+	"version": 1,
+	"base_image": "codeocean/py-r:python3.9-R4.2.2-IRkernel-ubuntu20.04",
+	"post_install": true,
+	"options": {
+		"registry_host_arg": true,
+		"git_ask_pass": true,
+		"mount_secrets": true
+	},
+	"env_variables": [
+		{
+			"name": "RENV_PATHS_LIBRARY",
+			"value": "/opt/renv/library"
+		},
+		{
+			"name": "RENV_PATHS_CACHE",
+			"value": "/opt/renv/cache"
+		},
+		{
+			"name": "RENV_CONFIG_REPOS_OVERRIDE",
+			"value": "https://cloud.r-project.org"
+		},
+		{
+			"name": "R_LIBS_USER",
+			"value": "/opt/renv/library"
+		}
+	]
+}
