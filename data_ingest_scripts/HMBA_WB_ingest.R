@@ -147,7 +147,7 @@ marmoset_sub <- marmoset_sub[,c(cn12,setdiff(colnames(marmoset_sub),cn12))]
 macaque_sub  <- macaque_sub[,c(cn12,setdiff(colnames(macaque_sub),cn12))]
 
 # Write out all four files to the data directory
-fwrite(celltype,"HMBA_WB_celltypes.csv.gz")
+fwrite(celltype,"HMBA_WB_celltypes.csv")
 fwrite(human_sub,"HMBA_WB_human_cluster_annotation.csv.gz")
 fwrite(marmoset_sub,"HMBA_WB_marmoset_cluster_annotation.csv.gz")
 fwrite(macaque_sub,"HMBA_WB_macaque_cluster_annotation.csv.gz")
