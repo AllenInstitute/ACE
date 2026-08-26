@@ -116,7 +116,7 @@ for (cn in colnames(human)) if(suffix[cn]!=""){
 ## Remove unnecessary columns and output gzipped files
 
 # Remove common columns
-cn_keep = setdiff(colnames(human),c("V1","cluster_id","species"))
+cn_keep = setdiff(colnames(human),c("V1","cluster_id","species","clustermap_mouse WB cl:majority vote"))
 human_sub    <- human_sub[,cn_keep]
 marmoset_sub <- marmoset_sub[,cn_keep]
 macaque_sub  <- macaque_sub[,cn_keep]
